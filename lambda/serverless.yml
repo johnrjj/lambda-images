@@ -1,0 +1,50 @@
+service: test
+
+provider:
+  name: aws
+  runtime: nodejs4.3
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+      Resource: "arn:aws:dynamodb:us-east-1:*:*"
+
+package:
+ include:
+   - ../node_modules/**
+
+functions:
+  public:
+    handler: handler.publicEndpoint
+    events:
+      - http:
+          path: public
+          method: get
+          cors: true
+  private:
+    handler: handler.privateEndpoint
+    events:
+      - http:
+          path: private
+          method: get
+          authorizer: authFn
+          cors: true
+  authFn:
+    handler: handler.auth
+
+# resources:
+#   Resources:
+#     UsersDynamoDbTable:
+#       Type: 'AWS::DynamoDB::Table'
+#       Properties:
+#         TableName: 'userz'
+#         KeySchema:
+#           - AttributeName: email
+#             KeyType: HASH
+#         AttributeDefinitions:
+#           - AttributeName: email
+#             AttributeType: S
+#         ProvisionedThroughput:
+#           ReadCapacityUnits: 1
+#           WriteCapacityUnits: 1
+
