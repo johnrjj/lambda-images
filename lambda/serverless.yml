@@ -1,19 +1,37 @@
 service: test
 
+custom:
+  bucket: image-service-jj-2
+
 provider:
   name: aws
   runtime: nodejs4.3
   iamRoleStatements:
     - Effect: Allow
       Action:
-        - dynamodb:PutItem
-      Resource: "arn:aws:dynamodb:us-east-1:*:*"
+        - s3:ListBucket
+      Resource: "arn:aws:s3:::image-service-jj-2"
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:GetObject
+        - s3:DeleteObject
+      Resource: "arn:aws:s3:::image-service-jj-2/*"
 
 package:
  include:
    - ../node_modules/**
 
 functions:
+  upload:
+    handler: handler.getSignedUrl
+    environment:
+      BUCKET: ${self:custom.bucket}
+    events:
+      - http:
+          path: upload
+          method: get
+          cors: true
   public:
     handler: handler.publicEndpoint
     events:
@@ -31,6 +49,17 @@ functions:
           cors: true
   authFn:
     handler: handler.auth
+
+
+
+
+resources:
+  Resources:
+    ImageBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: image-service-jj-2
+        AccessControl: PublicReadWrite
 
 # resources:
 #   Resources:
