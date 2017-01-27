@@ -1,36 +1,43 @@
-import { S3 } from 'aws-sdk';
+import * as AWS from 'aws-sdk';
 
-const signUrl = async (event, context) =>
-  new Promise((accept, reject) => {
-    const s3 = new S3({signatureVersion: 'v4'});
-    const now = Date.now();
-    const key = now.toString();
-    const params = {
-      Bucket: 'image-service-jj-2',
-      Key: '1234',
-      ContentType: 'image/png',
-      ACL: 'authenticated-read',
-      Expires: 60
-    };
-    return s3.getSignedUrl('putObject', params, (err, url) => err ? reject(err) : accept(url));
-  });
+AWS.config.update({
+  accessKeyId: process.env.S3_ACCESS_KEY_ID,
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+});
 
-const getSignedUrl = (event, context, callback) => {
-  return signUrl(event, context)
-    .then(url => {
-      const response = {
-        statusCode: 200,
-        body: JSON.stringify({
-          message: url,
-          input: event,
-          context,
-        }),
-      };
-      callback(null, response);
+const s3 = new AWS.S3();
+
+const generateS3PresignedUrl = (actionKey: string, parameters): Promise<string> =>
+  new Promise((resolve, reject) => {
+    s3.getSignedUrl(actionKey, parameters, (err, url) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(url)
+      }
     })
-    .catch(e => callback(e));
+  })
+
+const getSignedUrl = async (event, context, callback) => {
+  try {
+    const url = await generateS3PresignedUrl('putObject', {
+      Bucket: process.env.BUCKET,
+      Key: '1234',
+      ContentType: 'application/octet-stream',
+      ACL: 'public-read',
+    });
+    const response = {
+      statusCode: 200,
+      body: JSON.stringify({ url }),
+    };
+    return callback(null, response);
+  } catch (err) {
+    return callback(err);
+  }
 };
 
 export {
   getSignedUrl,
 };
+
+
