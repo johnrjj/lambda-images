@@ -2,8 +2,13 @@ service: lambda-images
 
 custom:
   BUCKET: 
+  DYNAMO: 
   S3_ACCESS_KEY_ID: 
   S3_SECRET_ACCESS_KEY: 
+
+  AUTH0_CLIENT_ID: 
+  AUTH0_CLIENT_SECRET: 
+  AUTH0_DOMAIN: 
 
 provider:
   name: aws
@@ -11,36 +16,47 @@ provider:
   iamRoleStatements:
     - Effect: Allow
       Action:
-        - s3:ListBucket
-      Resource: "arn:aws:s3:::${self:custom.BUCKET}"
+        - s3:*
+      Resource: "*"
+    # - Effect: Allow
+    #   Action:
+    #     - s3:ListBucket
+    #   Resource: "arn:aws:s3:::${self:custom.BUCKET}"
+    # - Effect: Allow
+    #   Action:
+    #     - s3:PutObject
+    #     - s3:GetObject
+    #     - s3:DeleteObject
+    #   Resource: "arn:aws:s3:::${self:custom.BUCKET}/*"
     - Effect: Allow
       Action:
-        - s3:PutObject
-        - s3:GetObject
-        - s3:DeleteObject
-      Resource: "arn:aws:s3:::${self:custom.BUCKET}/*"
-      # -  Effect: "Allow"
-      #   Action:
-      #     - "s3:ListBucket"
-      #   Resource:
-      #     Fn::Join:
-      #       - ""
-      #       - - "arn:aws:s3:::"
-      #         - Ref: ImageBucket
-      # -  Effect: "Allow"
-      #   Action:
-      #     - "s3:PutObject"
-      #   Resource:
-      #     Fn::Join:
-      #       - ""
-      #       - - "arn:aws:s3:::"
-      #         - Ref : "ImageBucket"
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:us-east-1:*:*"
 
 package:
  include:
    - ../node_modules/**
 
 functions:
+  createThumbnail:
+    handler: handler.createThumbnail
+    environment:
+      BUCKET: ${self:custom.BUCKET}
+      DYNAMO: ${self:custom.DYNAMO}
+    events:
+      - s3:
+          bucket: ${self:custom.BUCKET}
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: images/
+
+
   upload:
     handler: handler.getSignedUrl
     environment:
@@ -74,25 +90,31 @@ functions:
 
 resources:
   Resources:
-    TestBucket:
-      Type: AWS::S3::Bucket
+    # Have to take this out for now as subscribing to s3 events create a bucket of their own
+    # ImageBucket:
+    #   Type: AWS::S3::Bucket
+    #   Properties:
+    #     BucketName: ${self:custom.BUCKET}
+    #     AccessControl: Private
+    #     CorsConfiguration:
+    #       CorsRules:
+    #         - AllowedHeaders:
+    #             - "*"
+    #           AllowedMethods:
+    #             - PUT
+    #             - GET
+    #           AllowedOrigins:
+    #             - "*"     
+    ImageMetadataTable:
+      Type: 'AWS::DynamoDB::Table'
       Properties:
-        BucketName: ${self:custom.BUCKET}
-        AccessControl: Private
-
-# resources:
-#   Resources:
-#     UsersDynamoDbTable:
-#       Type: 'AWS::DynamoDB::Table'
-#       Properties:
-#         TableName: 'userz'
-#         KeySchema:
-#           - AttributeName: email
-#             KeyType: HASH
-#         AttributeDefinitions:
-#           - AttributeName: email
-#             AttributeType: S
-#         ProvisionedThroughput:
-#           ReadCapacityUnits: 1
-#           WriteCapacityUnits: 1
-
+        TableName: ${self:custom.DYNAMO}
+        KeySchema:
+          - AttributeName: name
+            KeyType: HASH
+        AttributeDefinitions:
+          - AttributeName: name
+            AttributeType: S
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
