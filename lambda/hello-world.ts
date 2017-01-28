@@ -28,5 +28,3 @@ export {
   privateEndpoint,
   publicEndpoint,
 };
-
-

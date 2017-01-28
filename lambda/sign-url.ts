@@ -39,5 +39,3 @@ const getSignedUrl = async (event, context, callback) => {
 export {
   getSignedUrl,
 };
-
-
