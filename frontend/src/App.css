@@ -22,3 +22,17 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+
+.second {
+  position: fixed;
+  z-index: -1;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 2px;
+  height: 100vh;
+  width: 100vw;
+  left: 0;
+  top: 0;
+/*   bottom: 0;
+  right: 0; */
+}

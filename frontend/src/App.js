@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
+import 'normalize.css';
+
 import logo from './logo.svg';
 import './App.css';
 import { XHRPromise } from './util';
 import fetch from 'isomorphic-fetch';
 
-const endpoint = 'https://86nm7wekjc.execute-api.us-east-1.amazonaws.com/dev/upload';
+import Router from 'react-router/BrowserRouter'
+import Match from 'react-router/Match'
+import Link from 'react-router/Link'
+
+
+const endpoint = 'https://up08ep1b3j.execute-api.us-east-1.amazonaws.com/dev/upload';
 
 const getPercentComplete = ({loaded, total, lengthComputable}) => lengthComputable ? console.log((loaded / total) * 100) : null
 
@@ -37,9 +44,25 @@ const uploadFile = async (url, file) => {
   }, getPercentComplete);
 };
 
+
+const Gallery = ({ params }) => (
+  <div>
+    <h1>Gallery: {params.id}</h1>
+  </div>
+);
+
+const ParamsExample = () => (
+    <Router>
+      <div>
+        <Match pattern="/g/:id" component={Gallery} />
+        <Match exactly="true" pattern="/:id" component={App} />
+      </div>
+    </Router>
+);
+
 class App extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = { file: null };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleImageChange = this.handleImageChange.bind(this);
@@ -67,11 +90,12 @@ class App extends Component {
   };
 
   render() {
+    const id = this.props.params.id;
     return (
       <div className="App">
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+          <h2>PHoto: {id}</h2>
         </div>
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
@@ -85,4 +109,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default ParamsExample;
