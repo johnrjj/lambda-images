@@ -10,6 +10,7 @@ import Router from 'react-router/BrowserRouter'
 import Match from 'react-router/Match'
 import Link from 'react-router/Link'
 
+import Page from './containers/Page';
 
 const endpoint = 'https://up08ep1b3j.execute-api.us-east-1.amazonaws.com/dev/upload';
 
@@ -51,16 +52,16 @@ const Gallery = ({ params }) => (
   </div>
 );
 
-const ParamsExample = () => (
-    <Router>
-      <div>
-        <Match pattern="/g/:id" component={Gallery} />
-        <Match exactly="true" pattern="/:id" component={App} />
-      </div>
-    </Router>
+const App = () => (
+  <Router>
+    <div>
+      <Match pattern="/g/:id" component={Gallery} />
+      <Match exactly={true} pattern="/:id" component={Page} />
+    </div>
+  </Router>
 );
 
-class App extends Component {
+class Uploader extends Component {
   constructor(props) {
     super(props);
     this.state = { file: null };
@@ -109,4 +110,4 @@ class App extends Component {
   }
 }
 
-export default ParamsExample;
+export default App;
