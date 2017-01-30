@@ -1,4 +1,5 @@
-import FileDrop from '../components/FileDrop';
+import DropArea from '../components/DropArea';
+import DropModal from '../components/DropModal';
 import React, { Component } from 'react';
 
 class Page extends Component {
@@ -8,11 +9,13 @@ class Page extends Component {
 
   render() {
     return (
-      <FileDrop>
+      <DropArea>
+        <DropModal>
+          <p>hello2</p>  
+        </DropModal>
         <h2>I can drop files here...</h2>
-      </FileDrop>
+      </DropArea>
     )
-
   }
 }
 

@@ -7,7 +7,7 @@ const FileDropZone = (props) => {
     onDragLeave,
     onDragEnd,
     onDrop,
-    ...rest
+    ...rest,
   } = props;
 
   const handleDragOver = (e) => {
