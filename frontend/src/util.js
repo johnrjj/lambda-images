@@ -1,6 +1,6 @@
 // Promisified XHR Request, because I'd like to track upload progress.
 // Unfortunately fetch doesn't have that ability. We can do everything else with fetch though.
-const XHRPromise = (url, opts = {}, onProgress) => 
+const XHRPromise = (url, opts = {}, onProgress) =>
   new Promise((accept, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open(opts.method || 'get', url);
@@ -15,6 +15,40 @@ const XHRPromise = (url, opts = {}, onProgress) =>
     xhr.send(opts.body);
   });
 
+
+const getSignedUrl = async (signUrlEndpoint, fileProps) => {
+  const { type } = fileProps; // mime type
+  console.log(type);
+
+  const headers = new Headers({
+    "Content-Type": type,
+  });
+
+  try {
+    const res = await fetch(signUrlEndpoint, { headers });
+    const { url } = await res.json();
+    console.log(url);
+    return url;
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+};
+
+const uploadFile = async (url, file) => {
+  await XHRPromise(url, {
+    method: 'put',
+    headers: {
+      'Content-Type': 'application/octet-stream',
+    },
+    body: file,
+  }, getPercentComplete);
+};
+
+const getPercentComplete = ({loaded, total, lengthComputable}) => lengthComputable ? console.log((loaded / total) * 100) : null
+
+
 export {
   XHRPromise,
+  getSignedUrl,
 };

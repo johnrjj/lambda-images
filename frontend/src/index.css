@@ -17,3 +17,22 @@ body {
   background-color: #f9f9f9;
   box-sizing: border-box
 }
+
+
+body {
+  font-family: -apple-system, 
+                BlinkMacSystemFont, 
+                "Segoe UI", 
+                Roboto, 
+                Oxygen-Sans, 
+                Ubuntu, 
+                Cantarell, 
+                "Helvetica Neue", 
+                sans-serif;
+  line-height: 1.3;
+}
+h1, h2, h3, h4, h5, h6 { margin: 0; font: inherit; }
+
+p { margin: 0 }
+a { color: inherit; text-decoration: none; }
+* { box-sizing: border-box; }

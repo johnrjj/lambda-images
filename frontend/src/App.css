@@ -36,3 +36,51 @@
 /*   bottom: 0;
   right: 0; */
 }
+
+/*
+.Image {
+  position: absolute;
+  height: 400px;
+  width: 400px;
+}
+
+.example-enter {
+  opacity: 0.01;
+  transition: opacity .5s ease-in;
+}
+
+.example-enter.example-enter-active {
+  opacity: 1;
+}
+
+.example-leave {
+  opacity: 1;
+  transition: opacity .5s ease-in;
+}
+
+.example-leave.example-leave-active {
+  opacity: 0;
+}
+
+.link-active {
+  color: #bbbbbb;
+  text-decoration: none;
+}
+
+body {
+  font-family: -apple-system, 
+                BlinkMacSystemFont, 
+                "Segoe UI", 
+                Roboto, 
+                Oxygen-Sans, 
+                Ubuntu, 
+                Cantarell, 
+                "Helvetica Neue", 
+                sans-serif;
+  line-height: 1.3;
+}
+h1, h2, h3, h4, h5, h6 { margin: 0; font: inherit; }
+
+p { margin: 0 }
+a { color: inherit; text-decoration: none; }
+* { box-sizing: border-box; }*/

@@ -1,6 +1,8 @@
 import React from 'react';
 import Radium from 'radium';
 
+// todo: make full screen an attribute so modal is reusable.
+
 const styles = {
   fullScreen: {
     position: 'fixed',
@@ -33,14 +35,14 @@ const styles = {
   text: {
     color: '#f2f2f2',
   }
-}
+};
 
-const DropModal = (props) => (
+const DropModal = (({ children }) =>
   <div style={[styles.fullScreen, styles.modalBackdrop, styles.hideBehind]}>
     <div style={styles.modalContainer}>
       <div style={styles.text}>Upload a file</div>
       <div>hello1</div>
-      {props.children}
+      {children}
     </div>
   </div >
 );
