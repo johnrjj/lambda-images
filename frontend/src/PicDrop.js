@@ -48,8 +48,12 @@ class DropPic extends Component {
       }
     }
     this.setState({ files: postFiles });
-    const randomId = '12249829'
-    const signedUrls = generateSignedUrls(postFiles);
+
+    // const signedUrls = generateSignedUrls(postFiles);
+    const generatedAlbumId = '1';
+    const generatedPhotoURls = {};
+    const { push } = this.props;
+    push(`/g/${generatedAlbumId}`);
   }
 
   render() { 
@@ -58,7 +62,7 @@ class DropPic extends Component {
           onDragEnter={this.toggleModal}
           onDragLeave={this.toggleModal}
           onDrop={this.handleDrop}>
-          <FullViewportModal>
+          <FullViewportModal hide={!this.state.showModal}>
             <div>Upload a file</div>
           </FullViewportModal>
           <Route path="/a/:id" component={GalleryPage}/>

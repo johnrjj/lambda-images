@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-const FileDropZone = props => {
+const DropArea = props => {
   const {
     onDragOver,
     onDragEnter,
@@ -68,4 +68,4 @@ const FileDropZone = props => {
   );
 };
 
-export default FileDropZone;
+export default DropArea;

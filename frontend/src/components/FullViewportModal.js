@@ -11,14 +11,15 @@ const styles = {
     left: 0,
     top: 0,
   },
-  modalBackdrop: {
+  modalContainer: {
     backgroundColor: 'rgba(0,0,0,0.7)',
     borderRadius: '2px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    transition: 'opacity 0.2s ease-out',
   },
-  modalContainer: {
+  modalContentContainer: {
     backgroundColor: '#45484f',
     width: '680px',
     height: '450px',
@@ -29,20 +30,26 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
   },
-  hideBehind: {
-    zIndex: '-1',
-  },
-  text: {
-    color: '#f2f2f2',
+  hidden: {
+    transition: 'opacity 0.25s ease-in',
+    opacity: '0',
   },
 };
 
-const DropModal = ({ children }) => (
-  <div style={[styles.fullScreen, styles.modalBackdrop, styles.hideBehind]}>
-    <div style={styles.modalContainer}>
-      {children}
+const FullViewportModal = ({ children, hide }) => {
+  return (
+    <div
+      style={[
+        styles.fullScreen,
+        styles.modalContainer,
+        hide ? styles.hidden : '',
+      ]}
+    >
+      <div style={styles.modalContentContainer}>
+        {children}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
-export default Radium(DropModal);
+export default Radium(FullViewportModal);
