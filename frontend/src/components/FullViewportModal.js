@@ -40,8 +40,6 @@ const styles = {
 const DropModal = (({ children }) =>
   <div style={[styles.fullScreen, styles.modalBackdrop, styles.hideBehind]}>
     <div style={styles.modalContainer}>
-      <div style={styles.text}>Upload a file</div>
-      <div>hello1</div>
       {children}
     </div>
   </div >

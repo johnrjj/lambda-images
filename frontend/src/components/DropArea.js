@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
-const FileDropZone =  (props, context) => {
-  console.log(context);
+const FileDropZone = (props) => {
   const { 
     onDragOver,
     onDragEnter,
