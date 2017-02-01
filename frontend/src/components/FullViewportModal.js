@@ -17,7 +17,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-  }, 
+  },
   modalContainer: {
     backgroundColor: '#45484f',
     width: '680px',
@@ -34,15 +34,15 @@ const styles = {
   },
   text: {
     color: '#f2f2f2',
-  }
+  },
 };
 
-const DropModal = (({ children }) =>
+const DropModal = ({ children }) => (
   <div style={[styles.fullScreen, styles.modalBackdrop, styles.hideBehind]}>
     <div style={styles.modalContainer}>
       {children}
     </div>
-  </div >
+  </div>
 );
 
 export default Radium(DropModal);

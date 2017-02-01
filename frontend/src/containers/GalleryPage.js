@@ -1,12 +1,12 @@
 import React from 'react';
 import Radium from 'radium';
 
-const GalleryPage = withRouter(({push}) => {
+const GalleryPage = ({ push }) => {
   return (
     <div>
       <h1>a gallery page</h1>
-    </div >
-  )
-});
+    </div>
+  );
+};
 
 export default Radium(GalleryPage);
