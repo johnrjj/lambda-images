@@ -137,6 +137,4 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
   }
 }
 
-// const x = withRouter(Radium(DropPi))
-
 export default withRouter(Radium(DropPic));

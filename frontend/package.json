@@ -3,12 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "@types/enzyme": "^2.7.2",
     "@types/isomorphic-fetch": "^0.0.32",
+    "@types/jest": "^18.1.1",
     "@types/radium": "^0.18.20",
-    "react-scripts-ts": "1.0.6"
+    "@types/sinon": "^1.16.34",
+    "enzyme": "^2.7.1",
+    "jest": "^18.1.0",
+    "react-addons-test-utils": "^15.4.2",
+    "react-scripts-ts": "1.0.6",
+    "sinon": "^1.17.7"
   },
   "dependencies": {
-    "@types/jest": "^18.1.1",
     "@types/node": "^7.0.4",
     "@types/react": "^15.0.6",
     "@types/react-dom": "^0.14.22",

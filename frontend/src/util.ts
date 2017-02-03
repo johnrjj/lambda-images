@@ -1,14 +1,11 @@
 // Promisified XHR Request, because I'd like to track upload progress.
 // Unfortunately fetch doesn't have that ability. We can do everything else with fetch though.
-
-
-
 export interface XHROptions {
-  headers: any;
-  method: string;
+  headers?: any;
+  method?: string;
   body?: any;
 }
-const XHRPromise = (url, opts: XHROptions, onProgress) => new Promise((
+const XHRPromise = (url, opts: XHROptions = {}, onProgress = undefined) => new Promise((
   accept,
   reject,
 ) => {

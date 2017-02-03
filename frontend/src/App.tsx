@@ -8,9 +8,9 @@ const endpoint = 'https://up08ep1b3j.execute-api.us-east-1.amazonaws.com/dev/upl
 class App extends Component<null, null> {
   render() {
     return (
-  <Router>
-    <PicDrop apiEndpoint={endpoint} />
-  </Router>
+      <Router>
+        <PicDrop apiEndpoint={endpoint} />
+      </Router>
     );
   }
 }

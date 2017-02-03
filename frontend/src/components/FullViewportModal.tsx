@@ -1,7 +1,6 @@
 import * as React from 'react';
-// import { Component } from 'react';
+import { Component, ReactNode } from 'react';
 import * as Radium from 'radium';
-import { ReactNode } from '@types/react';
 
 // todo: make full screen an attribute so modal is reusable.
 

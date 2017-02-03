@@ -1,7 +1,16 @@
 import * as React from 'react';
-import { Component } from 'react';
+import { Component, ReactNode } from 'react';
 
-const DropArea = props => {
+export interface DropAreaProps {
+  onDragEnter?(e: Event);
+  onDragOver?(e: Event);
+  onDragLeave?(e: Event);
+  onDragEnd?(e: Event);
+  onDrop?(e: Event);
+  children?: ReactNode;
+}
+
+const DropArea = (props: DropAreaProps) => {
   const {
     onDragOver,
     onDragEnter,
