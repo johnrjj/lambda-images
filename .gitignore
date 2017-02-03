@@ -5,3 +5,4 @@ lambda/**/*.js
 .serverless
 
 .DS_Store
+.vscode
