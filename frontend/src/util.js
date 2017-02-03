@@ -1,27 +1,28 @@
 // Promisified XHR Request, because I'd like to track upload progress.
 // Unfortunately fetch doesn't have that ability. We can do everything else with fetch though.
-const XHRPromise = (url, opts = {}, onProgress) =>
-  new Promise((accept, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open(opts.method || 'get', url);
-    for (let k in opts.headers || {}) {
-      xhr.setRequestHeader(k, opts.headers[k]);
-    }
-    xhr.onload = e => accept(e.target.responseText);
-    xhr.onerror = reject;
-    if (xhr.upload && onProgress) {
-      xhr.upload.onprogress = onProgress;
-    }
-    xhr.send(opts.body);
-  });
-
+const XHRPromise = (url, opts = {}, onProgress) => new Promise((
+  accept,
+  reject,
+) => {
+  const xhr = new XMLHttpRequest();
+  xhr.open(opts.method || 'get', url);
+  for (let k in opts.headers || {}) {
+    xhr.setRequestHeader(k, opts.headers[k]);
+  }
+  xhr.onload = e => accept(e.target.responseText);
+  xhr.onerror = reject;
+  if (xhr.upload && onProgress) {
+    xhr.upload.onprogress = onProgress;
+  }
+  xhr.send(opts.body);
+});
 
 const getSignedUrl = async (signUrlEndpoint, fileProps) => {
   const { type } = fileProps; // mime type
   console.log(type);
 
   const headers = new Headers({
-    "Content-Type": type,
+    'Content-Type': type,
   });
 
   try {
@@ -37,40 +38,38 @@ const getSignedUrl = async (signUrlEndpoint, fileProps) => {
 
 const generateAlbumSignatures = async (endpoint, images) => {
   try {
-    const res = await fetch(endpoint, { 
+    const res = await fetch(endpoint, {
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
       method: 'POST',
-      body: JSON.stringify(images) 
+      body: JSON.stringify(images),
     });
-    const x = await res.json();
-    console.log(x);
-    const { url } = x;
-    console.log(url);
-    return url;
+    const json = await res.json();
+    const { album } = json;
+    return album;
   } catch (e) {
-    console.log(e);
+    console.error(e);
     throw e;
   }
 };
 
 const uploadFile = async (url, file) => {
-  await XHRPromise(url, {
-    method: 'put',
-    headers: {
-      'Content-Type': 'application/octet-stream',
+  await XHRPromise(
+    url,
+    {
+      method: 'put',
+      headers: {
+        'Content-Type': 'application/octet-stream',
+      },
+      body: file,
     },
-    body: file,
-  }, getPercentComplete);
+    getPercentComplete,
+  );
 };
 
-const getPercentComplete = ({loaded, total, lengthComputable}) => lengthComputable ? console.log((loaded / total) * 100) : null
+const getPercentComplete = ({ loaded, total, lengthComputable }) =>
+  lengthComputable ? console.log(loaded / total * 100) : null;
 
-
-export {
-  XHRPromise,
-  getSignedUrl,
-  generateAlbumSignatures,
-};
+export { XHRPromise, getSignedUrl, generateAlbumSignatures };
