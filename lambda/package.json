@@ -5,7 +5,8 @@
   "scripts": {
     "lint": "tslint -t stylish '{lambda}/**/*.{ts,tsx}'",
     "build": "tsc",
-    "build:watch": "tsc -w"
+    "build:watch": "tsc -w",
+    "deploy": "tsc && sls deploy"
   },
   "repository": {},
   "license": "MIT",

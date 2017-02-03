@@ -68,14 +68,22 @@ const generateAlbum = async (event: any, context: Context, callback: Callback) =
   try {
     const images = JSON.parse(body);
 
-    const imagesWithPresignedUrls = await Promise.all(images.map(image => {
+    const imagesWithPresignedUrls = await Promise.all(images.map(async image => {
+
+      // todo this should return a 400 but the control flow is messed up (nested async mapping)
+      if (!image.type) {
+        throw new Error(`Image missing (mime) type: ${JSON.stringify(image)}`);
+      }
+
       const fileType = extension(image.type);
-      return generateS3PresignedUrl('putObject', {
+
+      const presignedUrl = await generateS3PresignedUrl('putObject', {
         Bucket: process.env.BUCKET,
         Key: `images/${generateUniqueKey()}.${fileType}`,
         ContentType: 'application/octet-stream',
         ACL: 'public-read',
       });
+      return Object.assign(image, { presignedUrl }); 
     }));
 
     const album = {
