@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import fetch from 'isomorphic-fetch';
-import Radium from 'radium';
+import * as React from 'react';
+import * as fetch from 'isomorphic-fetch';
+import * as Radium from 'radium';
 import { withRouter, Route } from 'react-router-dom';
 import './App.css';
 import 'normalize.css';
@@ -9,7 +9,6 @@ import FullViewportModal from './components/FullViewportModal';
 import AlbumPage from './containers/AlbumPage';
 import ImagePage from './containers/ImagePage';
 import { XHRPromise } from './util';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { generateAlbumSignatures } from './util';
 const generateSignedUrls = files => {
   files.forEach(file => {
@@ -36,10 +35,32 @@ const styles = {
   },
 };
 
-class DropPic extends Component {
+export interface File {
+  name: string;
+  type: string;
+  size: number;
+  previewUrl?: string;
+};
+
+export interface DropPicProps {
+  push(destination: string);
+}
+
+export interface DropPicState {
+  showModal: boolean;
+  files: Array<File>;
+  uploading: boolean;
+}
+
+
+class DropPic extends React.Component<DropPicProps, DropPicState> {
   constructor(props) {
     super(props);
-    this.state = { showModal: false };
+    this.state = {
+      showModal: false,
+      uploading: false,
+      files: null,
+    };
     this.toggleModal = this.toggleModal.bind(this);
     this.handleDrop = this.handleDrop.bind(this);
   }
@@ -101,19 +122,21 @@ class DropPic extends Component {
         <input
           type="text"
           value="hey"
-          onChange={() => {}}
+          onChange={() => { }}
           style={styles.input}
         />
         <Route path="/a/:id" component={AlbumPage} />
         <Route path="/:id" exact component={ImagePage} />
         {this.state.files
           ? this.state.files.map(file => (
-              <img key={file.name} src={file.previewUrl} />
-            ))
+            <img key={file.name} src={file.previewUrl} />
+          ))
           : null}
       </DropArea>
     );
   }
 }
+
+// const x = withRouter(Radium(DropPi))
 
 export default withRouter(Radium(DropPic));

@@ -1,5 +1,5 @@
-import React from 'react';
-import Radium from 'radium';
+import * as React from 'react';
+import * as Radium from 'radium';
 
 const AlbumPage = ({ match }) => {
   return (

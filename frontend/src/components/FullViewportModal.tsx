@@ -1,5 +1,7 @@
-import React from 'react';
-import Radium from 'radium';
+import * as React from 'react';
+// import { Component } from 'react';
+import * as Radium from 'radium';
+import { ReactNode } from '@types/react';
 
 // todo: make full screen an attribute so modal is reusable.
 
@@ -38,7 +40,12 @@ const styles = {
   },
 };
 
-const FullViewportModal = ({ children, hide }) => {
+export interface FullViewportModal {
+  children?: ReactNode;
+  hide: boolean;
+}
+
+const FullViewportModal = ({ children, hide }: FullViewportModal) => {
   return (
     <div
       style={[styles.fullScreen, styles.modalContainer, hide && styles.hidden]}
