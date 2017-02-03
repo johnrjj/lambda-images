@@ -12,14 +12,21 @@ const DropArea = props => {
 
   const handleDragOver = e => {
     e.preventDefault();
+    console.log('test1');
 
     if (onDragOver) {
       onDragOver(e);
     }
   };
 
+  const handleDragStart = e => {
+    console.log('test3');
+  }
+
   const handleDragEnter = e => {
     e.preventDefault();
+        console.log('test2');
+
 
     if (onDragEnter) {
       onDragEnter(e);
@@ -61,6 +68,7 @@ const DropArea = props => {
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
+      onDragStart={handleDragStart}
       {...rest}
     >
       {props.children}

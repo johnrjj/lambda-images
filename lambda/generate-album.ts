@@ -68,8 +68,8 @@ const generateAlbum = async (event: any, context: Context, callback: Callback) =
   try {
     const images = JSON.parse(body);
 
-    const imagesWithPresignedUrls = Promise.all(images.map(image => {
-      const fileType = extension(image.mimeType);
+    const imagesWithPresignedUrls = await Promise.all(images.map(image => {
+      const fileType = extension(image.type);
       return generateS3PresignedUrl('putObject', {
         Bucket: process.env.BUCKET,
         Key: `images/${generateUniqueKey()}.${fileType}`,
@@ -90,7 +90,7 @@ const generateAlbum = async (event: any, context: Context, callback: Callback) =
       statusCode: 200,
       body: JSON.stringify({ event, context, album }),
     };
-    
+
     return callback(null, response);
   } catch (err) {
     callback(err);

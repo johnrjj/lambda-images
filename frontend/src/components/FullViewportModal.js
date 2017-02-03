@@ -18,6 +18,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     transition: 'opacity 0.2s ease-out',
+    zIndex: '1',
   },
   modalContentContainer: {
     backgroundColor: '#45484f',
@@ -33,17 +34,14 @@ const styles = {
   hidden: {
     transition: 'opacity 0.25s ease-in',
     opacity: '0',
+    zIndex: '-1',
   },
 };
 
 const FullViewportModal = ({ children, hide }) => {
   return (
     <div
-      style={[
-        styles.fullScreen,
-        styles.modalContainer,
-        hide ? styles.hidden : '',
-      ]}
+      style={[styles.fullScreen, styles.modalContainer, hide && styles.hidden]}
     >
       <div style={styles.modalContentContainer}>
         {children}

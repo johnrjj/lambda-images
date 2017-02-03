@@ -35,6 +35,27 @@ const getSignedUrl = async (signUrlEndpoint, fileProps) => {
   }
 };
 
+const generateAlbumSignatures = async (endpoint, images) => {
+  try {
+    const res = await fetch(endpoint, { 
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      body: JSON.stringify(images) 
+    });
+    const x = await res.json();
+    console.log(x);
+    const { url } = x;
+    console.log(url);
+    return url;
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+};
+
 const uploadFile = async (url, file) => {
   await XHRPromise(url, {
     method: 'put',
@@ -51,4 +72,5 @@ const getPercentComplete = ({loaded, total, lengthComputable}) => lengthComputab
 export {
   XHRPromise,
   getSignedUrl,
+  generateAlbumSignatures,
 };
