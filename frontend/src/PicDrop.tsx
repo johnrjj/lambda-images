@@ -15,6 +15,7 @@ import { XHRPromise } from './util';
 import { generateAlbumSignatures } from './util';
 import Header from './components/Header';
 import Card from './components/Card';
+import Photo from './components/PhotoCard';
 const generateSignedUrls = files => {
   files.forEach(file => {
     const { size, type, name } = file;
@@ -127,19 +128,8 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
         <ContentContainer>
           <Header />
           <Card>
-            <input
-              type="text"
-              value="hey"
-              onChange={() => { }}
-              style={styles.input}
-            />
-            <Route path="/a/:id" component={AlbumPage} />
+            <Route path="/a/:id" photos={this.state.files} component={AlbumPage} />
             <Route path="/:id" exact component={ImagePage} />
-            {this.state.files
-              ? this.state.files.map(file => (
-                <img key={file.name} src={file.previewUrl} />
-              ))
-              : null}
           </Card>
         </ContentContainer>
       </DropArea>

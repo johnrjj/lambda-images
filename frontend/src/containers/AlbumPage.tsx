@@ -1,10 +1,19 @@
 import * as React from 'react';
 import * as Radium from 'radium';
+import { File } from '../PicDrop';
+import PhotoCard from '../components/PhotoCard';
 
-const AlbumPage = ({ match }) => {
+export interface AlbumPageProps {
+  photos: File[];
+  [idx: string]: any;
+}
+
+const AlbumPage = ({ match, photos, ...rest }: AlbumPageProps ) => {
+  console.log(photos, rest);
   return (
     <div>
-      <h1>a gallery page, with id of {match.params.id}</h1>
+      hello
+      {photos ? photos.map(photo => <PhotoCard key={photo.name} src={photo.previewUrl} />) : null}
     </div>
   );
 };

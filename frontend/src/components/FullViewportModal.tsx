@@ -22,7 +22,8 @@ const styles = {
     zIndex: '1',
   },
   modalContentContainer: {
-    backgroundColor: '#45484f',
+    backgroundColor: '#fff',
+    // backgroundColor: '#45484f',
     width: '680px',
     height: '450px',
     boxShadow: '0 5px 15px 0 rgba(0,0,0,.5)',
