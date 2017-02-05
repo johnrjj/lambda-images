@@ -19,7 +19,6 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     transition: 'opacity 0.2s ease-out',
-    zIndex: '1',
   },
   modalContentContainer: {
     backgroundColor: '#fff',
@@ -36,7 +35,6 @@ const styles = {
   hidden: {
     transition: 'opacity 0.25s ease-in',
     opacity: '0',
-    zIndex: '-1',
   },
 };
 

@@ -8,13 +8,25 @@ export interface AlbumPageProps {
   [idx: string]: any;
 }
 
-const AlbumPage = ({ match, photos, ...rest }: AlbumPageProps ) => {
+const styles = {
+  title: {
+    fontSize: '2rem',
+    marginBottom: '1rem',
+  },
+}
+
+const AlbumPage = ({ match, photos, ...rest }: AlbumPageProps) => {
   console.log(photos, rest);
   return (
     <div>
-      hello
-      {photos ? photos.map(photo => <PhotoCard key={photo.name} src={photo.previewUrl} />) : null}
+      <div style={styles.title}>
+        album title
+      </div>
+      <div>
+        {photos ? photos.map(photo => <PhotoCard key={photo.name} src={photo.previewUrl} />) : null}
+      </div>
     </div>
+
   );
 };
 

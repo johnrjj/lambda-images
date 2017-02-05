@@ -15,12 +15,11 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
-    margin: '0 0 0 1rem',
+    // margin: '0 0 0 1rem',
   },
 };
 
 const Card = ({ children }: CardProps) => {
-  console.log(children);
   return (
     <div style={styles.container}>
       {children}

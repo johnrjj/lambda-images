@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { CSSProperties } from 'react';
 import * as Radium from 'radium';
 
 export interface Photo {
@@ -8,12 +9,12 @@ export interface Photo {
 const Photo = ({ src, ...rest }: Photo) => {
   // const styles = getStyles(width, height);
   return (
-    <div>
-      <div style={styles.title}> 
-        image title
-      </div>
+    <div style={styles.container}>
       <div style={styles.imgContainer}>
         <img style={styles.img} src={src} />
+      </div>
+      <div style={styles.description}> 
+        image descrpition
       </div>
     </div>
 
@@ -24,15 +25,22 @@ export default Radium(Photo);
 
 
 const styles = {
-  imgContainer: {
-    width: '100px',
+  container: {
+    marginBottom: '2rem',
   },
+  imgContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: '1rem',
+  } as CSSProperties,
   img: { 
     display: 'block',
-    width: '100%',
+    width: 'auto',
+    maxWidth: '100%',
     height: 'auto',
   },
-  title: {
-    fontSize: '2rem',
+  description: {
+    fontSize: '1rem',
   }
 };

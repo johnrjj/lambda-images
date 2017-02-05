@@ -8,9 +8,9 @@ export interface ContentProps {
 
 const styles = {
   container: {
-    margin: '1rem auto',
-    width: '80%',
-    padding: '4.5rem 1em',
+    paddingTop: '5rem',
+    width: '46rem',
+    margin: 'auto',
   }
 };
 
