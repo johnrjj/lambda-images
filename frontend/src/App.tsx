@@ -16,7 +16,3 @@ class App extends Component<null, null> {
 }
 
 export default App;
-
-
-
-

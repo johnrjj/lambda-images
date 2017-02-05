@@ -1,15 +1,20 @@
 import * as React from 'react';
 import * as fetch from 'isomorphic-fetch';
 import * as Radium from 'radium';
+
 import { withRouter, Route } from 'react-router-dom';
-import './App.css';
 import 'normalize.css';
+import './App.css';
+
 import DropArea from './components/DropArea';
 import FullViewportModal from './components/FullViewportModal';
+import ContentContainer from './components/ContentContainer';
 import AlbumPage from './containers/AlbumPage';
 import ImagePage from './containers/ImagePage';
 import { XHRPromise } from './util';
 import { generateAlbumSignatures } from './util';
+import Header from './components/Header';
+import Card from './components/Card';
 const generateSignedUrls = files => {
   files.forEach(file => {
     const { size, type, name } = file;
@@ -119,19 +124,24 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
         <FullViewportModal hide={!this.state.showModal}>
           <div>Upload a file</div>
         </FullViewportModal>
-        <input
-          type="text"
-          value="hey"
-          onChange={() => { }}
-          style={styles.input}
-        />
-        <Route path="/a/:id" component={AlbumPage} />
-        <Route path="/:id" exact component={ImagePage} />
-        {this.state.files
-          ? this.state.files.map(file => (
-            <img key={file.name} src={file.previewUrl} />
-          ))
-          : null}
+        <ContentContainer>
+          <Header />
+          <Card>
+            <input
+              type="text"
+              value="hey"
+              onChange={() => { }}
+              style={styles.input}
+            />
+            <Route path="/a/:id" component={AlbumPage} />
+            <Route path="/:id" exact component={ImagePage} />
+            {this.state.files
+              ? this.state.files.map(file => (
+                <img key={file.name} src={file.previewUrl} />
+              ))
+              : null}
+          </Card>
+        </ContentContainer>
       </DropArea>
     );
   }

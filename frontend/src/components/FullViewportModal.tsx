@@ -13,7 +13,7 @@ const styles = {
     top: 0,
   },
   modalContainer: {
-    backgroundColor: 'rgba(0,0,0,0.7)',
+    backgroundColor: 'rgba(0,0,0,0.3)',
     borderRadius: '2px',
     display: 'flex',
     alignItems: 'center',
@@ -39,12 +39,12 @@ const styles = {
   },
 };
 
-export interface FullViewportModal {
+export interface FullViewportModalProps {
   children?: ReactNode;
-  hide: boolean;
+  hide?: boolean;
 }
 
-const FullViewportModal = ({ children, hide }: FullViewportModal) => {
+const FullViewportModal = ({ children, hide }: FullViewportModalProps) => {
   return (
     <div
       style={[styles.fullScreen, styles.modalContainer, hide && styles.hidden]}
