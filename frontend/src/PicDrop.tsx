@@ -1,21 +1,23 @@
 import * as React from 'react';
 import * as fetch from 'isomorphic-fetch';
 import * as Radium from 'radium';
-
 import { withRouter, Route } from 'react-router-dom';
 import 'normalize.css';
 import './App.css';
-
 import DropArea from './components/DropArea';
 import FullViewportModal from './components/FullViewportModal';
 import ContentContainer from './components/ContentContainer';
 import AlbumPage from './containers/AlbumPage';
+import Home from './containers/Home';
 import ImagePage from './containers/ImagePage';
-import { XHRPromise } from './util';
-import { generateAlbumSignatures } from './util';
 import Header from './components/Header';
 import Card from './components/Card';
 import Photo from './components/PhotoCard';
+import { XHRPromise } from './util';
+import { generateAlbumSignatures } from './util';
+
+const generateAlbumEndpoint: string = 'https://up08ep1b3j.execute-api.us-east-1.amazonaws.com/dev/generateAlbum'
+
 const generateSignedUrls = files => {
   files.forEach(file => {
     const { size, type, name } = file;
@@ -58,9 +60,9 @@ export interface DropPicState {
   uploading: boolean;
 }
 
-
 class DropPic extends React.Component<DropPicProps, DropPicState> {
-  constructor(props) {
+  constructor(props, context) {
+    console.log(props, context);
     super(props);
     this.state = {
       showModal: false,
@@ -101,7 +103,7 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
       type,
     }));
     const album = await generateAlbumSignatures(
-      'https://up08ep1b3j.execute-api.us-east-1.amazonaws.com/dev/generateAlbum',
+      generateAlbumEndpoint,
       filesMetadata,
     );
     const { url, images } = album;
@@ -123,11 +125,12 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
         onDrop={this.handleDrop}
       >
         <FullViewportModal hide={!this.state.showModal}>
-          <div>Upload a file</div>
+          <div>Drop file here to upload</div>
         </FullViewportModal>
         <ContentContainer>
           <Header />
           <Card>
+            <Route path="/" exact component={Home} />
             <Route path="/a/:id" photos={this.state.files} component={AlbumPage} />
             <Route path="/:id" exact component={ImagePage} />
           </Card>

@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 
 const styles = {
   header: {
+    zIndex: 2,
     alignItems: 'center',
     justifyContent: 'space-between',
     position: 'fixed',
@@ -21,6 +22,7 @@ const styles = {
   item: {
     padding: '5px 15px',
     cursor: 'pointer',
+    background: 'rgba(0, 0, 0, 0.22)',
   },
   itemSelected: {
 
@@ -34,7 +36,7 @@ const Header = () => (
     </div>
     <div>
       right
-      </div>
+    </div>
   </nav>
 );
 

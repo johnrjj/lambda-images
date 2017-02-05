@@ -13,12 +13,13 @@ const styles = {
     top: 0,
   },
   modalContainer: {
-    backgroundColor: 'rgba(0,0,0,0.3)',
+    backgroundColor: 'rgba(0,0,0,0.5)',
     borderRadius: '2px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     transition: 'opacity 0.2s ease-out',
+    zIndex: '1',
   },
   modalContentContainer: {
     backgroundColor: '#fff',
@@ -35,6 +36,7 @@ const styles = {
   hidden: {
     transition: 'opacity 0.25s ease-in',
     opacity: '0',
+    zIndex: '-1', // hack until we can animate the component itself rather than the component contents
   },
 };
 

@@ -120,4 +120,8 @@ const uploadFile = async (url, file) => {
 const getPercentComplete = ({ loaded, total, lengthComputable }) =>
   lengthComputable ? console.log(loaded / total * 100) : null;
 
-export { XHRPromise, getSignedUrl, generateAlbumSignatures };
+export { 
+  XHRPromise, 
+  getSignedUrl, 
+  generateAlbumSignatures 
+};

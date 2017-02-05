@@ -10,7 +10,7 @@ const styles = {
   container: {
     paddingTop: '5rem',
     width: '46rem',
-    margin: 'auto',
+    margin: '0 auto 2rem auto',
   }
 };
 
