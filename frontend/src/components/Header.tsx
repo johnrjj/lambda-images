@@ -25,7 +25,6 @@ const styles = {
     background: 'rgba(0, 0, 0, 0.22)',
   },
   itemSelected: {
-
   }
 };
 

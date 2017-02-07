@@ -8,7 +8,7 @@ import DropArea from './components/DropArea';
 import FullViewportModal from './components/FullViewportModal';
 import ContentContainer from './components/ContentContainer';
 import AlbumPage from './containers/AlbumPage';
-import Home from './containers/Home';
+import Home from './containers/HomePage';
 import ImagePage from './containers/ImagePage';
 import Header from './components/Header';
 import Card from './components/Card';
@@ -28,6 +28,11 @@ const getTotalFileSize = files =>
   files.reduce((accum, file) => accum + file.size, 0);
 
 const styles = {
+  pageContainer: {
+    paddingTop: '5rem',
+    width: '46rem',
+    margin: '0 auto 2rem auto',
+  },
   input: {
     backgroundColor: 'inherit',
     border: 'none',
@@ -124,7 +129,9 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
         onDragLeave={this.toggleModal}
         onDrop={this.handleDrop}
       >
-        <FullViewportModal hide={!this.state.showModal}>
+        <FullViewportModal 
+          hide={!this.state.showModal}
+        >
           <div>Drop file here to upload</div>
         </FullViewportModal>
         <ContentContainer>

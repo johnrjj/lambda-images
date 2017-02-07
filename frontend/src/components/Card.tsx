@@ -15,7 +15,6 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
-    // margin: '0 0 0 1rem',
   },
 };
 
