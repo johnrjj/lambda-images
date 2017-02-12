@@ -16,7 +16,7 @@ import Photo from './components/PhotoCard';
 import { XHRPromise } from './util';
 import { generateAlbumSignatures } from './util';
 
-const generateAlbumEndpoint: string = 'https://up08ep1b3j.execute-api.us-east-1.amazonaws.com/dev/generateAlbum'
+const generateAlbumEndpoint: string = 'https://1am8vv38ug.execute-api.us-east-1.amazonaws.com/dev/generateAlbum'
 
 const generateSignedUrls = files => {
   files.forEach(file => {
@@ -48,7 +48,7 @@ const styles = {
   },
 };
 
-export interface File {
+export interface Image {
   name: string;
   type: string;
   size: number;
@@ -61,7 +61,7 @@ export interface DropPicProps {
 
 export interface DropPicState {
   showModal: boolean;
-  files: Array<File>;
+  files: Array<Image>;
   uploading: boolean;
 }
 

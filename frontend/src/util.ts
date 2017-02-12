@@ -1,3 +1,5 @@
+import { Image } from './PicDrop';
+
 // Promisified XHR Request, because I'd like to track upload progress.
 // Unfortunately fetch doesn't have that ability. We can do everything else with fetch though.
 export interface XHROptions {
@@ -23,7 +25,7 @@ const XHRPromise = (url, opts: XHROptions = {}, onProgress = undefined) => new P
   xhr.send(opts.body);
 });
 
-const getSignedUrl = async (signUrlEndpoint, fileProps) => {
+const getSignedUrl = async (signUrlEndpoint: string, fileProps: Image) => {
   const { type } = fileProps; // mime type
   console.log(type);
 
@@ -42,7 +44,7 @@ const getSignedUrl = async (signUrlEndpoint, fileProps) => {
   }
 };
 
-const generateAlbumSignatures = async (endpoint, images) => {
+const generateAlbumSignatures = async (endpoint: string, images: Array<Image>) => {
   try {
     const res = await fetch(endpoint, {
       headers: {
@@ -117,11 +119,35 @@ const uploadFile = async (url, file) => {
   );
 };
 
+// Needs Auth..
+const updateImageDescription = async (endpoint: string, imageKey: string, description: string) => {
+  try {
+    const res = await fetch(endpoint, {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      body: JSON.stringify({ key: imageKey, description }),
+    });
+    const json = await res.json();
+    const { error } = json;
+    return { 
+      error, 
+    };
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
+
 const getPercentComplete = ({ loaded, total, lengthComputable }) =>
   lengthComputable ? console.log(loaded / total * 100) : null;
 
 export { 
   XHRPromise, 
   getSignedUrl, 
-  generateAlbumSignatures 
+  generateAlbumSignatures,
+  updateImageDescription,
 };

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Component } from 'react';
 import * as Radium from 'radium';
-import { File } from '../PicDrop';
+import { Image } from '../PicDrop';
 import PhotoCard from '../components/PhotoCard';
 
 const styles = {
@@ -33,7 +33,7 @@ const styles = {
 }
 
 export interface AlbumPageProps {
-  photos: File[];
+  photos: Image[];
   [idx: string]: any;
 }
 

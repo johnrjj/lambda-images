@@ -8,7 +8,34 @@ AWS.config.update({
   secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
 });
 
+const DDB_TABLE = process.env.DYNAMO;
+
 const s3 = new AWS.S3();
+const dynamodb = new AWS.DynamoDB();
+
+const storeMetadata = (key: string, s3Key: string) => {
+  return new Promise((accept, reject) => {
+    let params = {
+      TableName: DDB_TABLE,
+      Item: {
+        key: { S: key },
+        image: { S: s3Key },
+        timestamp: { S: (new Date().toJSON().toString()) }
+      }
+    };
+    dynamodb.putItem(params, (err, data) => {
+      if (err) {
+        console.log('error putting item', err);
+        reject(err);
+      } else {
+        console.log('succesfullyput item', data);
+
+        accept(data);
+      }
+    });
+  });
+};
+
 
 const generateUniqueKey = (): string => {
   const id: string = uuid();
@@ -26,39 +53,11 @@ const generateS3PresignedUrl = (actionKey: string, parameters): Promise<string> 
     })
   });
 
-const getSignedUrl = async (event: any, context: Context, callback: Callback) => {
-  console.log('Dumping event', event);
-  console.log('Dumping context', context);
-  let fileType = null;
-  if (event.headers['Content-Type']) {
-    const mimeType = event.headers['Content-Type'];
-    fileType = extension(mimeType);
-    console.log(`Detected file type: ${fileType}`);
-  } else {
-    fileType = 'png';
-  }
-  try {
-    const url = await generateS3PresignedUrl('putObject', {
-      Bucket: process.env.BUCKET,
-      Key: `images/${generateUniqueKey()}.${fileType}`,
-      ContentType: 'application/octet-stream',
-      ACL: 'public-read',
-    });
-    const response = {
-      headers: {
-        'Access-Control-Allow-Origin': '*', // Required for CORS support to work
-      },
-      statusCode: 200,
-      body: JSON.stringify({ url }),
-    };
-    return callback(null, response);
-  } catch (err) {
-    return callback(err);
-  }
-};
+export interface ImageFromClientApi {
+  type: string;
+}
 
 const generateAlbum = async (event: any, context: Context, callback: Callback) => {
-
   const { body } = event;
 
   if (!body) {
@@ -66,7 +65,7 @@ const generateAlbum = async (event: any, context: Context, callback: Callback) =
   }
 
   try {
-    const images = JSON.parse(body);
+    const images: Array<ImageFromClientApi> = JSON.parse(body);
 
     const imagesWithPresignedUrls = await Promise.all(images.map(async image => {
 
@@ -77,19 +76,29 @@ const generateAlbum = async (event: any, context: Context, callback: Callback) =
 
       const fileType = extension(image.type);
 
+      const id = generateUniqueKey();
+      const s3Key = `images/${id}.${fileType}`;
       const presignedUrl = await generateS3PresignedUrl('putObject', {
         Bucket: process.env.BUCKET,
-        Key: `images/${generateUniqueKey()}.${fileType}`,
+        Key: s3Key,
         ContentType: 'application/octet-stream',
         ACL: 'public-read',
       });
-      return Object.assign(image, { presignedUrl }); 
+
+      return Object.assign(image, { presignedUrl, id, fileType, s3Key });
     }));
+
+    const albumId = generateUniqueKey();
 
     const album = {
       url: generateUniqueKey(),
       images: imagesWithPresignedUrls,
     };
+
+
+    // generate metadata here!!!
+    const res = await Promise.all(imagesWithPresignedUrls.map(image => storeMetadata(image.id, image.s3Key)));
+    console.log('response from storing metadata', res);
 
     const response = {
       headers: {

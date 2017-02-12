@@ -1,6 +1,6 @@
 frameworkVersion: ">=1.2.0 <2.0.0"
 
-service: lambda-image
+service: lambda-image-2
 
 custom:
   BUCKET:
@@ -21,16 +21,6 @@ provider:
       Action:
         - s3:*
       Resource: "*"
-    # - Effect: Allow
-    #   Action:
-    #     - s3:ListBucket
-    #   Resource: "arn:aws:s3:::${self:custom.BUCKET}"
-    # - Effect: Allow
-    #   Action:
-    #     - s3:PutObject
-    #     - s3:GetObject
-    #     - s3:DeleteObject
-    #   Resource: "arn:aws:s3:::${self:custom.BUCKET}/*"
     - Effect: Allow
       Action:
         - dynamodb:DescribeTable
@@ -59,6 +49,15 @@ functions:
           rules:
             - prefix: images/
 
+  updateDescription:
+    handler: handler.updateDescription
+    environment:
+      DYNAMO: ${self:custom.DYNAMO}
+    events:
+      - http:
+          path: updateDescription
+          method: post
+          cors: true
 
   upload:
     handler: handler.getSignedUrl
@@ -85,6 +84,7 @@ functions:
       BUCKET: ${self:custom.BUCKET}
       S3_ACCESS_KEY_ID: ${self:custom.S3_ACCESS_KEY_ID}
       S3_SECRET_ACCESS_KEY: ${self:custom.S3_SECRET_ACCESS_KEY}
+      DYNAMO: ${self:custom.DYNAMO}
     events:
       - http:
           path: generateAlbum
@@ -124,10 +124,10 @@ resources:
       Properties:
         TableName: ${self:custom.DYNAMO}
         KeySchema:
-          - AttributeName: name
+          - AttributeName: key
             KeyType: HASH
         AttributeDefinitions:
-          - AttributeName: name
+          - AttributeName: key
             AttributeType: S
         ProvisionedThroughput:
           ReadCapacityUnits: 1
