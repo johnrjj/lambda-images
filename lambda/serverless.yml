@@ -46,8 +46,8 @@ functions:
       - s3:
           bucket: ${self:custom.BUCKET}
           event: s3:ObjectCreated:*
-          rules:
-            - prefix: images/
+          # rules:
+          #   - prefix: images/
 
   updateDescription:
     handler: handler.updateDescription

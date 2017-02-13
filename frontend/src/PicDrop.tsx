@@ -13,16 +13,13 @@ import ImagePage from './containers/ImagePage';
 import Header from './components/Header';
 import Card from './components/Card';
 import Photo from './components/PhotoCard';
-import { XHRPromise } from './util';
-import { generateAlbumSignatures } from './util';
+import { 
+  XHRPromise, 
+  uploadFile, 
+  generateAlbumSignatures 
+} from './util';
 
-const generateAlbumEndpoint: string = 'https://1am8vv38ug.execute-api.us-east-1.amazonaws.com/dev/generateAlbum'
-
-const generateSignedUrls = files => {
-  files.forEach(file => {
-    const { size, type, name } = file;
-  });
-};
+const generateAlbumEndpoint: string = 'https://1am8vv38ug.execute-api.us-east-1.amazonaws.com/dev/generateAlbum';
 
 const getTotalFileSize = files =>
   files.reduce((accum, file) => accum + file.size, 0);
@@ -85,7 +82,7 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
   async handleDrop(e) {
     this.toggleModal();
     const { files, types, items } = e.dataTransfer;
-    const postFiles = Array.prototype.slice.call(files);
+    const postFiles: Array<File> = Array.prototype.slice.call(files);
 
     for (let i = 0; i < postFiles.length || 0; i++) {
       const file = files[i];
@@ -112,6 +109,7 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
       filesMetadata,
     );
     const { url, images } = album;
+    console.log(album);
 
     console.log(getTotalFileSize(filesMetadata));
     console.log(url, images);
@@ -120,6 +118,16 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
     const { push } = this.props;
     push(`/a/${url}`);
     console.log('but i can keep executing!');
+
+    const upload = await uploadFile(images[0].presignedUrl, postFiles[0], (e) => {
+      console.log(e);
+    });
+    console.log(upload);
+    console.log('now what');
+
+    // const upload = await uploadFile(this.state., );
+
+
   }
 
   render() {

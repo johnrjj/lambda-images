@@ -19,7 +19,6 @@ const storeMetadata = (key: string, s3Key: string) => {
       TableName: DDB_TABLE,
       Item: {
         key: { S: key },
-        image: { S: s3Key },
         timestamp: { S: (new Date().toJSON().toString()) }
       }
     };
@@ -77,7 +76,7 @@ const generateAlbum = async (event: any, context: Context, callback: Callback) =
       const fileType = extension(image.type);
 
       const id = generateUniqueKey();
-      const s3Key = `images/${id}.${fileType}`;
+      const s3Key = `${id}.${fileType}`;
       const presignedUrl = await generateS3PresignedUrl('putObject', {
         Bucket: process.env.BUCKET,
         Key: s3Key,

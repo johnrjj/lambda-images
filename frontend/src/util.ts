@@ -12,16 +12,23 @@ const XHRPromise = (url, opts: XHROptions = {}, onProgress = undefined) => new P
   reject,
 ) => {
   const xhr: XMLHttpRequest = new XMLHttpRequest();
-  xhr.send()
+  console.log('hello');
+  // xhr.send();
   xhr.open(opts.method || 'get', url);
   for (let k in opts.headers || {}) {
     xhr.setRequestHeader(k, opts.headers[k]);
   }
+    console.log('hell1o');
+
   xhr.onload = (e) => accept(e.target);
   xhr.onerror = reject;
+    console.log('hello3');
+
   if (xhr.upload && onProgress) {
     xhr.upload.onprogress = onProgress;
   }
+    console.log('hello4');
+
   xhr.send(opts.body);
 });
 
@@ -105,8 +112,9 @@ const generateAlbumSignatures = async (endpoint: string, images: Array<Image>) =
 //   });
 // }
 
-const uploadFile = async (url, file) => {
-  await XHRPromise(
+const uploadFile = (url: string, file: File, progressFn: (e:ProgressEvent) => void) => {
+  console.log('uploDING');
+  return XHRPromise(
     url,
     {
       method: 'put',
@@ -115,7 +123,7 @@ const uploadFile = async (url, file) => {
       },
       body: file,
     },
-    getPercentComplete,
+    progressFn,
   );
 };
 
@@ -132,8 +140,8 @@ const updateImageDescription = async (endpoint: string, imageKey: string, descri
     });
     const json = await res.json();
     const { error } = json;
-    return { 
-      error, 
+    return {
+      error,
     };
   } catch (e) {
     console.error(e);
@@ -145,9 +153,10 @@ const updateImageDescription = async (endpoint: string, imageKey: string, descri
 const getPercentComplete = ({ loaded, total, lengthComputable }) =>
   lengthComputable ? console.log(loaded / total * 100) : null;
 
-export { 
-  XHRPromise, 
-  getSignedUrl, 
+export {
+  XHRPromise,
+  getSignedUrl,
+  uploadFile,
   generateAlbumSignatures,
   updateImageDescription,
 };
