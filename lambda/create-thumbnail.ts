@@ -2,10 +2,11 @@ import * as aws from 'aws-sdk';
 // import { }
 import * as gm from 'gm';
 
-const DDB_TABLE = process.env.DYNAMO;
+const DDB_TABLE: string = process.env.DYNAMO;
+const THUMBNAIL_BUCKET: string = process.env.THUMBNAIL_BUCKET;
 
-const DEFAULT_MAX_WIDTH = 200;
-const DEFAULT_MAX_HEIGHT = 200;
+const DEFAULT_MAX_WIDTH: number = 200;
+const DEFAULT_MAX_HEIGHT: number = 200;
 
 const imageTransform = gm.subClass({
   imageMagick: true,
@@ -13,7 +14,6 @@ const imageTransform = gm.subClass({
 
 const s3 = new aws.S3();
 const dynamodb = new aws.DynamoDB();
-
 const docClient = new aws.DynamoDB.DocumentClient()
 
 const getImageType = (key: string, cb) => {
@@ -107,6 +107,32 @@ const updateDatabaseWithS3Key = (key: string, s3Key: string): Promise<aws.Dynamo
   });
 }
 
+const updateDatabaseWithThumbnailKey = (fileKey: string, thumbnailS3Key: string): Promise<aws.DynamoDB.UpdateItemOutput> => {
+  return new Promise((accept, reject) => {
+    const updateDescriptionParams: aws.DynamoDB.UpdateItemInput = {
+      TableName: DDB_TABLE,
+      Key: {
+        key: fileKey,
+      },
+      UpdateExpression: "set thumbnails3key = :d",
+      ExpressionAttributeValues: {
+        ":d": thumbnailS3Key,
+      },
+      ReturnValues: "UPDATED_NEW"
+    };
+    docClient.update(updateDescriptionParams, (err, data) => {
+      if (err) {
+        console.log('err putting', err);
+        reject(err);
+      } else {
+        console.log('succesfullyput item', data);
+        accept(data);
+      }
+    });
+  });
+}
+
+
 const storeMetadata = (srcKey, dstKey) => {
   return new Promise((accept, reject) => {
     let params = {
@@ -138,48 +164,36 @@ const storeMetadata = (srcKey, dstKey) => {
 };
 
 const driver = async (event, context, callback) => {
-  console.log('Options from event: ', event);
-  console.log('1');
-  const srcBucket = event.Records[0].s3.bucket.name;
-  const srcKey = event.Records[0].s3.object.key;
-  console.log('2');
-  console.log(srcBucket, srcKey);
+  const srcBucket: string = event.Records[0].s3.bucket.name;
+  const srcKey: string = event.Records[0].s3.object.key;
 
-  const dstBucket = srcBucket;
+  const dstBucket: string = THUMBNAIL_BUCKET;
   const dstKey = `thumbs/${srcKey}`;
-  console.log('3');
-  console.log(dstBucket, dstKey);
 
-  // const imageType = getImageType(srcKey, callback);
-  console.log('4');
+  const fileKey: string = srcKey.split('.')[0];  // 123456789.png => '123456789'
 
-  // const s3Object = await downloadImage({
-  //   Bucket: srcBucket,
-  //   Key: srcKey,
-  // });
+  await updateDatabaseWithS3Key(fileKey, srcKey);
 
-  console.log('5');
+  const imageType = getImageType(srcKey, callback);
 
+  const s3Object = await downloadImage({
+    Bucket: srcBucket,
+    Key: srcKey,
+  });
 
-  // const transformData = await transformImage(s3Object, imageType);
+  const transformData = await transformImage(s3Object, imageType);
 
-  console.log('6');
+  await uploadThumbnail({
+    Key: dstKey,
+    Bucket: dstBucket,
+    Body: transformData.buffer,
+    ContentType: transformData.contentType,
+    Metadata: transformData.metadata,
+    ACL: 'public-read',
+  });
 
-
-  // await uploadThumbnail({
-  //   Key: dstKey,
-  //   Bucket: dstBucket,
-  //   Body: transformData.buffer,
-  //   ContentType: transformData.contentType,
-  //   Metadata: transformData.metadata,
-  //   ACL: 'public-read',
-  // });
-
-  await updateDatabaseWithS3Key(srcKey.split(".")[0], dstKey);
-
-  console.log('it worked');
+  await updateDatabaseWithThumbnailKey(fileKey, dstKey);
 };
-
 
 const handler = (event, context, callback) => {
   console.log('called...');

@@ -35,7 +35,6 @@ const storeMetadata = (key: string, s3Key: string) => {
   });
 };
 
-
 const generateUniqueKey = (): string => {
   const id: string = uuid();
   return id;
@@ -93,7 +92,6 @@ const generateAlbum = async (event: any, context: Context, callback: Callback) =
       url: generateUniqueKey(),
       images: imagesWithPresignedUrls,
     };
-
 
     // generate metadata here!!!
     const res = await Promise.all(imagesWithPresignedUrls.map(image => storeMetadata(image.id, image.s3Key)));

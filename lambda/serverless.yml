@@ -4,10 +4,10 @@ service: lambda-image-2
 
 custom:
   BUCKET:
+  THUMBNAIL_BUCKET:
   DYNAMO:
   S3_ACCESS_KEY_ID:
   S3_SECRET_ACCESS_KEY:
-
   AUTH0_CLIENT_ID:
   AUTH0_CLIENT_SECRET:
   AUTH0_DOMAIN:
@@ -41,6 +41,7 @@ functions:
     handler: handler.createThumbnail
     environment:
       BUCKET: ${self:custom.BUCKET}
+      THUMBNAIL_BUCKET: ${self:custom.THUMBNAIL_BUCKET}
       DYNAMO: ${self:custom.DYNAMO}
     events:
       - s3:
@@ -57,19 +58,6 @@ functions:
       - http:
           path: updateDescription
           method: post
-          cors: true
-
-  upload:
-    handler: handler.getSignedUrl
-    environment:
-      BUCKET: ${self:custom.BUCKET}
-      S3_ACCESS_KEY_ID: ${self:custom.S3_ACCESS_KEY_ID}
-      S3_SECRET_ACCESS_KEY: ${self:custom.S3_SECRET_ACCESS_KEY}
-
-    events:
-      - http:
-          path: upload
-          method: get
           cors: true
   public:
     handler: handler.publicEndpoint
@@ -105,20 +93,20 @@ functions:
 resources:
   Resources:
     # Have to take this out for now as subscribing to s3 events create a bucket of their own
-    # ImageBucket:
-    #   Type: AWS::S3::Bucket
-    #   Properties:
-    #     BucketName: ${self:custom.BUCKET}
-    #     AccessControl: Private
-    #     CorsConfiguration:
-    #       CorsRules:
-    #         - AllowedHeaders:
-    #             - "*"
-    #           AllowedMethods:
-    #             - PUT
-    #             - GET
-    #           AllowedOrigins:
-    #             - "*"     
+    ImageBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.THUMBNAIL_BUCKET}
+        AccessControl: PublicRead
+        CorsConfiguration:
+          CorsRules:
+            - AllowedHeaders:
+                - "*"
+              AllowedMethods:
+                - PUT
+                - GET
+              AllowedOrigins:
+                - "*"     
     ImageMetadataTable:
       Type: 'AWS::DynamoDB::Table'
       Properties:
