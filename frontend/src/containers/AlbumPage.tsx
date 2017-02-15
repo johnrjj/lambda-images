@@ -67,7 +67,14 @@ class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
           </div>
         </div>
         <div>
-          {this.props.photos ? this.props.photos.map(photo => <PhotoCard key={photo.name} src={photo.previewUrl} />) : null}
+          {this.props.photos 
+            ? this.props.photos.map(
+            photo => <PhotoCard 
+                        key={photo.name} 
+                        percentUploaded={photo.percentUploaded} 
+                        src={photo.previewUrl} 
+            />) 
+            : null}
         </div>
       </div>
     );

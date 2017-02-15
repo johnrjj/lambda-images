@@ -4,9 +4,10 @@ import * as Radium from 'radium';
 
 export interface Photo {
   src: string;
+  percentUploaded?: number;
 }
 
-const Photo = ({ src, ...rest }: Photo) => {
+const Photo = ({ src, percentUploaded = 0, ...rest }: Photo) => {
   // const styles = getStyles(width, height);
   return (
     <div style={styles.container}>
@@ -14,9 +15,9 @@ const Photo = ({ src, ...rest }: Photo) => {
         <img style={styles.img} src={src} />
         <div style={uploaderStyles.uploadingContainer}>
           <div style={uploaderStyles.uploadingContent}>
-            23% Complete
-        </div>
-          <div style={uploaderStyles.uploadingProgressBar}>
+            {`${Math.round(percentUploaded)}%`}
+          </div>
+          <div style={uploaderStyles.uploadingProgressBar(Math.round(percentUploaded))}>
           </div>
         </div>
       </div>
@@ -70,14 +71,16 @@ const uploaderStyles = {
     paddingTop: '0.8rem',
     textShadow: '0 0 2px rgba(57,196,66,.3)',
   },
-  uploadingProgressBar: {
-    position: 'absolute',
-    bottom: '0',
-    left: '0',
-    height: '4px',
-    zIndex: 3,
-    width: '100%', // need to m ake this a variable
-    backgroundColor: '#6CB0FF',
-    transition: '0.3s width ease-out',
+  uploadingProgressBar(progress: number) {
+    return {
+      position: 'absolute',
+      bottom: '0',
+      left: '0',
+      height: '4px',
+      zIndex: 3,
+      width: `${progress || 0}%`, // need to m ake this a variable
+      backgroundColor: '#6CB0FF',
+      transition: '0.3s width ease-out',
+    }
   },
 }

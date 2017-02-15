@@ -13,10 +13,10 @@ import ImagePage from './containers/ImagePage';
 import Header from './components/Header';
 import Card from './components/Card';
 import Photo from './components/PhotoCard';
-import { 
-  XHRPromise, 
-  uploadFile, 
-  generateAlbumSignatures 
+import {
+  XHRPromise,
+  uploadFile,
+  generateAlbumSignatures
 } from './util';
 
 const generateAlbumEndpoint: string = 'https://1am8vv38ug.execute-api.us-east-1.amazonaws.com/dev/generateAlbum';
@@ -50,6 +50,8 @@ export interface Image {
   type: string;
   size: number;
   previewUrl?: string;
+  url?: string;
+  percentUploaded?: number;
 };
 
 export interface DropPicProps {
@@ -119,14 +121,18 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
     push(`/a/${url}`);
     console.log('but i can keep executing!');
 
-    const upload = await uploadFile(images[0].presignedUrl, postFiles[0], (e) => {
-      console.log(e);
-    });
-    console.log(upload);
-    console.log('now what');
-
-    // const upload = await uploadFile(this.state., );
-
+    const x = await Promise.all(images.map((image, i) => {
+      return uploadFile(image.presignedUrl, postFiles[i], (e) => {
+        const { loaded, total } = e;
+        const percentUploaded = 100 * (loaded / total);
+        this.setState((prev, props) => {
+          const files = prev.files;
+          files[i].percentUploaded = percentUploaded;
+          return { files };
+        });
+      })
+    }));
+    console.log(x);
 
   }
 
@@ -137,7 +143,7 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
         onDragLeave={this.toggleModal}
         onDrop={this.handleDrop}
       >
-        <FullViewportModal 
+        <FullViewportModal
           hide={!this.state.showModal}
         >
           <div>Drop file here to upload</div>
