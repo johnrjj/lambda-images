@@ -32,25 +32,6 @@ const XHRPromise = (url, opts: XHROptions = {}, onProgress = undefined) => new P
   xhr.send(opts.body);
 });
 
-const getSignedUrl = async (signUrlEndpoint: string, fileProps: Image) => {
-  const { type } = fileProps; // mime type
-  console.log(type);
-
-  const headers = new Headers({
-    'Content-Type': type,
-  });
-
-  try {
-    const res = await fetch(signUrlEndpoint, { headers });
-    const { url } = await res.json();
-    console.log(url);
-    return url;
-  } catch (e) {
-    console.log(e);
-    throw e;
-  }
-};
-
 const generateAlbumSignatures = async (endpoint: string, images: Array<Image>) => {
   try {
     const res = await fetch(endpoint, {
@@ -112,8 +93,7 @@ const generateAlbumSignatures = async (endpoint: string, images: Array<Image>) =
 //   });
 // }
 
-const uploadFile = (url: string, file: File, progressFn: (e:ProgressEvent) => void) => {
-  console.log('uploDING');
+const uploadFile = (url: string, file: File, progressFn: (e: ProgressEvent) => void) => {
   return XHRPromise(
     url,
     {
@@ -155,7 +135,6 @@ const getPercentComplete = ({ loaded, total, lengthComputable }) =>
 
 export {
   XHRPromise,
-  getSignedUrl,
   uploadFile,
   generateAlbumSignatures,
   updateImageDescription,
