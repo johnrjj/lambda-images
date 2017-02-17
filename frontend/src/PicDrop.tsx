@@ -82,7 +82,8 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
   }
 
   async handleDrop(e) {
-    this.toggleModal();
+    this.setState({ uploading: true });
+
     const { files, types, items } = e.dataTransfer;
     const postFiles: Array<File> = Array.prototype.slice.call(files);
 
@@ -116,7 +117,8 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
     console.log(getTotalFileSize(filesMetadata));
     console.log(url, images);
 
-    this.setState({ uploading: true });
+    this.toggleModal();
+
     const { push } = this.props;
     push(`/a/${url}`);
     console.log('but i can keep executing!');
@@ -146,7 +148,7 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
         <FullViewportModal
           hide={!this.state.showModal}
         >
-          <div>Drop file here to upload</div>
+          <div>{this.state.uploading ? 'Loading' : null}</div>
         </FullViewportModal>
         <ContentContainer>
           <Header />

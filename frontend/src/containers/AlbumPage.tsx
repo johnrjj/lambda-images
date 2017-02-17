@@ -3,6 +3,7 @@ import { Component } from 'react';
 import * as Radium from 'radium';
 import { Image } from '../PicDrop';
 import PhotoCard from '../components/PhotoCard';
+import SimpleInput from '../components/SimpleInput';
 
 const styles = {
   title: {
@@ -61,19 +62,26 @@ class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
         <div style={styles.header}>
           <div style={styles.title}>
             album title
-        </div>
+          </div>
           <div style={styles.subtitle}>
             subtitle
           </div>
+          <SimpleInput 
+            onKeyUp={(e) => console.log(e.keyCode)} 
+            onChange={(e) =>  console.log(e.target.value)} 
+            onFocus={(e) => console.log(e)}
+            onBlur={(e) => console.log(e)}
+            placeholder='Add a title to your post!'>
+          </SimpleInput>
         </div>
         <div>
-          {this.props.photos 
+          {this.props.photos
             ? this.props.photos.map(
-            photo => <PhotoCard 
-                        key={photo.name} 
-                        percentUploaded={photo.percentUploaded} 
-                        src={photo.previewUrl} 
-            />) 
+              photo => <PhotoCard
+                key={photo.name}
+                percentUploaded={photo.percentUploaded}
+                src={photo.previewUrl}
+              />)
             : null}
         </div>
       </div>
@@ -81,11 +89,8 @@ class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
   }
 }
 
-export default Radium(AlbumPage);
+const changeFileDescription = (fileKey: string, newDescription: string) => {
+  throw Error('Not yet implemented');
+}
 
-// {/*<input
-//   type="text"
-//   value={this.state.albumTitle}
-//   onChange={this.onAlbumTitleChange}
-//   style={styles.input}
-// />*/}
+export default Radium(AlbumPage);
