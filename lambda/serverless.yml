@@ -6,8 +6,10 @@ custom:
   BUCKET:
   THUMBNAIL_BUCKET:
   DYNAMO:
+  COLLECTION_TABLE:
   S3_ACCESS_KEY_ID:
   S3_SECRET_ACCESS_KEY:
+
   AUTH0_CLIENT_ID:
   AUTH0_CLIENT_SECRET:
   AUTH0_DOMAIN:
@@ -73,6 +75,7 @@ functions:
       S3_ACCESS_KEY_ID: ${self:custom.S3_ACCESS_KEY_ID}
       S3_SECRET_ACCESS_KEY: ${self:custom.S3_SECRET_ACCESS_KEY}
       DYNAMO: ${self:custom.DYNAMO}
+      COLLECTION_TABLE: ${self:custom.COLLECTION_TABLE}
     events:
       - http:
           path: generateAlbum
@@ -111,6 +114,19 @@ resources:
       Type: 'AWS::DynamoDB::Table'
       Properties:
         TableName: ${self:custom.DYNAMO}
+        KeySchema:
+          - AttributeName: key
+            KeyType: HASH
+        AttributeDefinitions:
+          - AttributeName: key
+            AttributeType: S
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    CollectionMetadataTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        TableName: ${self:custom.COLLECTION_TABLE}
         KeySchema:
           - AttributeName: key
             KeyType: HASH

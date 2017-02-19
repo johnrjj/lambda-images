@@ -8,15 +8,17 @@ AWS.config.update({
   secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
 });
 
-const DDB_TABLE = process.env.DYNAMO;
+const FILE_DDB_TABLE = process.env.DYNAMO;
+const COLLECTION_DDB_TABLE = process.env.COLLECTION_TABLE;
 
 const s3 = new AWS.S3();
 const dynamodb = new AWS.DynamoDB();
+const docClient = new AWS.DynamoDB.DocumentClient();
 
 const storeMetadata = (key: string, s3Key: string) => {
   return new Promise((accept, reject) => {
     let params = {
-      TableName: DDB_TABLE,
+      TableName: FILE_DDB_TABLE,
       Item: {
         key: { S: key },
         timestamp: { S: (new Date().toJSON().toString()) }
@@ -55,6 +57,33 @@ export interface ImageFromClientApi {
   type: string;
 }
 
+const saveAlbumToDb = (album: object) => {
+  return new Promise((accept, reject) => {
+    const params = {
+      TableName: COLLECTION_DDB_TABLE,
+      Item: album,
+      // {
+      //     // "year": year,
+      //     // "title": title,
+      //     // "info":{
+      //     //     "plot": "Nothing happens at all.",
+      //     //     "rating": 0
+      //     }
+      // }
+    };
+    return docClient.put(params, function (err, data) {
+      if (err) {
+        console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
+        reject(err);
+      } else {
+        console.log("Added item:", JSON.stringify(data, null, 2));
+        accept(data)
+      }
+    });
+  })
+};
+
+
 const generateAlbum = async (event: any, context: Context, callback: Callback) => {
   const { body } = event;
 
@@ -89,11 +118,16 @@ const generateAlbum = async (event: any, context: Context, callback: Callback) =
     const albumId = generateUniqueKey();
 
     const album = {
-      url: generateUniqueKey(),
+      url: albumId,
+      key: albumId, // needed for dynamo...
       images: imagesWithPresignedUrls,
     };
 
+    const x = await saveAlbumToDb(album);
+    console.log(x);
+
     // generate metadata here!!!
+    // do this batched...
     const res = await Promise.all(imagesWithPresignedUrls.map(image => storeMetadata(image.id, image.s3Key)));
     console.log('response from storing metadata', res);
 
