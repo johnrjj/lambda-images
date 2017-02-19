@@ -15,12 +15,12 @@ const s3 = new AWS.S3();
 const dynamodb = new AWS.DynamoDB();
 const docClient = new AWS.DynamoDB.DocumentClient();
 
-const storeMetadata = (key: string, s3Key: string) => {
+const storeMetadata = (id: string, s3Key: string) => {
   return new Promise((accept, reject) => {
     let params = {
       TableName: FILE_DDB_TABLE,
       Item: {
-        key: { S: key },
+        id: { S: id },
         timestamp: { S: (new Date().toJSON().toString()) }
       }
     };
@@ -117,17 +117,20 @@ const generateAlbum = async (event: any, context: Context, callback: Callback) =
 
     const albumId = generateUniqueKey();
 
+    const entries: Array<string> = imagesWithPresignedUrls.map(image => image.id);
+
     const album = {
       url: albumId,
-      key: albumId, // needed for dynamo...
-      images: imagesWithPresignedUrls,
+      id: albumId, // needed for dynamo...
+      entries, // for dynamo...
+      images: imagesWithPresignedUrls, // for frontend...
     };
 
     const x = await saveAlbumToDb(album);
     console.log(x);
 
     // generate metadata here!!!
-    // do this batched...
+    // todo: do this batched...
     const res = await Promise.all(imagesWithPresignedUrls.map(image => storeMetadata(image.id, image.s3Key)));
     console.log('response from storing metadata', res);
 

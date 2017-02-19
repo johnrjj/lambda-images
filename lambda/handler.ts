@@ -3,6 +3,7 @@ import { privateEndpoint, publicEndpoint } from './hello-world';
 import { createThumbnail } from './create-thumbnail';
 import { generateAlbum } from './generate-album';
 import { updateDescription } from './update-file-description';
+import { checkCollectionStatus } from './upload-progress';
 
 export {
   privateEndpoint,
@@ -11,5 +12,6 @@ export {
   createThumbnail,
   generateAlbum,
   updateDescription,
+  checkCollectionStatus,
 };
 

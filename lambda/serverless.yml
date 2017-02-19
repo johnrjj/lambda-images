@@ -81,6 +81,31 @@ functions:
           path: generateAlbum
           method: post
           cors: true
+  # collectionStatusOne:
+  #   handler: handler.checkCollectionStatus
+  #   environment:
+  #     DYNAMO: ${self:custom.DYNAMO}
+  #     COLLECTION_TABLE: ${self:custom.COLLECTION_TABLE}
+  #   events:
+  #     - http:
+  #         path: collection/{id}
+  #         method: get
+  #         integration: lambda
+  #         cors: true
+  #         request:
+  #           parameters:
+  #             paths:
+  #               id: true
+  collectionStatusTwo:
+    handler: handler.checkCollectionStatus
+    environment:
+      DYNAMO: ${self:custom.DYNAMO}
+      COLLECTION_TABLE: ${self:custom.COLLECTION_TABLE}
+    events:
+      - http:
+          path: status/{id}
+          method: get
+          cors: true
   private:
     handler: handler.privateEndpoint
     events:
@@ -115,10 +140,10 @@ resources:
       Properties:
         TableName: ${self:custom.DYNAMO}
         KeySchema:
-          - AttributeName: key
+          - AttributeName: id
             KeyType: HASH
         AttributeDefinitions:
-          - AttributeName: key
+          - AttributeName: id
             AttributeType: S
         ProvisionedThroughput:
           ReadCapacityUnits: 1
@@ -128,10 +153,10 @@ resources:
       Properties:
         TableName: ${self:custom.COLLECTION_TABLE}
         KeySchema:
-          - AttributeName: key
+          - AttributeName: id
             KeyType: HASH
         AttributeDefinitions:
-          - AttributeName: key
+          - AttributeName: id
             AttributeType: S
         ProvisionedThroughput:
           ReadCapacityUnits: 1

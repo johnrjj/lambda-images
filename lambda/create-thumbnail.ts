@@ -82,12 +82,12 @@ const uploadThumbnail = ({ Bucket, Key, Body, ContentType, Metadata, ACL }) => {
   });
 };
 
-const updateDatabaseWithS3Key = (key: string, s3Key: string): Promise<aws.DynamoDB.UpdateItemOutput> => {
+const updateDatabaseWithS3Key = (id: string, s3Key: string): Promise<aws.DynamoDB.UpdateItemOutput> => {
   return new Promise((accept, reject) => {
     const updateDescriptionParams: aws.DynamoDB.UpdateItemInput = {
       TableName: DDB_TABLE,
       Key: {
-        key,
+        id,
       },
       UpdateExpression: "set s3key = :d",
       ExpressionAttributeValues: {
@@ -107,12 +107,12 @@ const updateDatabaseWithS3Key = (key: string, s3Key: string): Promise<aws.Dynamo
   });
 }
 
-const updateDatabaseWithThumbnailKey = (fileKey: string, thumbnailS3Key: string): Promise<aws.DynamoDB.UpdateItemOutput> => {
+const updateDatabaseWithThumbnailKey = (fileId: string, thumbnailS3Key: string): Promise<aws.DynamoDB.UpdateItemOutput> => {
   return new Promise((accept, reject) => {
     const updateDescriptionParams: aws.DynamoDB.UpdateItemInput = {
       TableName: DDB_TABLE,
       Key: {
-        key: fileKey,
+        id: fileId,
       },
       UpdateExpression: "set thumbnails3key = :d",
       ExpressionAttributeValues: {
@@ -133,12 +133,12 @@ const updateDatabaseWithThumbnailKey = (fileKey: string, thumbnailS3Key: string)
 }
 
 
-const storeMetadata = (srcKey, dstKey) => {
+const storeMetadata = (id, dstKey) => {
   return new Promise((accept, reject) => {
     let params = {
       TableName: DDB_TABLE,
       Item: {
-        key: { S: srcKey },
+        id: { S: id },
       }
     };
 
