@@ -35,20 +35,42 @@ const styles = {
 
 export interface AlbumPageProps {
   photos: Image[];
+  albumId: string;
   [idx: string]: any;
 }
 
 export interface AlbumPageState {
   albumTitle: string;
+  photos: Image[];
 }
 
 class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
   constructor(props) {
+    console.log(props);
     super(props);
     this.state = {
       albumTitle: 'Give your album a title',
+      photos: props.photos || [],
     };
     this.onAlbumTitleChange = this.onAlbumTitleChange.bind(this);
+  }
+
+  async componentDidMount() {
+    if (this.state.photos.length === 0) {
+      console.log('no photos pregiven');
+      const id = this.props.match.params.id;
+      const endpoint = `https://1am8vv38ug.execute-api.us-east-1.amazonaws.com/dev/collection/${id}/entries`;
+      const x: any = await fetch(endpoint).then(x => x.json());
+      console.log(x, id);
+      const files: Array<any> = x.files;
+      console.log(files);
+      const photos: Image[] = files.map(file => ({ src: `https://image-service-jj-02.s3.amazonaws.com/${file.s3key}` }))
+      
+      console.log(photos);
+      this.setState({
+        photos,
+      });
+    }
   }
 
   onAlbumTitleChange(e) {
@@ -61,26 +83,35 @@ class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
       <div>
         <div style={styles.header}>
           <div style={styles.title}>
-            album title
-          </div>
-          <div style={styles.subtitle}>
-            subtitle
-          </div>
           <SimpleInput 
             onKeyUp={(e) => console.log(e.keyCode)} 
             onChange={(e) =>  console.log(e.target.value)} 
             onFocus={(e) => console.log(e)}
             onBlur={(e) => console.log(e)}
             placeholder='Add a title to your post!'>
+          </SimpleInput>          </div>
+          <SimpleInput 
+            onKeyUp={(e) => console.log(e.keyCode)} 
+            onChange={(e) =>  console.log(e.target.value)} 
+            onFocus={(e) => console.log(e)}
+            onBlur={(e) => console.log(e)}
+            placeholder='Add a description'>
           </SimpleInput>
         </div>
         <div>
-          {this.props.photos
-            ? this.props.photos.map(
+          {this.state.photos
+            ? this.state.photos.map(
               photo => <PhotoCard
                 key={photo.name}
-                percentUploaded={photo.percentUploaded}
-                src={photo.previewUrl}
+                statusText={
+                  !photo.percentUploaded 
+                  ? null
+                  : photo.percentUploaded && photo.percentUploaded < 100 
+                    ? `${Math.round(photo.percentUploaded)}%` 
+                    : 'Processing' }
+                progressBarPercent={photo.percentUploaded < 100 ? photo.percentUploaded : null}
+                src={photo.src}
+                previewUrl={photo.previewUrl}
               />)
             : null}
         </div>

@@ -2,7 +2,7 @@ import * as React from 'react';
 
 const Home = ({  }) => (
   <div>
-    <h3>welcome</h3>
+    <h3>Drag file(s) here.</h3>
   </div>
 );
 
