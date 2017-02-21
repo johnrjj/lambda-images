@@ -34,12 +34,45 @@ const getCollectionContentsFromDynamo = (collectionId: string): Promise<Array<st
   });
 };
 
+const getFileSrcUrl = async (fileIds: Array<string>): Promise<Array<any>> => {
+  const queryResults: Array<AWS.DynamoDB.DocumentClient.QueryOutput> = await Promise.all(fileIds.map(fileId => {
+    return new Promise((accept, reject) => {
+      const params: AWS.DynamoDB.DocumentClient.QueryInput = {
+        TableName: FILE_DDB_TABLE,
+        KeyConditionExpression: "#id = :id",
+        ExpressionAttributeNames: { "#id": "id" },
+        ExpressionAttributeValues: { ":id": fileId }
+      };
+      docClient.query(params, (err, data) => {
+        if (err) {
+          console.log("Unable to query. Error:", JSON.stringify(err, null, 2));
+          reject(err);
+        } else {
+          console.log("Query succeeded.");
+          data.Items.forEach(item => console.log(item));
+          accept(data);
+        }
+      });
+    });
+  }));
+
+  const transformedResults = queryResults.map(queryResult => {
+    if (queryResult.Items && queryResult.Items[0]) {
+      return queryResult.Items[0];
+    }
+    return;
+  });
+
+  return transformedResults;
+}
+
 const getCollectionContents = async (event: any, context: Context, callback: Callback) => {
   console.log('event', event);
-  console.log('conext', context);
+  console.log('context', context);
   try {
     const collectionId = event.pathParameters.id;
     const collectionEntries: Array<string> = await getCollectionContentsFromDynamo(collectionId);
+    const files = await getFileSrcUrl(collectionEntries);
     const response = {
       headers: {
         'Access-Control-Allow-Origin': '*', // Required for CORS support to work
@@ -50,6 +83,7 @@ const getCollectionContents = async (event: any, context: Context, callback: Cal
         context, 
         collectionId, 
         entries: collectionEntries, 
+        files,
       }),
     };
     return callback(null, response);

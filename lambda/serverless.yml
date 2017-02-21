@@ -51,7 +51,6 @@ functions:
           event: s3:ObjectCreated:*
           # rules:
           #   - prefix: images/
-
   updateDescription:
     handler: handler.updateDescription
     environment:
@@ -103,7 +102,17 @@ functions:
       COLLECTION_TABLE: ${self:custom.COLLECTION_TABLE}
     events:
       - http:
-          path: status/{id}
+          path: collection/{id}/status
+          method: get
+          cors: true
+  getCollectionContents:
+    handler: handler.getCollectionContents
+    environment:
+      DYNAMO: ${self:custom.DYNAMO}
+      COLLECTION_TABLE: ${self:custom.COLLECTION_TABLE}
+    events:
+      - http:
+          path: collection/{id}/entries
           method: get
           cors: true
   private:
