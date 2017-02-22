@@ -35,7 +35,7 @@ const getCollectionContents = (collectionId: string): Promise<Array<string>> => 
   });
 };
 
-const checkIfFilesAreProcessed = async (fileIds: Array<string>): Promise<boolean> => {
+const checkIfFilesAreProcessed = async (fileIds: Array<string>): Promise<any> => {
   const queryResults: Array<AWS.DynamoDB.DocumentClient.QueryOutput> = await Promise.all(fileIds.map(fileId => {
     return new Promise((accept, reject) => {
       // const filterExpression: string = `#id IN (${Object.keys(queryValues).join(', ')})`;
@@ -96,7 +96,10 @@ const checkIfFilesAreProcessed = async (fileIds: Array<string>): Promise<boolean
 
   console.log(isDone);
 
-  return isDone;
+  return {
+   entries: transformedResults,
+   processed: isDone, 
+  };
 }
 
 const checkCollectionStatus = async (event: any, context: Context, callback: Callback) => {
@@ -106,8 +109,8 @@ const checkCollectionStatus = async (event: any, context: Context, callback: Cal
     const collectionId = event.pathParameters.id;
     const collectionEntries: Array<string> = await getCollectionContents(collectionId);
     console.log(collectionEntries);
-    const isDoneProcessing = await checkIfFilesAreProcessed(collectionEntries);
-    console.log(isDoneProcessing);
+    const files = await checkIfFilesAreProcessed(collectionEntries);
+    console.log(files);
     const response = {
       headers: {
         'Access-Control-Allow-Origin': '*', // Required for CORS support to work
@@ -117,7 +120,9 @@ const checkCollectionStatus = async (event: any, context: Context, callback: Cal
         event, 
         context, 
         collectionId, 
-        processed: isDoneProcessing 
+        entries2: collectionEntries,
+        entries: files.entries,
+        processed: files.processed,
       }),
     };
     return callback(null, response);
