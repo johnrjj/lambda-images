@@ -8,9 +8,11 @@ export interface Photo {
   // percentUploaded?: number;
   statusText?: string;
   progressBarPercent?: number;
+  previewHeight?: number;
+
 }
 
-const Photo = ({ src, previewUrl, statusText, progressBarPercent, ...rest }: Photo) => {
+const Photo = ({ src, previewUrl, statusText, progressBarPercent, previewHeight, ...rest }: Photo) => {
   // const styles = getStyles(width, height);
   // const image = new Image();
   // if (previewUrl) {
@@ -23,8 +25,8 @@ const Photo = ({ src, previewUrl, statusText, progressBarPercent, ...rest }: Pho
 
   return (
     <div style={styles.container}>
-      <div style={styles.imgContainer}>
-        <img style={styles.img} src={src} />
+      <div style={[styles.imgContainer, styles.placeholderHeight(448.08)]}>
+        <img style={[styles.img]} src={src} />
         <img style={styles.previewImg} src={previewUrl} />
         <div style={uploaderStyles.uploadingContainer}>
           <div style={uploaderStyles.uploadingContent}>
@@ -70,12 +72,15 @@ const styles = {
     width: 'auto',
     maxWidth: '100%',
     height: 'auto',
-    // position: 'absolute',
-    // top: 0,
+    position: 'absolute',
+    top: 0,
   },
   description: {
     fontSize: '1rem',
   },
+  placeholderHeight(height: number) {
+    return (height) ? { minHeight: height } : null;
+  }
 };
 
 const uploaderStyles = {

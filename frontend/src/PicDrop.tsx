@@ -1,5 +1,4 @@
 import * as React from 'react';
-// import * as fetch from 'isomorphic-fetch';
 import * as Radium from 'radium';
 import { withRouter, Route } from 'react-router-dom';
 import 'normalize.css';
@@ -68,14 +67,17 @@ export interface DropPicState {
   status: string;
 }
 
-const checkIfCollectionDoneProcessing = async (collectionId: string) => {
+
+export interface CollectionStatus {
+  entries: Array<string>;
+  processed: boolean;
+}
+
+const getCollectionStatus = async (collectionId: string) => {
   const endpoint = `${collectionEndpoint}/${collectionId}/status`;
   const res = await fetch(endpoint);
-  const data = await res.json();
-  console.log(data);
-  const processed = !!data.processed;
-  console.log(processed);
-  return processed;
+  const data = await res.json() as CollectionStatus;
+  return data;
 };
 
 class DropPic extends React.Component<DropPicProps, DropPicState> {
@@ -154,51 +156,50 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
       })
     }));
 
-
-
-
-
     // now we can check the processing statuses of all the photos and make sure everything worked...
 
     // poll, query DB make sure all photos have urls s3 keys
     const albumId = url;
-    this.poll(albumId, (err, done) => {
-      if (err) {
-        console.log(err);
-        return this.setState({ error: 'UPLOAD_TIMEOUT' });
-      }
-      console.log('done!');
-      return this.setState({ status: 'done' });
-    });
-    // isAlbumFinished(albumId);
+    try {
+      const res = await this.poll(albumId);
+      console.log(res);
 
-    // query for album, get list of all pictures,
-    // query for all pictures, get s3 urls...
+      const entries: any = res.entries;
+      const testImg = new Image();
+      const src: string = `https://image-service-jj-02.s3.amazonaws.com/${entries[0].s3key}`
+      testImg.onload = (e) => console.log('loaded', e);
+      testImg.onerror = (e) => console.log('onerror', e);
+      testImg.src = src;
+      this.setState((prevState: DropPicState, props: DropPicProps) => {
+        const files = prevState.files;
+        files[0].src = src;
+      });
 
-    // if all s3 urls are there, we should be good....
-
-
+    } catch (err) {
+      console.log('err', err);
+    }
   }
 
-  poll(collectionId, callback) {
-    const endTime = Number(new Date()) + (10000);
-    const interval = 100;
-
-    const poller = () => {
-      console.log('polling...');
-      checkIfCollectionDoneProcessing(collectionId)
-        .then(isDone => {
-          console.log('isdone', isDone);
-          if (isDone) {
-            return callback(null, true);
-          } else if (Number(new Date()) < endTime) {
-            return setTimeout(poller, interval);
-          } else {
-            return callback('timeout');
-          }
-        }).catch(callback);
-    }
-    poller();
+  poll(collectionId): Promise<any> {
+    return new Promise((accept, reject) => {
+      const endTime = Number(new Date()) + (10000);
+      const interval = 100;
+      const poller = () => {
+        console.log('polling...');
+        getCollectionStatus(collectionId)
+          .then(status => {
+            console.log('isdone', status);
+            if (status.processed) {
+              return accept(status);
+            } else if (Number(new Date()) < endTime) {
+              return setTimeout(poller, interval);
+            } else {
+              return reject('timeout');
+            }
+          });
+      }
+      poller();
+    });
   }
 
   render() {
