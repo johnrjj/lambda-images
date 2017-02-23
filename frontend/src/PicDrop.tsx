@@ -182,8 +182,8 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
 
   poll(collectionId): Promise<any> {
     return new Promise((accept, reject) => {
-      const endTime = Number(new Date()) + (10000);
-      const interval = 100;
+      const endTime = Number(new Date()) + (5000);
+      const interval = 200;
       const poller = () => {
         console.log('polling...');
         getCollectionStatus(collectionId)
@@ -194,7 +194,7 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
             } else if (Number(new Date()) < endTime) {
               return setTimeout(poller, interval);
             } else {
-              return reject('timeout');
+              return reject(`Polling collection ${collectionId} timed out.`);
             }
           });
       }

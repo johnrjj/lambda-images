@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Component } from 'react';
 import * as Radium from 'radium';
+// import * as fetch from 'isomorphic-fetch';
 import { Image } from '../PicDrop';
 import PhotoCard from '../components/PhotoCard';
 import SimpleInput from '../components/SimpleInput';
