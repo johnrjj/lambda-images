@@ -66,7 +66,7 @@ class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
       const files: Array<any> = x.files;
       console.log(files);
       const photos: AImage[] = files.map(file => ({ src: `https://image-service-jj-02.s3.amazonaws.com/${file.s3key}` }))
-      
+
       console.log(photos);
       this.setState({
         photos,
@@ -82,34 +82,17 @@ class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
   render() {
     return (
       <div>
-        <div style={styles.header}>
-          <div style={styles.title}>
-          <SimpleInput 
-            onKeyUp={(e) => console.log(e.keyCode)} 
-            onChange={(e) =>  console.log(e.target.value)} 
-            onFocus={(e) => console.log(e)}
-            onBlur={(e) => console.log(e)}
-            placeholder='Add a title to your post!'>
-          </SimpleInput>          </div>
-          <SimpleInput 
-            onKeyUp={(e) => console.log(e.keyCode)} 
-            onChange={(e) =>  console.log(e.target.value)} 
-            onFocus={(e) => console.log(e)}
-            onBlur={(e) => console.log(e)}
-            placeholder='Add a description'>
-          </SimpleInput>
-        </div>
         <div>
           {this.state.photos
-            ? this.state.photos.map(
-              photo => <PhotoCard
+            ? this.state.photos.map(photo =>
+              <PhotoCard
                 key={photo.name}
                 statusText={
-                  !photo.percentUploaded 
-                  ? null
-                  : photo.percentUploaded && photo.percentUploaded < 100 
-                    ? `${Math.round(photo.percentUploaded)}%` 
-                    : 'Processing' }
+                  !photo.percentUploaded
+                    ? null
+                    : (photo.percentUploaded && photo.percentUploaded) < 100
+                      ? `${Math.round(photo.percentUploaded)}%`
+                      : 'Processing'}
                 progressBarPercent={photo.percentUploaded < 100 ? photo.percentUploaded : null}
                 src={photo.src}
                 previewHeight={photo.height}

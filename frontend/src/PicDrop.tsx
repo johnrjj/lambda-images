@@ -2,7 +2,6 @@ import * as React from 'react';
 import * as Radium from 'radium';
 import { withRouter, Route } from 'react-router-dom';
 import 'isomorphic-fetch';
-
 import 'normalize.css';
 import './App.css';
 import DropArea from './components/DropArea';
@@ -70,7 +69,6 @@ export interface DropPicState {
   error: string;
   status: string;
 }
-
 
 export interface CollectionStatus {
   entries: Array<string>;
@@ -176,6 +174,12 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
     try {
       const res = await this.poll(albumId);
       console.log(res);
+
+      this.setState((prevState: DropPicState) => {
+        const { files } = prevState;
+        files.forEach(file => file.percentUploaded = null);
+        return { files };
+      });
 
       const entries: any = res.entries;
       const testImg = new Image();
