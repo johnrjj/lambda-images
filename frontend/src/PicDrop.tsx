@@ -1,6 +1,8 @@
 import * as React from 'react';
 import * as Radium from 'radium';
 import { withRouter, Route } from 'react-router-dom';
+import 'isomorphic-fetch';
+
 import 'normalize.css';
 import './App.css';
 import DropArea from './components/DropArea';
@@ -45,7 +47,7 @@ const styles = {
   },
 };
 
-export interface Image {
+export interface AImage {
   name?: string;
   type?: string;
   size?: number;
@@ -53,6 +55,8 @@ export interface Image {
   url?: string;
   percentUploaded?: number;
   src?: string;
+  height?: number;
+  width?: number;
 };
 
 export interface DropPicProps {
@@ -61,7 +65,7 @@ export interface DropPicProps {
 
 export interface DropPicState {
   showModal: boolean;
-  files: Array<Image>;
+  files: Array<AImage>;
   uploading: boolean;
   error: string;
   status: string;
@@ -110,10 +114,19 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
       const reader = new FileReader();
       const url = reader.readAsDataURL(file);
       reader.onloadend = e => {
+        console.log(this.state);
         const files = this.state.files;
+        const image = new Image();
+        image.src = reader.result;
+        const height = image.height;
+        const width = image.width;
+        // here??
         this.setState((prevState, props) => {
           const files = prevState.files;
           files[i].previewUrl = reader.result;
+          files[i].height = height;
+          files[i].width = width;
+          console.log(height);
           return { files };
         });
       };

@@ -1,4 +1,6 @@
-import { Image } from './PicDrop';
+import { AImage } from './PicDrop';
+import 'isomorphic-fetch';
+
 
 // Promisified XHR Request, because I'd like to track upload progress.
 // Unfortunately fetch doesn't have that ability. We can do everything else with fetch though.
@@ -32,7 +34,7 @@ const XHRPromise = (url, opts: XHROptions = {}, onProgress = undefined) => new P
   xhr.send(opts.body);
 });
 
-const generateAlbumSignatures = async (endpoint: string, images: Array<Image>) => {
+const generateAlbumSignatures = async (endpoint: string, images: Array<AImage>) => {
   try {
     const res = await fetch(endpoint, {
       headers: {

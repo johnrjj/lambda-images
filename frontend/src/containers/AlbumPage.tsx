@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Component } from 'react';
 import * as Radium from 'radium';
-// import * as fetch from 'isomorphic-fetch';
-import { Image } from '../PicDrop';
+import 'isomorphic-fetch';
+import { AImage } from '../PicDrop';
 import PhotoCard from '../components/PhotoCard';
 import SimpleInput from '../components/SimpleInput';
 
@@ -35,14 +35,14 @@ const styles = {
 }
 
 export interface AlbumPageProps {
-  photos: Image[];
+  photos: AImage[];
   albumId: string;
   [idx: string]: any;
 }
 
 export interface AlbumPageState {
   albumTitle: string;
-  photos: Image[];
+  photos: AImage[];
 }
 
 class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
@@ -65,7 +65,7 @@ class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
       console.log(x, id);
       const files: Array<any> = x.files;
       console.log(files);
-      const photos: Image[] = files.map(file => ({ src: `https://image-service-jj-02.s3.amazonaws.com/${file.s3key}` }))
+      const photos: AImage[] = files.map(file => ({ src: `https://image-service-jj-02.s3.amazonaws.com/${file.s3key}` }))
       
       console.log(photos);
       this.setState({
@@ -112,6 +112,8 @@ class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
                     : 'Processing' }
                 progressBarPercent={photo.percentUploaded < 100 ? photo.percentUploaded : null}
                 src={photo.src}
+                previewHeight={photo.height}
+                previewWidth={photo.width}
                 previewUrl={photo.previewUrl}
               />)
             : null}

@@ -9,23 +9,28 @@ export interface Photo {
   statusText?: string;
   progressBarPercent?: number;
   previewHeight?: number;
-
+  previewWidth?: number;
 }
 
-const Photo = ({ src, previewUrl, statusText, progressBarPercent, previewHeight, ...rest }: Photo) => {
-  // const styles = getStyles(width, height);
-  // const image = new Image();
-  // if (previewUrl) {
-  //   image.src = previewUrl;
-  // } else {
-  //   image.src = src;
-  // }
-  // const width = image.width;
-  // console.log(width);
+const maxWidth = 672;
+const maxHeight = 0;
+
+const Photo = ({ src, previewUrl, statusText, progressBarPercent, previewWidth, previewHeight, ...rest }: Photo) => {
+
+  let width = previewWidth;
+  let height = previewHeight;
+
+  console.log(width, height);
+
+  if (width > maxHeight) {
+    const ratio = maxWidth / width;
+    width = maxWidth;
+    height = height * ratio;
+  }
 
   return (
     <div style={styles.container}>
-      <div style={[styles.imgContainer, styles.placeholderHeight(448.08)]}>
+      <div style={[styles.imgContainer, previewHeight ? styles.placeholderHeight(height): null]}>
         <img style={[styles.img]} src={src} />
         <img style={styles.previewImg} src={previewUrl} />
         <div style={uploaderStyles.uploadingContainer}>
