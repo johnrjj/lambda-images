@@ -90,14 +90,14 @@ class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
                 statusText={
                   !photo.percentUploaded
                     ? null
-                    : (photo.percentUploaded && photo.percentUploaded) < 100
+                    : (photo.percentUploaded >= 0 && photo.percentUploaded < 100 )
                       ? `${Math.round(photo.percentUploaded)}%`
                       : 'Processing'}
-                progressBarPercent={photo.percentUploaded < 100 ? photo.percentUploaded : null}
+                uploadProgress={photo.percentUploaded < 100 ? photo.percentUploaded : null}
                 src={photo.src}
-                previewHeight={photo.height}
-                previewWidth={photo.width}
-                previewUrl={photo.previewUrl}
+                height={photo.height}
+                width={photo.width}
+                placeholderImageSrc={photo.previewUrl}
               />)
             : null}
         </div>

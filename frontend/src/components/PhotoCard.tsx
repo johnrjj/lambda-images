@@ -5,27 +5,24 @@ import PhotoDisplayer from './PhotoDisplayer';
 
 export interface Photo {
   src: string;
-  previewUrl: string;
-  // percentUploaded?: number;
+  placeholderImageSrc: string;
+  height: number;
+  width: number;
+  uploadProgress: number;
   statusText?: string;
-  progressBarPercent?: number;
-  previewHeight?: number;
-  previewWidth?: number;
 }
 
-const maxWidth = 672;
-const maxHeight = 0;
-
-const Photo = ({ src, previewUrl, statusText, progressBarPercent, previewWidth, previewHeight, ...rest }: Photo) => {
+const Photo = ({ src, height, width, placeholderImageSrc, uploadProgress, statusText, ...rest }: Photo) => {
   return (
     <div style={styles.container}>
-      <PhotoDisplayer 
-        originalHeight={previewHeight} 
-        originalWidth={previewWidth}
+      <PhotoDisplayer
         mainImageSrc={src}
-        placeholderImageSrc={previewUrl}
-        progressBarPercent={progressBarPercent}
+        originalHeight={height}
+        originalWidth={width}
+        placeholderImageSrc={placeholderImageSrc}
         statusText={statusText}
+        progressBarPercent={uploadProgress}
+        {...rest}
       />
     </div>
   )
