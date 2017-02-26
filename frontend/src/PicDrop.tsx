@@ -23,7 +23,9 @@ const generateAlbumEndpoint: string = 'https://1am8vv38ug.execute-api.us-east-1.
 const collectionEndpoint: string = 'https://1am8vv38ug.execute-api.us-east-1.amazonaws.com/dev/collection'; //{id}/status
 
 const getTotalFileSize = files =>
-  files.reduce((accum, file) => accum + file.size, 0);
+  files.reduce((accum, file) => 
+    accum + file.size, 0
+);
 
 const styles = {
   pageContainer: {
@@ -118,12 +120,13 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
         image.src = reader.result;
         const height = image.height;
         const width = image.width;
-        // here??
+
         this.setState((prevState, props) => {
           const files = prevState.files;
           files[i].previewUrl = reader.result;
           files[i].height = height;
           files[i].width = width;
+          files[i].percentUploaded = 0;
           console.log(height);
           return { files };
         });
@@ -143,14 +146,15 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
     const { url, images } = album;
     console.log(album);
 
-    console.log(getTotalFileSize(filesMetadata));
+    const totalFileSize = getTotalFileSize(filesMetadata);
+    console.log(`total file size: ${totalFileSize}`);
     console.log(url, images);
-
-    this.toggleModal();
 
     const { push } = this.props;
     push(`/a/${url}`);
     console.log('but i can keep executing!');
+
+    this.toggleModal();
 
     await Promise.all(images.map((image, i) => {
 

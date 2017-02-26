@@ -65,7 +65,12 @@ class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
       console.log(x, id);
       const files: Array<any> = x.files;
       console.log(files);
-      const photos: AImage[] = files.map(file => ({ src: `https://image-service-jj-02.s3.amazonaws.com/${file.s3key}` }))
+      const photos: AImage[] = files.map(file => ({
+        src: `https://image-service-jj-02.s3.amazonaws.com/${file.s3key}`,
+        name: file.id,
+        width: file.width,
+        height: file.heght,
+      }));
 
       console.log(photos);
       this.setState({
@@ -88,7 +93,7 @@ class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
               <PhotoCard
                 key={photo.name}
                 statusText={
-                  !photo.percentUploaded
+                  (!photo.percentUploaded && photo.percentUploaded !== 0)
                     ? null
                     : (photo.percentUploaded >= 0 && photo.percentUploaded < 100 )
                       ? `${Math.round(photo.percentUploaded)}%`
