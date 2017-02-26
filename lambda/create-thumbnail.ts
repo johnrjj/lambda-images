@@ -29,15 +29,13 @@ const getImageType = (key: string, cb) => {
   return imageType;
 };
 
-const downloadImage = ({Bucket, Key}) =>
+const downloadImage = ({ Bucket, Key }) =>
   new Promise((accept, reject) => {
-    s3.getObject({ Bucket, Key }, (err, data) => {
-      return (err) ? reject(err) : accept(data);
-    });
+    s3.getObject({ Bucket, Key }, (err, data) =>
+      (err) ? reject(err) : accept(data));
   });
 
-
-const transformImage = (s3ImageObject, imageType): Promise<{ contentType, metadata, buffer }> => {
+const transformImage = (s3ImageObject, imageType): Promise<{ contentType, metadata, buffer, originalHeight, originalWidth, height, width }> => {
   return new Promise((accept, reject) => {
     const image = imageTransform(s3ImageObject.Body)
     image.size((err, size) => {
@@ -49,15 +47,17 @@ const transformImage = (s3ImageObject, imageType): Promise<{ contentType, metada
       const height = scalingFactor * size.height;
 
       image.resize(width, height).toBuffer(imageType, (err, buffer) => {
-        if (err) {
-          return reject(err);
-        } else {
-          return accept({
-            contentType: s3ImageObject.ContentType,
-            metadata,
-            buffer,
+        return (err)
+          ? reject(err)
+          : accept({
+              contentType: s3ImageObject.ContentType,
+              metadata,
+              buffer,
+              originalHeight: size.height,
+              originalWidth: size.width,
+              height: height,
+              width: width,
           });
-        }
       });
     });
   });
@@ -106,6 +106,27 @@ const updateDatabaseWithS3Key = (id: string, s3Key: string): Promise<aws.DynamoD
     });
   });
 }
+
+const updateDatabaseWithMediaMetadata = (id: string, height: number, width: number): Promise<aws.DynamoDB.UpdateItemOutput> => {
+  return new Promise((accept, reject) => {
+    const updateDescriptionParams: aws.DynamoDB.UpdateItemInput = {
+      TableName: DDB_TABLE,
+      Key: { id },
+      UpdateExpression: 'set height = :h, width = :w',
+      ExpressionAttributeValues: {
+        ':h': height,
+        ':w': width,
+      },
+      ReturnValues: "UPDATED_NEW"
+    };
+    docClient.update(updateDescriptionParams, (err, data) => {
+      return (err) 
+        ? console.log('err putting', err) || reject(err)
+        : console.log('succesfullyput item', data) || accept(data);
+    });
+  });
+}
+
 
 const updateDatabaseWithThumbnailKey = (fileId: string, thumbnailS3Key: string): Promise<aws.DynamoDB.UpdateItemOutput> => {
   return new Promise((accept, reject) => {
@@ -182,6 +203,12 @@ const driver = async (event, context, callback) => {
   });
 
   const transformData = await transformImage(s3Object, imageType);
+
+  // original = height width of the original image in s3. i know it's a weird place to do this, move it...
+  const { height, width, originalHeight, originalWidth } = transformData;
+  console.log(height, width);
+  const res = await updateDatabaseWithMediaMetadata(fileKey, originalHeight, originalWidth);
+  console.log(res);
 
   await uploadThumbnail({
     Key: dstKey,
