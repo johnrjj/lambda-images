@@ -1,5 +1,7 @@
 import * as AWS from 'aws-sdk';
 import { Context, Callback } from 'aws-lambda';
+import { getFileData } from './repositories/file';
+
 
 const FILE_DDB_TABLE = process.env.DYNAMO;
 const COLLECTION_DDB_TABLE = process.env.COLLECTION_TABLE;
@@ -36,47 +38,7 @@ const getCollectionContents = (collectionId: string): Promise<Array<string>> => 
 };
 
 const checkIfFilesAreProcessed = async (fileIds: Array<string>): Promise<any> => {
-  const queryResults: Array<AWS.DynamoDB.DocumentClient.QueryOutput> = await Promise.all(fileIds.map(fileId => {
-    return new Promise((accept, reject) => {
-      // const filterExpression: string = `#id IN (${Object.keys(queryValues).join(', ')})`;
-      // console.log('filter expression', filterExpression);
-      // console.log('queryValues', queryValues);
-
-      const params: AWS.DynamoDB.DocumentClient.QueryInput = {
-        TableName: FILE_DDB_TABLE,
-        KeyConditionExpression: "#id = :id",
-        ExpressionAttributeNames: {
-          "#id": "id",
-        },
-        ExpressionAttributeValues: {
-          ":id": fileId,
-        }
-        // ExpressionAttributeNames: {
-        //   '#id': 'id',
-        // },
-        // FilterExpression: filterExpression,
-        // ExpressionAttributeValues: queryValues,
-      };
-
-      docClient.query(params, (err, data) => {
-        if (err) {
-          console.log("Unable to query. Error:", JSON.stringify(err, null, 2));
-          reject(err);
-        } else {
-          console.log("Query succeeded.");
-          data.Items.forEach(item => console.log(item));
-          accept(data);
-        }
-      });
-    });
-  }));
-
-  // const transformedResultsObject: any = queryResults.reduce((accum, cur, i): any => {
-  //   const file = cur.Items[0];
-  //   accum[file.id] = file;
-  //   return accum;
-  // }, {});
-
+  const queryResults: Array<AWS.DynamoDB.DocumentClient.QueryOutput> = await Promise.all(fileIds.map(getFileData));
   const transformedResults = queryResults.map(queryResult => {
     if (queryResult.Items && queryResult.Items[0]) {
       return queryResult.Items[0];

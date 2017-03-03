@@ -2,6 +2,9 @@ import * as AWS from 'aws-sdk';
 import { v4 as uuid } from 'uuid';
 import { extension } from 'mime';
 import { Context, Callback } from 'aws-lambda';
+import { createCollection } from './repositories/collection';
+import { createFileMetadata } from './repositories/file';
+
 
 AWS.config.update({
   accessKeyId: process.env.S3_ACCESS_KEY_ID,
@@ -12,77 +15,19 @@ const FILE_DDB_TABLE = process.env.DYNAMO;
 const COLLECTION_DDB_TABLE = process.env.COLLECTION_TABLE;
 
 const s3 = new AWS.S3();
-const dynamodb = new AWS.DynamoDB();
-const docClient = new AWS.DynamoDB.DocumentClient();
 
-const storeMetadata = (id: string, s3Key: string) => {
-  return new Promise((accept, reject) => {
-    let params = {
-      TableName: FILE_DDB_TABLE,
-      Item: {
-        id: { S: id },
-        timestamp: { S: (new Date().toJSON().toString()) }
-      }
-    };
-    dynamodb.putItem(params, (err, data) => {
-      if (err) {
-        console.log('error putting item', err);
-        reject(err);
-      } else {
-        console.log('succesfullyput item', data);
-
-        accept(data);
-      }
-    });
-  });
-};
-
-const generateUniqueKey = (): string => {
-  const id: string = uuid();
-  return id;
-}
+const generateUniqueKey = (): string => uuid();
 
 const generateS3PresignedUrl = (actionKey: string, parameters): Promise<string> =>
-  new Promise((resolve, reject) => {
-    s3.getSignedUrl(actionKey, parameters, (err, url) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(url)
-      }
-    })
-  });
+  new Promise((resolve, reject) =>
+    s3.getSignedUrl(actionKey, parameters, (err, url) =>
+      (err)
+        ? reject(err)
+        : resolve(url)));
 
 export interface ImageFromClientApi {
   type: string;
 }
-
-const saveAlbumToDb = (album: object) => {
-  return new Promise((accept, reject) => {
-    const params = {
-      TableName: COLLECTION_DDB_TABLE,
-      Item: album,
-      // {
-      //     // "year": year,
-      //     // "title": title,
-      //     // "info":{
-      //     //     "plot": "Nothing happens at all.",
-      //     //     "rating": 0
-      //     }
-      // }
-    };
-    return docClient.put(params, function (err, data) {
-      if (err) {
-        console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
-        reject(err);
-      } else {
-        console.log("Added item:", JSON.stringify(data, null, 2));
-        accept(data)
-      }
-    });
-  })
-};
-
 
 const generateAlbum = async (event: any, context: Context, callback: Callback) => {
   const { body } = event;
@@ -126,12 +71,11 @@ const generateAlbum = async (event: any, context: Context, callback: Callback) =
       images: imagesWithPresignedUrls, // for frontend...
     };
 
-    const x = await saveAlbumToDb(album);
+    const x = await createCollection(album);
     console.log(x);
 
-    // generate metadata here!!!
     // todo: do this batched...
-    const res = await Promise.all(imagesWithPresignedUrls.map(image => storeMetadata(image.id, image.s3Key)));
+    const res = await Promise.all(imagesWithPresignedUrls.map(image => createFileMetadata(image.id)));
     console.log('response from storing metadata', res);
 
     const response = {

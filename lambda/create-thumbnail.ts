@@ -1,8 +1,8 @@
 import * as aws from 'aws-sdk';
-// import { }
 import * as gm from 'gm';
+import { updateDatabaseWithThumbnailKey, updateDatabaseWithMediaMetadata, updateMetadata as updateDatabaseWithS3Key } from './repositories/file';
 
-const DDB_TABLE: string = process.env.DYNAMO;
+const FILE_DDB_TABLE: string = process.env.DYNAMO;
 const THUMBNAIL_BUCKET: string = process.env.THUMBNAIL_BUCKET;
 
 const DEFAULT_MAX_WIDTH: number = 200;
@@ -13,8 +13,6 @@ const imageTransform = gm.subClass({
 });
 
 const s3 = new aws.S3();
-const dynamodb = new aws.DynamoDB();
-const docClient = new aws.DynamoDB.DocumentClient()
 
 const getImageType = (key: string, cb) => {
   const foundType = key.match(/\.([^.]*)$/);
@@ -82,107 +80,6 @@ const uploadThumbnail = ({ Bucket, Key, Body, ContentType, Metadata, ACL }) => {
   });
 };
 
-const updateDatabaseWithS3Key = (id: string, s3Key: string): Promise<aws.DynamoDB.UpdateItemOutput> => {
-  return new Promise((accept, reject) => {
-    const updateDescriptionParams: aws.DynamoDB.UpdateItemInput = {
-      TableName: DDB_TABLE,
-      Key: {
-        id,
-      },
-      UpdateExpression: "set s3key = :d",
-      ExpressionAttributeValues: {
-        ":d": s3Key,
-      },
-      ReturnValues: "UPDATED_NEW"
-    };
-    docClient.update(updateDescriptionParams, (err, data) => {
-      if (err) {
-        console.log('err putting', err);
-        reject(err);
-      } else {
-        console.log('succesfullyput item', data);
-        accept(data);
-      }
-    });
-  });
-}
-
-const updateDatabaseWithMediaMetadata = (id: string, height: number, width: number): Promise<aws.DynamoDB.UpdateItemOutput> => {
-  return new Promise((accept, reject) => {
-    const updateDescriptionParams: aws.DynamoDB.UpdateItemInput = {
-      TableName: DDB_TABLE,
-      Key: { id },
-      UpdateExpression: 'set height = :h, width = :w',
-      ExpressionAttributeValues: {
-        ':h': height,
-        ':w': width,
-      },
-      ReturnValues: "UPDATED_NEW"
-    };
-    docClient.update(updateDescriptionParams, (err, data) => {
-      return (err) 
-        ? console.log('err putting', err) || reject(err)
-        : console.log('succesfullyput item', data) || accept(data);
-    });
-  });
-}
-
-
-const updateDatabaseWithThumbnailKey = (fileId: string, thumbnailS3Key: string): Promise<aws.DynamoDB.UpdateItemOutput> => {
-  return new Promise((accept, reject) => {
-    const updateDescriptionParams: aws.DynamoDB.UpdateItemInput = {
-      TableName: DDB_TABLE,
-      Key: {
-        id: fileId,
-      },
-      UpdateExpression: "set thumbnails3key = :d",
-      ExpressionAttributeValues: {
-        ":d": thumbnailS3Key,
-      },
-      ReturnValues: "UPDATED_NEW"
-    };
-    docClient.update(updateDescriptionParams, (err, data) => {
-      if (err) {
-        console.log('err putting', err);
-        reject(err);
-      } else {
-        console.log('succesfullyput item', data);
-        accept(data);
-      }
-    });
-  });
-}
-
-
-const storeMetadata = (id, dstKey) => {
-  return new Promise((accept, reject) => {
-    let params = {
-      TableName: DDB_TABLE,
-      Item: {
-        id: { S: id },
-      }
-    };
-
-    // if ('author' in metadata) {
-    //   params.Item['author'] = { S: metadata.author };
-    // }
-    // if ('title' in metadata) {
-    //   params.Item['title'] = { S: metadata.title };
-    // }
-    // if ('description' in metadata) {
-    //   params.Item['description'] = { S: metadata.description };
-    // }
-
-    dynamodb.putItem(params, (err, data) => {
-      console.log('succesfullyput item', data);
-      if (err) {
-        reject(err);
-      } else {
-        accept(data);
-      }
-    });
-  });
-};
 
 const driver = async (event, context, callback) => {
   const srcBucket: string = event.Records[0].s3.bucket.name;
