@@ -34,13 +34,20 @@ provider:
         - dynamodb:DeleteItem
       Resource: "arn:aws:dynamodb:us-east-1:*:*"
 
+# package:
+#  include:
+#    - ../node_modules/**
+#    - ../dist/**
+
 package:
- include:
-   - ../node_modules/**
+  include:
+    - ./bundle.js
+  exclude:
+    - node_modules/**
 
 functions:
   createThumbnail:
-    handler: handler.createThumbnail
+    handler: bundle.createThumbnail
     environment:
       BUCKET: ${self:custom.BUCKET}
       THUMBNAIL_BUCKET: ${self:custom.THUMBNAIL_BUCKET}
@@ -52,7 +59,9 @@ functions:
           # rules:
           #   - prefix: images/
   updateDescription:
-    handler: handler.updateDescription
+    name: ${self:provider.stage}-createThumbnail # optional, Deployed Lambda name
+    description: Description stuff # optional, Description to publish to AWS
+    handler: bundle.updateDescription
     environment:
       DYNAMO: ${self:custom.DYNAMO}
     events:
@@ -61,7 +70,7 @@ functions:
           method: post
           cors: true
   generateAlbum:
-    handler: handler.generateAlbum
+    handler: bundle.generateAlbum
     environment:
       BUCKET: ${self:custom.BUCKET}
       S3_ACCESS_KEY_ID: ${self:custom.S3_ACCESS_KEY_ID}
@@ -74,7 +83,7 @@ functions:
           method: post
           cors: true
   collectionStatusTwo:
-    handler: handler.checkCollectionStatus
+    handler: bundle.checkCollectionStatus
     environment:
       DYNAMO: ${self:custom.DYNAMO}
       COLLECTION_TABLE: ${self:custom.COLLECTION_TABLE}
@@ -84,7 +93,7 @@ functions:
           method: get
           cors: true
   getCollectionContents:
-    handler: handler.getCollectionContents
+    handler: bundle.getCollectionContents
     environment:
       DYNAMO: ${self:custom.DYNAMO}
       COLLECTION_TABLE: ${self:custom.COLLECTION_TABLE}
@@ -94,7 +103,7 @@ functions:
           method: get
           cors: true
   authFn:
-    handler: handler.auth
+    handler: bundle.auth
 
 
 resources:

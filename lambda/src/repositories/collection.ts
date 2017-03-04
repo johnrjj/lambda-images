@@ -24,14 +24,14 @@ const getCollectionContents = (collectionId: string, tableName: string = COLLECT
       } else {
         console.log("Query succeeded.");
         data.Items.forEach(item => console.log(item));
-        const entries: Array<string> = data.Items[0].entries
+        const entries: Array<string> = data.Items[0]['entries'];
         accept(entries);
       }
     });
   });
 };
 
-const createCollection = (album: object) => {
+const createCollection = (album: any) => {
   return new Promise((accept, reject) => {
     const params = {
       TableName: COLLECTION_DDB_TABLE,

@@ -6,7 +6,8 @@
     "lint": "tslint -t stylish '{lambda}/**/*.{ts,tsx}'",
     "build": "tsc",
     "build:watch": "tsc -w",
-    "deploy": "tsc && sls deploy"
+    "deploy": "tsc && sls deploy",
+    "bundle": "tsc && browserify dist/handler.js --node --standalone rawjs > bundle.js"
   },
   "repository": {},
   "license": "MIT",
@@ -27,6 +28,10 @@
     "@types/jsonwebtoken": "^7.2.0",
     "@types/mime": "^0.0.29",
     "@types/uuid": "^2.0.29",
+    "browserify": "^14.1.0",
+    "spawn-sync": "^1.0.15",
+    "thread-sleep": "^2.0.0",
+    "try-thread-sleep": "^1.0.2",
     "tslint": "^4.3.1",
     "tslint-microsoft-contrib": "^4.0.0"
   }
