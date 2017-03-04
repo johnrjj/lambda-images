@@ -1,41 +1,11 @@
 import * as AWS from 'aws-sdk';
 import { Context, Callback } from 'aws-lambda';
 import { getFileData } from './repositories/file';
-
+import { jsonToResponse } from './util';
+import { getCollectionContents } from './repositories/collection';
 
 const FILE_DDB_TABLE = process.env.DYNAMO;
 const COLLECTION_DDB_TABLE = process.env.COLLECTION_TABLE;
-
-const dynamodb = new AWS.DynamoDB();
-const docClient = new AWS.DynamoDB.DocumentClient();
-
-const getCollectionContents = (collectionId: string): Promise<Array<string>> => {
-  return new Promise((accept, reject) => {
-    const params: AWS.DynamoDB.DocumentClient.QueryInput = {
-      TableName: COLLECTION_DDB_TABLE,
-      // ProjectionExpression: "#yr, title, info.genres, info.actors[0]",
-      KeyConditionExpression: '#id = :id',
-      ExpressionAttributeNames: {
-        '#id': 'id',
-      },
-      ExpressionAttributeValues: {
-        ":id": collectionId,
-      }
-    };
-
-    docClient.query(params, (err, data) => {
-      if (err) {
-        console.log("Unable to query. Error:", JSON.stringify(err, null, 2));
-        reject(err);
-      } else {
-        console.log("Query succeeded.");
-        data.Items.forEach(item => console.log(item));
-        const entries: Array<string> = data.Items[0].entries
-        accept(entries);
-      }
-    });
-  });
-};
 
 const checkIfFilesAreProcessed = async (fileIds: Array<string>): Promise<any> => {
   const queryResults: Array<AWS.DynamoDB.DocumentClient.QueryOutput> = await Promise.all(fileIds.map(getFileData));
@@ -49,7 +19,7 @@ const checkIfFilesAreProcessed = async (fileIds: Array<string>): Promise<any> =>
   console.log('transformedResults', transformedResults);
 
   const isDone = transformedResults.reduce((flag, x) => {
-    if (!x.s3key) {
+    if (!x['s3key']) {
       console.log(x, 'is not done yet!!');
       return false;
     }
@@ -59,40 +29,38 @@ const checkIfFilesAreProcessed = async (fileIds: Array<string>): Promise<any> =>
   console.log(isDone);
 
   return {
-   entries: transformedResults,
-   processed: isDone, 
+    entries: transformedResults,
+    processed: isDone,
   };
 }
 
-const checkCollectionStatus = async (event: any, context: Context, callback: Callback) => {
+const checkCollectionStatus = async (collectionId: string) => {
+  const collectionEntries: Array<string> = await getCollectionContents(collectionId);
+  console.log(collectionEntries);
+  const files = await checkIfFilesAreProcessed(collectionEntries);
+  console.log(files);
+  return {
+    collectionId,
+    entries2: collectionEntries,
+    entries: files.entries,
+    processed: files.processed,
+  }
+}
+
+const handler = async (event: any, context: Context, callback: Callback) => {
   console.log('event', event);
-  console.log('conext', context);
+  const collectionId = event.pathParameters.id;
+  console.log('context', context);
   try {
-    const collectionId = event.pathParameters.id;
-    const collectionEntries: Array<string> = await getCollectionContents(collectionId);
-    console.log(collectionEntries);
-    const files = await checkIfFilesAreProcessed(collectionEntries);
-    console.log(files);
-    const response = {
-      headers: {
-        'Access-Control-Allow-Origin': '*', // Required for CORS support to work
-      },
-      statusCode: 200,
-      body: JSON.stringify({ 
-        event, 
-        context, 
-        collectionId, 
-        entries2: collectionEntries,
-        entries: files.entries,
-        processed: files.processed,
-      }),
-    };
-    return callback(null, response);
-  } catch (err) {
-    callback(err);
+    const status = await checkCollectionStatus(collectionId);
+    const response = jsonToResponse(status);
+    console.log(response);
+    callback(null, response);
+  } catch (e) {
+    callback(e);
   }
 }
 
 export {
-  checkCollectionStatus,
+  handler as checkCollectionStatus,
 };

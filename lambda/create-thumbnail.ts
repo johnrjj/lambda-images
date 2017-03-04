@@ -1,6 +1,12 @@
 import * as aws from 'aws-sdk';
 import * as gm from 'gm';
-import { updateDatabaseWithThumbnailKey, updateDatabaseWithMediaMetadata, updateMetadata as updateDatabaseWithS3Key } from './repositories/file';
+import { 
+  updateDatabaseWithThumbnailKey, 
+  updateDatabaseWithMediaMetadata, 
+  updateMetadata as updateDatabaseWithS3Key,
+  downloadFile,
+  uploadFile,
+} from './repositories/file';
 
 const FILE_DDB_TABLE: string = process.env.DYNAMO;
 const THUMBNAIL_BUCKET: string = process.env.THUMBNAIL_BUCKET;
@@ -14,7 +20,7 @@ const imageTransform = gm.subClass({
 
 const s3 = new aws.S3();
 
-const getImageType = (key: string, cb) => {
+const getImageType = (key: string) => {
   const foundType = key.match(/\.([^.]*)$/);
   if (!foundType) {
     throw Error(`Could not determine image type for ${key}`);
@@ -26,12 +32,6 @@ const getImageType = (key: string, cb) => {
   }
   return imageType;
 };
-
-const downloadImage = ({ Bucket, Key }) =>
-  new Promise((accept, reject) => {
-    s3.getObject({ Bucket, Key }, (err, data) =>
-      (err) ? reject(err) : accept(data));
-  });
 
 const transformImage = (s3ImageObject, imageType): Promise<{ contentType, metadata, buffer, originalHeight, originalWidth, height, width }> => {
   return new Promise((accept, reject) => {
@@ -61,53 +61,32 @@ const transformImage = (s3ImageObject, imageType): Promise<{ contentType, metada
   });
 };
 
-const uploadThumbnail = ({ Bucket, Key, Body, ContentType, Metadata, ACL }) => {
-  return new Promise((accept, reject) => {
-    s3.putObject({
-      Bucket,
-      Key,
-      Body,
-      ContentType,
-      Metadata,
-      ACL,
-    }, (err, data) => {
-      if (err) {
-        return reject(err);
-      } else {
-        return accept(true);
-      }
-    });
-  });
-};
 
-
-const driver = async (event, context, callback) => {
-  const srcBucket: string = event.Records[0].s3.bucket.name;
-  const srcKey: string = event.Records[0].s3.object.key;
+const createThumbnailFromImg = async (origImgBucket: string, origImgKey: string) => {
 
   const dstBucket: string = THUMBNAIL_BUCKET;
-  const dstKey = `thumbs/${srcKey}`;
+  const dstKey = `thumbs/${origImgKey}`;
+  const fileKey: string = origImgKey.split('.')[0];  // 123456789.png => '123456789'
+  await updateDatabaseWithS3Key(fileKey, origImgKey);
 
-  const fileKey: string = srcKey.split('.')[0];  // 123456789.png => '123456789'
+  const imageType = getImageType(origImgKey);
 
-  await updateDatabaseWithS3Key(fileKey, srcKey);
-
-  const imageType = getImageType(srcKey, callback);
-
-  const s3Object = await downloadImage({
-    Bucket: srcBucket,
-    Key: srcKey,
+  const s3Object = await downloadFile({
+    Bucket: origImgBucket,
+    Key: origImgKey,
   });
 
   const transformData = await transformImage(s3Object, imageType);
 
   // original = height width of the original image in s3. i know it's a weird place to do this, move it...
   const { height, width, originalHeight, originalWidth } = transformData;
+  console.log(transformData);
+  console.log(transformData.metadata);
   console.log(height, width);
   const res = await updateDatabaseWithMediaMetadata(fileKey, originalHeight, originalWidth);
   console.log(res);
 
-  await uploadThumbnail({
+  await uploadFile({
     Key: dstKey,
     Bucket: dstBucket,
     Body: transformData.buffer,
@@ -119,11 +98,15 @@ const driver = async (event, context, callback) => {
   await updateDatabaseWithThumbnailKey(fileKey, dstKey);
 };
 
-const handler = (event, context, callback) => {
-  console.log('called...');
-  driver(event, context, callback)
-    .then(callback)
-    .catch(err => callback(err));
+const handler = async (event, context, callback: (err?, response?) => never) => {
+  const srcBucket: string = event.Records[0].s3.bucket.name;
+  const srcKey: string = event.Records[0].s3.object.key;
+  try {
+    const res = await createThumbnailFromImg(srcBucket, srcKey);
+    callback(null, res);
+  } catch (e) {
+    callback(e);
+  }
 }
 
 export {

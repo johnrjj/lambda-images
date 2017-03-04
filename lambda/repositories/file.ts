@@ -1,9 +1,10 @@
 import * as AWS from 'aws-sdk';
 
-const FILE_DDB_TABLE = process.env.DYNAMO;
+const FILE_DDB_TABLE = process.env.DYNAMO; // get this out of here, lazy lol
 
 const dynamodb = new AWS.DynamoDB();
 const docClient = new AWS.DynamoDB.DocumentClient();
+const s3 = new AWS.S3();
 
 const getFileData = (fileId) => {
   return new Promise((accept, reject) => {
@@ -95,7 +96,7 @@ const updateDatabaseWithMediaMetadata = (id: string, height: number, width: numb
       ReturnValues: "UPDATED_NEW"
     };
     docClient.update(updateDescriptionParams, (err, data) => {
-      return (err) 
+      return (err)
         ? console.log('err putting', err) || reject(err)
         : console.log('succesfullyput item', data) || accept(data);
     });
@@ -125,11 +126,41 @@ const createFileMetadata = (id: string) => {
   });
 };
 
+const downloadFile = ({ Bucket, Key }: { Bucket: string, Key: string }) => {
+  const params: AWS.S3.GetObjectRequest = { Bucket, Key };
+  return new Promise((accept, reject) => {
+    s3.getObject(params, (err, data) =>
+      (err) ? reject(err) : accept(data));
+  });
+};
+
+const uploadFile = ({ Bucket, Key, Body, ContentType, Metadata, ACL }) => {
+  return new Promise((accept, reject) => {
+    s3.putObject({
+      Bucket,
+      Key,
+      Body,
+      ContentType,
+      Metadata,
+      ACL,
+    }, (err, data) => {
+      if (err) {
+        return reject(err);
+      } else {
+        return accept(true);
+      }
+    });
+  });
+};
+
+
 export {
   getFileData,
   createFileMetadata,
   updateMetadata,
   updateDatabaseWithMediaMetadata,
   updateDatabaseWithThumbnailKey,
+  downloadFile,
+  uploadFile,
 }
 
