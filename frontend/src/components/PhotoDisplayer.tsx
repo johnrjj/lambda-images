@@ -36,7 +36,8 @@ const styles = {
   },
   mainImage: {},
   getScaledImageStyle(origHeight: number, origWidth: number): { maxWidth: number, minHeight: number } {
-    const { height, width } = scaleImageToFit(origHeight, origWidth);
+    const { height = 0, width = 0 } = scaleImageToFit(origHeight, origWidth);
+    console.log(height, width, origHeight, origWidth);
     return {
       maxWidth: width,
       minHeight: height,
@@ -45,6 +46,7 @@ const styles = {
 };
 
 const PhotoDisplayer: React.StatelessComponent<PhotoDisplayerProps> = (props) => {
+  console.log('props', props);
   return (
     <div style={styles.container}>
       <img

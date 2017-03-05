@@ -38,6 +38,7 @@ export interface AlbumPageProps {
   photos: AImage[];
   albumId: string;
   [idx: string]: any;
+  match: any;
 }
 
 export interface AlbumPageState {
@@ -69,7 +70,7 @@ class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
         src: `https://image-service-jj-02.s3.amazonaws.com/${file.s3key}`,
         name: file.id,
         width: file.width,
-        height: file.heght,
+        height: file.height,
       }));
 
       console.log(photos);

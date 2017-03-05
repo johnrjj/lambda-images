@@ -9,7 +9,7 @@ class App extends Component<null, null> {
   render() {
     return (
       <Router>
-        <PicDrop apiEndpoint={endpoint} />
+        <PicDrop/>
       </Router>
     );
   }

@@ -109,8 +109,8 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
     const { files, types, items } = e.dataTransfer;
     const postFiles: Array<File> = Array.prototype.slice.call(files);
 
-    for (let i = 0; i < postFiles.length || 0; i++) {
-      const file = files[i];
+
+    postFiles.forEach((file, idx) => {
       const reader = new FileReader();
       const url = reader.readAsDataURL(file);
       reader.onloadend = e => {
@@ -123,15 +123,20 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
 
         this.setState((prevState, props) => {
           const files = prevState.files;
-          files[i].previewUrl = reader.result;
-          files[i].height = height;
-          files[i].width = width;
-          files[i].percentUploaded = 0;
+          files[idx].previewUrl = reader.result;
+          files[idx].height = height;
+          files[idx].width = width;
+          files[idx].percentUploaded = 0;
           console.log(height);
           return { files };
         });
       };
-    }
+    });
+
+    // for (let i = 0; i < postFiles.length || 0; i++) {
+    //   const file = files[i];
+
+    // }
     this.setState({ files: postFiles });
 
     const filesMetadata = postFiles.map(({ name, size, type }) => ({
