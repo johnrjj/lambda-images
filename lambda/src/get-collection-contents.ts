@@ -2,7 +2,7 @@ import * as AWS from 'aws-sdk';
 import { Context, Callback } from 'aws-lambda';
 import { getFileData } from './repositories/file';
 import { getCollectionContents } from './repositories/collection';
-import { jsonToResponse } from './util';
+import { jsonToResponse } from './util/lambda';
 
 const FILE_DDB_TABLE = process.env.DYNAMO;
 const COLLECTION_DDB_TABLE = process.env.COLLECTION_TABLE;

@@ -1,15 +1,15 @@
 import { auth } from './auth';
-import { createThumbnail } from './create-thumbnail';
+import { processFile } from './process-file';
 import { generateAlbum } from './generate-album';
-import { updateDescription } from './update-file-description';
-import { checkCollectionStatus } from './upload-progress';
+// import { updateDescription } from './update-file-description';
+import { checkCollectionStatus } from './get-collection-status';
 import { getCollectionContents } from './get-collection-contents';
 
 export {
   auth,
-  createThumbnail,
+  processFile,
   generateAlbum,
-  updateDescription,
+  // updateDescription,
   checkCollectionStatus,
   getCollectionContents,
 };

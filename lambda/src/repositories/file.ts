@@ -104,7 +104,7 @@ const updateDatabaseWithMediaMetadata = (id: string, height: number, width: numb
 }
 
 
-const createFileMetadata = (id: string) => {
+const createFileMetadata = (id: string): Promise<AWS.DynamoDB.PutItemOutput> => {
   return new Promise((accept, reject) => {
     let params = {
       TableName: FILE_DDB_TABLE,
@@ -126,7 +126,7 @@ const createFileMetadata = (id: string) => {
   });
 };
 
-const downloadFile = ({ Bucket, Key }: { Bucket: string, Key: string }) => {
+const downloadFile = ({ Bucket, Key }: { Bucket: string, Key: string }): Promise<AWS.S3.GetObjectOutput> => {
   const params: AWS.S3.GetObjectRequest = { Bucket, Key };
   return new Promise((accept, reject) => {
     s3.getObject(params, (err, data) =>

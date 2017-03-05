@@ -4,7 +4,7 @@ import { extension } from 'mime';
 import { Context, Callback } from 'aws-lambda';
 import { createCollection } from './repositories/collection';
 import { createFileMetadata } from './repositories/file';
-import { jsonToResponse } from './util';
+import { jsonToResponse } from './util/lambda';
 
 AWS.config.update({
   accessKeyId: process.env.S3_ACCESS_KEY_ID,
@@ -16,6 +16,16 @@ const COLLECTION_DDB_TABLE = process.env.COLLECTION_TABLE;
 
 const s3 = new AWS.S3();
 
+type GenerateAlbumRequest = Array<{ type: string; }>;
+// type GenerateAlbumResponse = Array<{ 
+//   type: string;
+//   presignedUrl: string;
+//   id: string;
+//   fileType: string;
+//   s3Key: string;
+// }>;
+
+
 const generateUniqueKey = (): string => uuid();
 
 const generateS3PresignedUrl = (actionKey: string, parameters): Promise<string> =>
@@ -25,11 +35,9 @@ const generateS3PresignedUrl = (actionKey: string, parameters): Promise<string> 
         ? reject(err)
         : resolve(url)));
 
-export interface ImageFromClientApi {
-  type: string;
-}
 
-const generateAlbum = async (images: Array<ImageFromClientApi>) => {
+
+const generateAlbum = async (images: GenerateAlbumRequest)=> {
   const imagesWithPresignedUrls = await Promise.all(images.map(async image => {
     // todo this should return a 400 but the control flow is messed up (nested async mapping)
     if (!image.type) {
@@ -78,7 +86,8 @@ const handler = async (event: any, context: Context, callback: Callback) => {
     callback(new Error("Body null in generateAlbum POST request"));
   }
   try {
-    const images: Array<ImageFromClientApi> = JSON.parse(body);
+    const images: GenerateAlbumRequest = JSON.parse(body);
+    console.log('from the clients body json', images);
     const album = await generateAlbum(images);
     const response = jsonToResponse(album);
     console.log(response);

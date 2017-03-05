@@ -38,6 +38,7 @@ provider:
 #  include:
 #    - ../node_modules/**
 #    - ../dist/**
+#    - ./bundle.js
 
 package:
   include:
@@ -46,8 +47,8 @@ package:
     - node_modules/**
 
 functions:
-  createThumbnail:
-    handler: bundle.createThumbnail
+  processFile:
+    handler: bundle.processFile
     environment:
       BUCKET: ${self:custom.BUCKET}
       THUMBNAIL_BUCKET: ${self:custom.THUMBNAIL_BUCKET}
@@ -58,17 +59,17 @@ functions:
           event: s3:ObjectCreated:*
           # rules:
           #   - prefix: images/
-  updateDescription:
-    name: ${self:provider.stage}-createThumbnail # optional, Deployed Lambda name
-    description: Description stuff # optional, Description to publish to AWS
-    handler: bundle.updateDescription
-    environment:
-      DYNAMO: ${self:custom.DYNAMO}
-    events:
-      - http:
-          path: updateDescription
-          method: post
-          cors: true
+  # updateDescription:
+  #   name: ${self:provider.stage}-createThumbnail # optional, Deployed Lambda name
+  #   description: Description stuff # optional, Description to publish to AWS
+  #   handler: bundle.updateDescription
+  #   environment:
+  #     DYNAMO: ${self:custom.DYNAMO}
+  #   events:
+  #     - http:
+  #         path: updateDescription
+  #         method: post
+  #         cors: true
   generateAlbum:
     handler: bundle.generateAlbum
     environment:
