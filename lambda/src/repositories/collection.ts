@@ -24,7 +24,8 @@ const getCollectionContents = (collectionId: string, tableName: string = COLLECT
       } else {
         console.log("Query succeeded.");
         data.Items.forEach(item => console.log(item));
-        const entries: Array<string> = data.Items[0]['entries'];
+        const colelction = data.Items[0];
+        const entries: Array<string> = colelction['entries'];
         accept(entries);
       }
     });

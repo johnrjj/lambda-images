@@ -8,17 +8,17 @@ const FILE_DDB_TABLE = process.env.DYNAMO;
 const COLLECTION_DDB_TABLE = process.env.COLLECTION_TABLE;
 
 const checkIfFilesAreProcessed = async (fileIds: Array<string>): Promise<any> => {
-  const queryResults: Array<AWS.DynamoDB.DocumentClient.QueryOutput> = await Promise.all(fileIds.map(getFileData));
-  const transformedResults = queryResults.map(queryResult => {
-    if (queryResult.Items && queryResult.Items[0]) {
-      return queryResult.Items[0];
-    }
-    return;
-  });
+  const files = await Promise.all(fileIds.map(getFileData));
+  // const transformedResults = queryResults.map(queryResult => {
+  //   if (queryResult.Items && queryResult.Items[0]) {
+  //     return queryResult.Items[0];
+  //   }
+  //   return;
+  // });
 
-  console.log('transformedResults', transformedResults);
+  console.log('transformedResults', files);
 
-  const isDone = transformedResults.reduce((flag, x) => {
+  const isDone = files.reduce((flag, x) => {
     if (!x['s3key']) {
       console.log(x, 'is not done yet!!');
       return false;
@@ -29,7 +29,7 @@ const checkIfFilesAreProcessed = async (fileIds: Array<string>): Promise<any> =>
   console.log(isDone);
 
   return {
-    entries: transformedResults,
+    entries: files,
     processed: isDone,
   };
 }

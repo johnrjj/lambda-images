@@ -7,15 +7,8 @@ import { jsonToResponse } from './util/lambda';
 const FILE_DDB_TABLE = process.env.DYNAMO;
 const COLLECTION_DDB_TABLE = process.env.COLLECTION_TABLE;
 
-const getFileSrcUrl = async (fileIds: Array<string>): Promise<Array<any>> => {
-  const queryResults: Array<AWS.DynamoDB.DocumentClient.QueryOutput> = await Promise.all(fileIds.map(getFileData))
-  const transformedResults = queryResults.map(queryResult => {
-    if (queryResult.Items && queryResult.Items[0]) {
-      return queryResult.Items[0];
-    }
-    return;
-  });
-  return transformedResults;
+const getFileSrcUrl = (fileIds: Array<string>): Promise<Array<any>> => {
+  return Promise.all(fileIds.map(getFileData));
 }
 
 const getCollectionContentsWrapper = async (collectionId) => {

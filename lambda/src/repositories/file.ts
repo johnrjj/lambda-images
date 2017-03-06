@@ -25,7 +25,13 @@ const getFileData = (fileId) => {
       } else {
         console.log("Query succeeded.");
         data.Items.forEach(item => console.log(item));
-        accept(data);
+        if (data.Items && data.Items[0]) {
+          const file = data.Items[0];
+          console.log('returning file', file);
+          return accept(file);
+        } else {
+          return reject(new Error(`Error getting file: ${fileId}`));
+        }
       }
     });
   });

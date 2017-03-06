@@ -17,13 +17,8 @@ const COLLECTION_DDB_TABLE = process.env.COLLECTION_TABLE;
 const s3 = new AWS.S3();
 
 type GenerateAlbumRequest = Array<{ type: string; }>;
-// type GenerateAlbumResponse = Array<{ 
-//   type: string;
-//   presignedUrl: string;
-//   id: string;
-//   fileType: string;
-//   s3Key: string;
-// }>;
+
+
 
 
 const generateUniqueKey = (): string => uuid();
@@ -59,16 +54,15 @@ const generateAlbum = async (images: GenerateAlbumRequest)=> {
   const albumId = generateUniqueKey();
   const entries: Array<string> = imagesWithPresignedUrls.map(image => image.id);
   const album = {
-    url: albumId,
+    // url: albumId,
     id: albumId, // needed for dynamo...
-    entries, // for dynamo...
+    entries, // for dynamo... getcollectionstatus/contents
     images: imagesWithPresignedUrls, // for frontend...
   };
 
   const x = await createCollection(album);
   console.log(x);
 
-  // todo: do this batched...
   const res = await Promise.all(imagesWithPresignedUrls.map(image => createFileMetadata(image.id)));
   console.log('response from storing metadata', res);
   
