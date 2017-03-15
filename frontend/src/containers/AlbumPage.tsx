@@ -35,10 +35,10 @@ const styles = {
 }
 
 export interface AlbumPageProps {
-  photos: AImage[];
-  albumId: string;
+  photos?: AImage[];
+  albumId?: string;
   [idx: string]: any;
-  match: any;
+  match?: any;
 }
 
 export interface AlbumPageState {
@@ -58,6 +58,7 @@ class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
   }
 
   async componentDidMount() {
+    console.log('mounting albumpage', this);
     if (this.state.photos.length === 0) {
       console.log('no photos pregiven');
       const id = this.props.match.params.id;

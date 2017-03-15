@@ -61,7 +61,7 @@ export interface AImage {
 };
 
 export interface DropPicProps {
-  push(destination: string);
+  history: any;
 }
 
 export interface DropPicState {
@@ -108,6 +108,7 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
 
     const { files, types, items } = e.dataTransfer;
     const postFiles: Array<File> = Array.prototype.slice.call(files);
+    this.setState({ files: postFiles });
 
 
     postFiles.forEach((file, idx) => {
@@ -137,7 +138,7 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
     //   const file = files[i];
 
     // }
-    this.setState({ files: postFiles });
+    // this.setState({ files: postFiles });
 
     const filesMetadata = postFiles.map(({ name, size, type }) => ({
       name,
@@ -148,15 +149,17 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
       generateAlbumEndpoint,
       filesMetadata,
     );
-    const { url, images } = album;
-    console.log(album);
+    const { id, images } = album;
+    // console.log(album);
 
     const totalFileSize = getTotalFileSize(filesMetadata);
     console.log(`total file size: ${totalFileSize}`);
-    console.log(url, images);
-
-    const { push } = this.props;
-    push(`/a/${url}`);
+    console.log(id, images);
+    console.log(this, this.props);
+    const { history } = this.props;
+    const { push } = history;
+    console.log(this.state);
+    push(`/a/${id}`);
     console.log('but i can keep executing!');
 
     this.toggleModal();
@@ -179,7 +182,7 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
     // now we can check the processing statuses of all the photos and make sure everything worked...
 
     // poll, query DB make sure all photos have urls s3 keys
-    const albumId = url;
+    const albumId = id;
     try {
       const res = await this.poll(albumId);
       console.log(res);
@@ -229,6 +232,10 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
   }
 
   render() {
+
+    const files = this.state.files;
+    // console.log
+
     return (
       <DropArea
         onDragEnter={this.toggleModal}
@@ -244,7 +251,10 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
           <Header />
           <Card>
             <Route path="/" exact component={Home} />
-            <Route path="/a/:id" photos={this.state.files} component={AlbumPage} />
+            <Route path="/a/:id" render={()=>
+
+              <AlbumPage meow={"meow"} photos={files}> </AlbumPage>
+            } />
             <Route path="/:id" exact component={ImagePage} />
           </Card>
         </ContentContainer>
