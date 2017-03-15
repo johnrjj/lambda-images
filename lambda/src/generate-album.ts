@@ -18,9 +18,6 @@ const s3 = new AWS.S3();
 
 type GenerateAlbumRequest = Array<{ type: string; }>;
 
-
-
-
 const generateUniqueKey = (): string => uuid();
 
 const generateS3PresignedUrl = (actionKey: string, parameters): Promise<string> =>
@@ -30,15 +27,11 @@ const generateS3PresignedUrl = (actionKey: string, parameters): Promise<string> 
         ? reject(err)
         : resolve(url)));
 
-
-
 const generateAlbum = async (images: GenerateAlbumRequest)=> {
   const imagesWithPresignedUrls = await Promise.all(images.map(async image => {
-    // todo this should return a 400 but the control flow is messed up (nested async mapping)
     if (!image.type) {
       throw new Error(`Image missing (mime) type: ${JSON.stringify(image)}`);
     }
-
     const fileType = extension(image.type);
     const id = generateUniqueKey();
     const s3Key = `${id}.${fileType}`;
@@ -54,7 +47,6 @@ const generateAlbum = async (images: GenerateAlbumRequest)=> {
   const albumId = generateUniqueKey();
   const entries: Array<string> = imagesWithPresignedUrls.map(image => image.id);
   const album = {
-    // url: albumId,
     id: albumId, // needed for dynamo...
     entries, // for dynamo... getcollectionstatus/contents
     images: imagesWithPresignedUrls, // for frontend...
@@ -69,7 +61,6 @@ const generateAlbum = async (images: GenerateAlbumRequest)=> {
   return {
     album,
   };
-
 }
 
 const handler = async (event: any, context: Context, callback: Callback) => {

@@ -40,28 +40,31 @@ const processImage = async (uploadedImageBucket: string, uploadedImageKey: strin
   });
 
   const imgBuffer: Buffer = s3Object.Body as Buffer;
+  const { width, height } = await getImageDimensions(imgBuffer);
 
-
+  console.log(width, height);
   
   const resizedImage: Buffer = await resizeImage(imgBuffer);
 
+  console.log('sup fam');
 
-  const { width, height } = await getImageDimensions(resizedImage);
+  console.log(width, height);
+
+  // const { width, height } = await getImageDimensions(resizedImage);
   const res = await updateDatabaseWithMediaMetadata(fileId, height, width);
   console.log(res);
 
-  const dstBucket: string = THUMBNAIL_BUCKET;
-  const dstKey = `thumbs/${uploadedImageKey}`;
+  const thumbnailS3Key = `thumbs/${uploadedImageKey}`;
   await uploadFile({
-    Key: dstKey,
-    Bucket: dstBucket,
+    Key: thumbnailS3Key,
+    Bucket: THUMBNAIL_BUCKET,
     Body: resizedImage,
     ContentType: s3Object.ContentType,
     Metadata: null,
     ACL: 'public-read',
   });
 
-  await updateDatabaseWithThumbnailKey(fileId, dstKey);
+  await updateDatabaseWithThumbnailKey(fileId, thumbnailS3Key);
 };
 
 const handler = async (event, context, callback: (err?, response?) => never) => {

@@ -6,7 +6,7 @@
     "lint": "tslint -t stylish '{lambda}/**/*.{ts,tsx}'",
     "build": "tsc",
     "build:watch": "tsc -w",
-    "deploy": "tsc && sls deploy",
+    "deploy": "npm run bundle &&  sls deploy",
     "bundle": "tsc && browserify dist/handler.js --node --standalone rawjs > bundle.js"
   },
   "repository": {},
