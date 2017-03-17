@@ -34,6 +34,23 @@ const styles = {
   },
 }
 
+const getProgressBarStyles = (progress: number = 0) => {
+  if (progress === 0) {
+    return null;
+  }
+  return {
+    position: 'absolute',
+    top: '50',
+    left: '0',
+    height: '4px',
+    zIndex: 3,
+    width: `${progress}%`,
+    backgroundColor: '#6CB0FF',
+    transition: '2s width ease-out',
+  }
+};
+
+
 export interface AlbumPageProps {
   photos?: AImage[];
   albumId?: string;
@@ -87,20 +104,29 @@ class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
   }
 
   render() {
+    const photos = this.state.photos;
+
+    const totalUploadedData = this.state.photos
+      .map(photo => photo.uploadedAmount)
+      .reduce((total, photoUploadAmt) => total += photoUploadAmt, 0);
+
+    const totalFilesSize = this.state.photos
+      .map(photo => photo.size)
+      .reduce((total, photoSize) => total += photoSize, 0);
+    const totalProgressPercent = 100 * (totalUploadedData / totalFilesSize);
+    console.log(totalProgressPercent);
     return (
       <div>
         <div>
-          {this.state.photos
-            ? this.state.photos.map(photo =>
+          <div style={getProgressBarStyles(totalProgressPercent)}></div>
+        </div>
+        <div>
+          {photos
+            ? photos.map(photo =>
               <PhotoCard
                 key={photo.name}
-                statusText={
-                  (!photo.percentUploaded && photo.percentUploaded !== 0)
-                    ? null
-                    : (photo.percentUploaded >= 0 && photo.percentUploaded < 100 )
-                      ? `${Math.round(photo.percentUploaded)}%`
-                      : 'Processing'}
-                uploadProgress={photo.percentUploaded < 100 ? photo.percentUploaded : null}
+                statusText={getStatusText(photo)}
+                uploadProgress={photo['percentUploaded'] < 100 ? photo['percentUploaded'] : null}
                 src={photo.src}
                 height={photo.height}
                 width={photo.width}
@@ -111,6 +137,18 @@ class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
       </div>
     );
   }
+}
+
+const getStatusText = (photo) => {
+  let percentUploaded = null;
+  if (photo.size && (photo.uploadedAmount || photo.uploadedAmount === 0)) {
+    percentUploaded = 100 * (photo.uploadedAmount / photo.size)
+  }
+  return (!percentUploaded && percentUploaded !== 0)
+    ? null
+    : (percentUploaded >= 0 && percentUploaded < 100)
+      ? `${Math.round(percentUploaded)}%`
+      : 'Processing';
 }
 
 const changeFileDescription = (fileKey: string, newDescription: string) => {

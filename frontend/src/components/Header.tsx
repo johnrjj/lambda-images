@@ -17,7 +17,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'row',
     width: '100%',
-    height: '55px',
+    height: '50px',
   } as CSSProperties,
   item: {
     padding: '5px 15px',

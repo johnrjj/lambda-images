@@ -23,9 +23,9 @@ const generateAlbumEndpoint: string = 'https://1am8vv38ug.execute-api.us-east-1.
 const collectionEndpoint: string = 'https://1am8vv38ug.execute-api.us-east-1.amazonaws.com/dev/collection'; //{id}/status
 
 const getTotalFileSize = files =>
-  files.reduce((accum, file) => 
+  files.reduce((accum, file) =>
     accum + file.size, 0
-);
+  );
 
 const styles = {
   pageContainer: {
@@ -54,7 +54,7 @@ export interface AImage {
   size?: number;
   previewUrl?: string;
   url?: string;
-  percentUploaded?: number;
+  uploadedAmount?: number;
   src?: string;
   height?: number;
   width?: number;
@@ -127,18 +127,11 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
           files[idx].previewUrl = reader.result;
           files[idx].height = height;
           files[idx].width = width;
-          files[idx].percentUploaded = 0;
-          console.log(height);
+          files[idx].uploadedAmount = 0;
           return { files };
         });
       };
     });
-
-    // for (let i = 0; i < postFiles.length || 0; i++) {
-    //   const file = files[i];
-
-    // }
-    // this.setState({ files: postFiles });
 
     const filesMetadata = postFiles.map(({ name, size, type }) => ({
       name,
@@ -170,10 +163,10 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
 
       return uploadFile(image.presignedUrl, postFiles[i], (e) => {
         const { loaded, total } = e;
-        const percentUploaded = 100 * (loaded / total);
+        // const percentUploaded = 100 * (loaded / total);
         this.setState((prev, props) => {
           const files = prev.files;
-          files[i].percentUploaded = percentUploaded;
+          files[i].uploadedAmount = loaded;
           return { files };
         });
       })
@@ -189,7 +182,7 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
 
       this.setState((prevState: DropPicState) => {
         const { files } = prevState;
-        files.forEach(file => file.percentUploaded = null);
+        files.forEach(file => file.uploadedAmount = null);
         return { files };
       });
 
@@ -251,10 +244,10 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
           <Header />
           <Card>
             <Route path="/" exact component={Home} />
-            <Route path="/a/:id" render={()=>
-
-              <AlbumPage meow={"meow"} photos={files}> </AlbumPage>
-            } />
+            <Route path="/a/:id" render={props =>
+              <AlbumPage {...props} meow={"meow"} photos={files}> </AlbumPage>
+            }
+            />
             <Route path="/:id" exact component={ImagePage} />
           </Card>
         </ContentContainer>
