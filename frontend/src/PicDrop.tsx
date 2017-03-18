@@ -6,7 +6,7 @@ import 'normalize.css';
 import './App.css';
 import DropArea from './components/DropArea';
 import FullViewportModal from './components/FullViewportModal';
-import ContentContainer from './components/ContentContainer';
+import PageContainer from './components/PageContainer';
 import AlbumPage from './containers/AlbumPage';
 import Home from './containers/HomePage';
 import ImagePage from './containers/ImagePage';
@@ -240,17 +240,16 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
         >
           <div>{this.state.uploading ? 'Loading' : null}</div>
         </FullViewportModal>
-        <ContentContainer>
+        <PageContainer>
           <Header />
           <Card>
             <Route path="/" exact component={Home} />
             <Route path="/a/:id" render={props =>
-              <AlbumPage {...props} meow={"meow"} photos={files}> </AlbumPage>
-            }
+              <AlbumPage {...props} meow={"meow"} photos={files}> </AlbumPage>}
             />
             <Route path="/:id" exact component={ImagePage} />
           </Card>
-        </ContentContainer>
+        </PageContainer>
       </DropArea>
     );
   }

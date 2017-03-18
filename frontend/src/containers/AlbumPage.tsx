@@ -5,16 +5,21 @@ import 'isomorphic-fetch';
 import { AImage } from '../PicDrop';
 import PhotoCard from '../components/PhotoCard';
 import SimpleInput from '../components/SimpleInput';
+import ContentEditable from '../components/ContentEditable';
 
 const styles = {
   title: {
-    fontSize: '2rem',
+    fontSize: '1.5rem',
+    marginBottom: '0.5rem',
   },
   subtitle: {
     fontSize: '1rem',
   },
-  header: {
-    marginBottom: '2rem',
+  albumHeader: {
+    padding: '1rem',
+  },
+  albumFooter: {
+    padding: '1rem',
   },
   input: {
     backgroundColor: 'inherit',
@@ -39,7 +44,7 @@ const getProgressBarStyles = (progress: number = 0) => {
     return null;
   }
   return {
-    position: 'absolute',
+    position: 'fixed',
     top: '50',
     left: '0',
     height: '4px',
@@ -100,8 +105,12 @@ class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
 
   onAlbumTitleChange(e) {
     const newTitle: string = e.target.value;
+    console.log('hey i should probably update the database yo!');
+    // debounce(editAlbumTitle(newTitle)) or something...
     this.setState({ albumTitle: newTitle });
   }
+
+
 
   render() {
     const photos = this.state.photos;
@@ -120,6 +129,19 @@ class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
         <div>
           <div style={getProgressBarStyles(totalProgressPercent)}></div>
         </div>
+        <div style={styles.albumHeader}>
+          <div style={styles.title}> 
+            <ContentEditable
+              onChange={this.onAlbumTitleChange}
+              html={this.state.albumTitle}
+            >
+            </ContentEditable>
+          </div>
+          <div style={styles.subtitle}>
+            Uploaded 7 min ago
+          </div>
+        </div>
+
         <div>
           {photos
             ? photos.map(photo =>
@@ -133,6 +155,11 @@ class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
                 placeholderImageSrc={photo.previewUrl}
               />)
             : null}
+        </div>
+        <div style={styles.albumFooter}>
+
+
+          {'meow'}
         </div>
       </div>
     );

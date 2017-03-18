@@ -24,6 +24,9 @@ const Photo = ({ src, height, width, placeholderImageSrc, uploadProgress, status
         progressBarPercent={uploadProgress}
         {...rest}
       />
+      <div style={styles.metadata}>
+        metadata reeeeeee
+      </div>
     </div>
   )
 };
@@ -34,4 +37,8 @@ const styles = {
   container: {
     marginBottom: '2rem',
   },
+  metadata: {
+    padding: '1rem 1rem 2rem',
+    
+  }
 };

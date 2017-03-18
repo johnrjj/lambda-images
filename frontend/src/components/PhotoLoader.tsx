@@ -1,3 +1,5 @@
+// Not currently in use, fyi. Code is here because I'll need it soon and I don't wanna lose this.
+
 import * as React from 'react';
 import { Component } from 'react';
 import { CSSProperties } from 'react';
