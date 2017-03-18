@@ -4,7 +4,6 @@ import * as Radium from 'radium';
 import 'isomorphic-fetch';
 import { AImage } from '../PicDrop';
 import PhotoCard from '../components/PhotoCard';
-import SimpleInput from '../components/SimpleInput';
 import ContentEditable from '../components/ContentEditable';
 
 const styles = {
