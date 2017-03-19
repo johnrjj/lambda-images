@@ -69,7 +69,6 @@ export interface AlbumPageState {
 
 class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
   constructor(props) {
-    console.log(props);
     super(props);
     this.state = {
       albumTitle: 'Give your album a title',

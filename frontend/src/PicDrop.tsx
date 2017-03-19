@@ -13,12 +13,16 @@ import ImagePage from './containers/ImagePage';
 import Header from './components/Header';
 import Card from './components/Card';
 import Photo from './components/PhotoCard';
+import Auth from './components/Auth0Lock';
 import {
   XHRPromise,
   uploadFile,
   generateAlbumSignatures
 } from './util';
 
+
+const auth0ClientId = '9b9vnnximFjks0pgQxhmlgtaIbOxqXoG';
+const auth0Domain = 'lamdba-images.auth0.com';
 const generateAlbumEndpoint: string = 'https://1am8vv38ug.execute-api.us-east-1.amazonaws.com/dev/generateAlbum';
 const collectionEndpoint: string = 'https://1am8vv38ug.execute-api.us-east-1.amazonaws.com/dev/collection'; //{id}/status
 
@@ -249,6 +253,7 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
             />
             <Route path="/:id" exact component={ImagePage} />
           </Card>
+          <Auth domain={auth0Domain} clientId={auth0ClientId} ></Auth>
         </PageContainer>
       </DropArea>
     );
