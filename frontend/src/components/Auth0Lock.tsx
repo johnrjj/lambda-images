@@ -41,4 +41,20 @@ class Auth extends Component<AuthProps, null> {
   }
 };
 
+
+// auth request...
+  // const token = localStorage.getItem('userToken');
+  // if (!token) {
+  //   document.getElementById('message').textContent = '';
+  //   document.getElementById('message').textContent = 'You must login to call this protected endpoint!';
+  //   return false;
+  // }
+  // const getdata = fetch(PRIVATE_ENDPOINT, {
+  //   headers: {
+  //     Authorization: `Bearer ${token}`,
+  //   },
+  //   method: 'GET',
+  //   cache: 'no-store',
+  // });
+
 export default Auth;

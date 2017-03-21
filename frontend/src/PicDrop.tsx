@@ -244,17 +244,15 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
         >
           <div>{this.state.uploading ? 'Loading' : null}</div>
         </FullViewportModal>
-        <PageContainer>
           <Header />
-          <Card>
             <Route path="/" exact component={Home} />
             <Route path="/a/:id" render={props =>
               <AlbumPage {...props} meow={"meow"} photos={files}> </AlbumPage>}
             />
             <Route path="/:id" exact component={ImagePage} />
-          </Card>
-          <Auth domain={auth0Domain} clientId={auth0ClientId} ></Auth>
-        </PageContainer>
+          {/*</Card>*/}
+          {/*<Auth domain={auth0Domain} clientId={auth0ClientId} ></Auth>*/}
+        {/*</PageContainer>*/}
       </DropArea>
     );
   }

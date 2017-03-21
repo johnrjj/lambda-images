@@ -25,7 +25,8 @@
     "react-dom": "^15.4.2",
     "react-perimeter": "^0.2.0",
     "react-router-dom": "^4.0.0",
-    "react-scripts-ts": "^1.1.6"
+    "react-scripts-ts": "^1.1.6",
+    "styled-components": "^1.4.4"
   },
   "scripts": {
     "start": "react-scripts-ts start",

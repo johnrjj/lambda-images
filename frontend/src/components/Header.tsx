@@ -11,19 +11,19 @@ const styles = {
     position: 'fixed',
     left: '0',
     top: '0',
-    background: '#12529D',
-    padding: '1rem',
+    background: '#5483F7',
+    padding: '1rem 3rem',
     color: '#f7fafe',
     display: 'flex',
     flexDirection: 'row',
     width: '100%',
     height: '50px',
   } as CSSProperties,
-  item: {
-    padding: '5px 15px',
-    cursor: 'pointer',
-    background: 'rgba(0, 0, 0, 0.22)',
-  },
+  // item: {
+  //   padding: '5px 15px',
+  //   cursor: 'pointer',
+  //   background: 'rgba(0, 0, 0, 0.22)',
+  // },
   itemSelected: {
   }
 };
@@ -31,10 +31,10 @@ const styles = {
 const Header = () => (
   <nav style={styles.header}>
     <div>
-      <Link style={styles.item} to="/">Home</Link>
+      <Link to="/"></Link>
     </div>
     <div>
-      right
+      
     </div>
   </nav>
 );
