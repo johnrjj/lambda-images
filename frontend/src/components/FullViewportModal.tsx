@@ -13,7 +13,7 @@ const styles = {
     top: 0,
   },
   modalContainer: {
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(0,0,0,0.2)',
     borderRadius: '2px',
     display: 'flex',
     alignItems: 'center',
@@ -24,8 +24,8 @@ const styles = {
   modalContentContainer: {
     backgroundColor: '#fff',
     // backgroundColor: '#45484f',
-    width: '680px',
-    height: '450px',
+    width: '50px',
+    height: '50px',
     boxShadow: '0 5px 15px 0 rgba(0,0,0,.5)',
     borderRadius: '5px',
     padding: '10rem 2rem',

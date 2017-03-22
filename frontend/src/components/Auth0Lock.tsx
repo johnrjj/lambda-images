@@ -17,7 +17,7 @@ class Auth extends Component<AuthProps, null> {
   }
 
   _showLogin = () => {
-    this._lock.show()
+    this._lock.show();
   }
 
   componentDidMount() {
@@ -29,13 +29,8 @@ class Auth extends Component<AuthProps, null> {
 
   render() {
     return (
-      <div>
-        <span
-          onClick={this._showLogin}
-          className='dib pa3 white bg-blue dim pointer'
-        >
-          Log in with Auth0
-      </span>
+      <div onClick={this._showLogin}>
+        {this.props.children}
       </div>
     )
   }
