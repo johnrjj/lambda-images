@@ -9,34 +9,40 @@ import style from 'styled-components';
 
 class Attempt extends React.Component<any, any> {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       anim: new Animated.Value(1),
     }
-    this.handleMouseDown = this.handleMouseDown.bind(this);
-    this.handleMouseUp = this.handleMouseUp.bind(this);
+    this.handleSpringDown = this.handleSpringDown.bind(this);
+    this.handleSpringUp = this.handleSpringUp.bind(this);
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if (this.props.pressed === true &&  nextProps.pressed === false) {
+      this.handleSpringUp();
+    } 
+    if (this.props.pressed === false && nextProps.pressed === true) {
+      this.handleSpringDown();
+    }
   }
 
   render() {
     return (
-      <div>
       <Animated.div
+        className={this.props.className}
         style={{transform: [{scale: this.state.anim}]}}
-        className="circle"
-        onMouseDown={this.handleMouseDown}
-        onMouseUp={this.handleMouseUp}>
-        Press
+      >
+        { this.props.children }
       </Animated.div>
-      </div>
     );
   }
 
-  handleMouseDown() {
-    Animated.spring(this.state.anim, { toValue: 0.8 }).start();
+  handleSpringDown() {
+    Animated.spring(this.state.anim, { toValue: 1.05 }).start();
   }
-  handleMouseUp() {
-    Animated.spring(this.state.anim, { toValue: 1 }).start();
+  handleSpringUp() {
+    Animated.spring(this.state.anim, { toValue: 1,       friction: 3,       }).start();
   }
 
 }

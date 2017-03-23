@@ -234,10 +234,7 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
     // console.log
 
     return (
-      <DropArea
-        onDragEnter={this.toggleModal}
-        onDragLeave={this.toggleModal}
-        onDrop={this.handleDrop}
+      <div
       >
         <FullViewportModal
           hide={!this.state.showModal}
@@ -253,7 +250,7 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
           {/*</Card>*/}
           {/*<Auth domain={auth0Domain} clientId={auth0ClientId} ></Auth>*/}
         {/*</PageContainer>*/}
-      </DropArea>
+      </div>
     );
   }
 }

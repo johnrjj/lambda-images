@@ -45,7 +45,7 @@ const styles = {
   },
   logo: {
     display: 'flex',
-    transform: 'translate3d(0px,0px,0px)',
+    // transform: 'translate3d(0px,0px,0px)',
     fontSize: '28px',
     fontWeight: 700
   } as CSSProperties,
