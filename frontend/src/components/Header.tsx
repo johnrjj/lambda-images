@@ -11,11 +11,13 @@ const styles = {
   container: {
     display: 'flex',
     margin: '0 auto',
-    width: '650px',
+    width: '760px',
     alignItems: 'center',
     justifyContent: 'space-between',
   } as CSSProperties,
   header: {
+        backgroundColor: '#5483F7',
+
     zIndex: 2,
     alignItems: 'center',
     position: 'fixed',
@@ -61,7 +63,7 @@ const Header = () => (
   <nav style={styles.header}>
     <div style={styles.container}> 
       <div style={styles.logo}>
-        <Link style={styles.itemLeft} to="/">PicDrop</Link>
+        <Link style={styles.itemLeft} to="/">DropPic</Link>
       </div>
       <div style={styles.linksContainer}>
         <Auth0Lock
