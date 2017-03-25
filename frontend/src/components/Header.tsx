@@ -11,17 +11,18 @@ const styles = {
   container: {
     display: 'flex',
     margin: '0 auto',
-    width: '760px',
+    width: '780px',
     alignItems: 'center',
     justifyContent: 'space-between',
   } as CSSProperties,
   header: {
-        backgroundColor: '#5483F7',
-
+    backgroundColor: '#5483F7',
+    borderBottom: '1px solid rgba(0,0,0,.0975)',
     zIndex: 2,
     alignItems: 'center',
     position: 'fixed',
     left: '0',
+    opacity: 0,
     top: '0',
     // background: '#5483F7',
     padding: '1rem 3rem',
@@ -31,7 +32,7 @@ const styles = {
     // alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    height: '89px',
+    height: '72px',
   } as CSSProperties,
   itemLeft: {
     padding: '5px 15px 5px 0',
@@ -53,26 +54,26 @@ const styles = {
   } as CSSProperties,
   linksContainer: {
     // float: 'right',
-        alignItems: 'center',
+    alignItems: 'center',
     justifyContent: 'center',
     display: 'flex'
-  }  as CSSProperties
+  } as CSSProperties
 };
 
 const Header = () => (
   <nav style={styles.header}>
-    <div style={styles.container}> 
+    <div style={styles.container}>
       <div style={styles.logo}>
         <Link style={styles.itemLeft} to="/">DropPic</Link>
       </div>
       <div style={styles.linksContainer}>
         <Auth0Lock
-        clientId={auth0ClientId}
-        domain={auth0Domain}
+          clientId={auth0ClientId}
+          domain={auth0Domain}
         >
-        <Link style={styles.itemRight} to="/">Login</Link>
+          <Link style={styles.itemRight} to="/">Login</Link>
         </Auth0Lock>
-        </div>
+      </div>
     </div>
   </nav>
 );

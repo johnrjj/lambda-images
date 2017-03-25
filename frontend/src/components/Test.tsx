@@ -11,15 +11,24 @@ class Attempt extends React.Component<any, any> {
   widthAnimFullscreen;
   heightAnimFullscreen;
   roundToStraightBorderRadiusAnim;
+  opacityFadeAnimFullscreen;
   constructor(props) {
     super(props);
 
     // 0 is shadow box, 1 is full screen...
     const animFullscreen = new Animated.Value(0);
 
+    // hacky af workaround because onEnd listened for animated is not working!!! agh
+    animFullscreen.addListener(({ value }) => value === 1.0 && this.handleResizeToFullscreenAnimEnd());
+
     this.roundToStraightBorderRadiusAnim = animFullscreen.interpolate({
       inputRange: [0, 1],
-      outputRange: ['14px', `0px`]
+      outputRange: ['14px', `0px`],
+    });
+
+    this.opacityFadeAnimFullscreen = animFullscreen.interpolate({
+      inputRange: [0, 1],
+      outputRange: [1, 0],
     });
 
     this.state = {
@@ -29,6 +38,7 @@ class Attempt extends React.Component<any, any> {
     
     this.handleSpringDown = this.handleSpringDown.bind(this);
     this.handleSpringUp = this.handleSpringUp.bind(this);
+    this.handleResizeToFullscreenAnimEnd = this.handleResizeToFullscreenAnimEnd.bind(this);
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -42,7 +52,7 @@ class Attempt extends React.Component<any, any> {
       const h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
         this.heightAnimFullscreen = this.state.animFullscreen.interpolate({
           inputRange: [0, 1],
-          outputRange: ['680px', `${h + fuzz}px`]
+          outputRange: ['690px', `${h + fuzz - 72}px`] // height of header...
         });
         this.widthAnimFullscreen = this.state.animFullscreen.interpolate({
           inputRange: [0, 1],
@@ -56,8 +66,16 @@ class Attempt extends React.Component<any, any> {
     }
   }
 
+  handleResizeToFullscreenAnimEnd() {
+    console.log('test.tsx, anim done');
+    this.props.onResizeToFullscreenAnimEnd();
+  }
+
   render() {
-    console.log( this.state.animFullscreen, this.state.anim);
+    // console.log( this.state.animFullscreen, this.state.anim);
+
+    // div (shadowbox, concerned on shadow/sizing)
+    //   div (content container, displays contents or not)
     return (
       <Animated.div
         className={this.props.className}
@@ -67,21 +85,27 @@ class Attempt extends React.Component<any, any> {
             maxWidth: this.widthAnimFullscreen || '760px',
             height:  '100%',
             borderRadius: this.roundToStraightBorderRadiusAnim || '14px',
-
             width: '100%',
         }}
       >
+
+      <Animated.div
+        style={{ 
+            opacity: this.opacityFadeAnimFullscreen || 1,
+        }}>
+
         { this.props.children }
+        </Animated.div>
       </Animated.div>
     );
   }
 
   handleSpringDown() {
     // Animated.spring(this.state.fullscren)
-    Animated.spring(this.state.animFullscreen, { toValue: 1}).start();
+    Animated.timing(this.state.animFullscreen, { toValue: 1, onUpdate: () => console.log('moo'), onEnd: () => console.log('meowww')}).start();
   }
   handleSpringUp() {
-    Animated.spring(this.state.animFullscreen, { toValue: 0}).start();
+    Animated.spring(this.state.animFullscreen, { toValue: 0,  onEnd: () => console.log('test')}).start();
 
     // Animated.spring(this.state.anim, { toValue: 1,       friction: 3,       }).start();
   }

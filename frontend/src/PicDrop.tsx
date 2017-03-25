@@ -90,7 +90,7 @@ const getCollectionStatus = async (collectionId: string) => {
 
 class DropPic extends React.Component<DropPicProps, DropPicState> {
   constructor(props, context) {
-    console.log(props, context);
+    console.log('DropPic ctr, dumping props and context', props, context);
     super(props);
     this.state = {
       showModal: false,
@@ -156,6 +156,7 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
     const { history } = this.props;
     const { push } = history;
     console.log(this.state);
+
     push(`/a/${id}`);
     console.log('but i can keep executing!');
 
@@ -206,6 +207,13 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
     }
   }
 
+  transitionToCreatedAlbum(albumId) {
+    // handleResizeToFullscreenAnimEnd
+    const { history } = this.props;
+    const { push } = history;
+    push(`/a/${albumId}`);
+  }
+
   poll(collectionId): Promise<any> {
     return new Promise((accept, reject) => {
       const endTime = Number(new Date()) + (5000);
@@ -234,21 +242,26 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
     // console.log
 
     return (
-      <div
-      >
+      <div>
         <FullViewportModal
           hide={!this.state.showModal}
         >
           <div>{this.state.uploading ? 'Loading' : null}</div>
         </FullViewportModal>
-          <Header />
-            <Route path="/" exact component={Home} />
-            <Route path="/a/:id" render={props =>
-              <AlbumPage {...props} meow={"meow"} photos={files}> </AlbumPage>}
-            />
-            <Route path="/:id" exact component={ImagePage} />
-          {/*</Card>*/}
-          {/*<Auth domain={auth0Domain} clientId={auth0ClientId} ></Auth>*/}
+        <Header />
+        <Route path="/" exact render={props =>
+          <Home
+            onResizeToFullscreenAnimEnd={() => console.log('in picdrop, anim done!')}
+            {...props}
+          />
+        }
+        />
+        <Route path="/a/:id" render={props =>
+          <AlbumPage {...props} meow={"meow"} photos={files}> </AlbumPage>}
+        />
+        <Route path="/:id" exact component={ImagePage} />
+        {/*</Card>*/}
+        {/*<Auth domain={auth0Domain} clientId={auth0ClientId} ></Auth>*/}
         {/*</PageContainer>*/}
       </div>
     );

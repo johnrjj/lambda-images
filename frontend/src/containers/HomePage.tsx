@@ -19,9 +19,10 @@ const FullViewportView = styled.div`
   position: relative;
   width: 100vw;
   background-image: linear-gradient(-180deg, #5483F7 19%, #2B5BDB 100%);
-  padding-top: 89px;
+  padding-top: 72px;
 `;
 
+// ç33CCA9
 // gray gradient   background-image: linear-gradient(-180deg, #FEFEFF 0%, #FCFCFD 51%, #F3F7FF 100%);
 
 
@@ -62,38 +63,32 @@ const InstructionSecondary = styled.div`
 `;
 
 const PhotosSvg = styled((props: any) => (
-
-
-<svg className={props.className}  width="99px" height="85px" viewBox="139 156 99 85" version="1.1" xmlns="http://www.w3.org/2000/svg">
-
+  <svg className={props.className} width="99px" height="85px" viewBox="139 156 99 85" version="1.1" xmlns="http://www.w3.org/2000/svg">
     <defs></defs>
-    <g id="Group-4" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(139.405941, 156.806647)">
-        <g id="pictures" fill-rule="nonzero">
-            <g id="Layer_1">
-                <path d="M3.20937058,19.669156 L77.1252475,0.23429779 C79.4230728,-0.368373505 81.8741513,0.987493461 82.4869696,3.247463 L97.1170085,56.6553095 C97.7298267,58.9150878 96.3511315,61.2504152 93.9764851,61.8528952 L20.0608027,81.2877534 C17.7629774,81.8904247 15.3118989,80.5345578 14.6990806,78.2745882 L0.145668317,24.8667417 C-0.467149929,22.6069634 0.911545262,20.2718273 3.20937058,19.669156 Z" id="Shape" fill="#E4E7E7"></path>
-                <path d="M9.41379066,23.9628304 L74.0613508,7.01401515 C75.8229844,6.56205949 77.6614392,7.61668644 78.1976308,9.34915124 L90.2999646,53.5669778 C90.7595297,55.2994426 89.6871464,57.1074564 87.9255127,57.5594121 L23.2777581,74.5082273 C21.5161245,74.960183 19.6776697,73.905556 19.1414781,72.1730912 L7.03933876,27.9552647 C6.5031471,26.2226087 7.57553041,24.414786 9.41379066,23.9628304 Z" id="Shape" fill="#A3B4E0"></path>
-                <path d="M16.613773,18.9157691 L93.5933522,18.9157691 C96.0444307,18.9157691 97.9593175,20.8743074 97.9593175,23.2094434 L97.9593175,79.3290239 C97.9593175,81.7395178 95.9678041,83.6226983 93.5933522,83.6226983 L16.613773,83.6226983 C14.1626945,83.6226983 12.2478076,81.66416 12.2478076,79.3290239 L12.2478076,23.2096347 C12.2478076,20.8743074 14.2393211,18.9157691 16.613773,18.9157691 Z" id="Shape" fill="#F3F3F3"></path>
-                <path d="M21.7458098,24.9420995 L88.6147631,24.9420995 C90.4530233,24.9420995 91.9849717,26.4486821 91.9849717,28.2565047 L91.9849717,74.3575117 C91.9849717,76.1653343 90.4530233,77.6719169 88.6147631,77.6719169 L21.7458098,77.6719169 C19.9075495,77.6719169 18.3756011,76.1653343 18.3756011,74.3575117 L18.3756011,28.2565047 C18.3756011,26.4486821 19.8309229,24.9420995 21.7458098,24.9420995 Z" id="Shape" fill="#B6CAFD"></path>
-                <path d="M18.3756011,28.2565047 L18.3756011,44.3767665 C19.1414781,44.4521243 19.9075495,44.5274821 20.6734264,44.5274821 C30.4011139,44.5274821 38.2907355,36.7686869 38.2907355,27.2018778 C38.2907355,26.4486821 38.2141089,25.6952952 38.1374823,24.9420995 L21.7458098,24.9420995 C19.8309229,24.9420995 18.3756011,26.4486821 18.3756011,28.2565047 Z" id="Shape" fill="#EFC75E"></path>
-                <path d="M23.967203,61.8530865 C22.0523161,61.8530865 20.1374293,62.0038021 18.3756011,62.2296843 L18.3756011,74.3575117 C18.3756011,76.1653343 19.9075495,77.6719169 21.7458098,77.6719169 L47.252546,77.6719169 C47.4057992,76.9938878 47.4824257,76.3914078 47.4824257,75.7133787 C47.4822313,68.0299413 36.9886669,61.8530865 23.967203,61.8530865 Z" id="Shape" fill="#8BBB04"></path>
-                <path d="M77.3549328,55.0733691 C56.3674151,55.0733691 39.2862977,65.1673004 39.0566124,77.6719169 L88.5381365,77.6719169 C90.3763967,77.6719169 91.9083451,76.1653343 91.9083451,74.3575117 L91.9083451,56.8060252 C87.3891266,55.7513982 82.4869696,55.0733691 77.3549328,55.0733691 Z" id="Shape" fill="#97CC04"></path>
-            </g>
+    <g id="Group-4" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd" transform="translate(139.405941, 156.806647)">
+      <g id="pictures" fillRule="nonzero">
+        <g id="Layer_1">
+          <path d="M3.20937058,19.669156 L77.1252475,0.23429779 C79.4230728,-0.368373505 81.8741513,0.987493461 82.4869696,3.247463 L97.1170085,56.6553095 C97.7298267,58.9150878 96.3511315,61.2504152 93.9764851,61.8528952 L20.0608027,81.2877534 C17.7629774,81.8904247 15.3118989,80.5345578 14.6990806,78.2745882 L0.145668317,24.8667417 C-0.467149929,22.6069634 0.911545262,20.2718273 3.20937058,19.669156 Z" id="Shape" fill="#E4E7E7"></path>
+          <path d="M9.41379066,23.9628304 L74.0613508,7.01401515 C75.8229844,6.56205949 77.6614392,7.61668644 78.1976308,9.34915124 L90.2999646,53.5669778 C90.7595297,55.2994426 89.6871464,57.1074564 87.9255127,57.5594121 L23.2777581,74.5082273 C21.5161245,74.960183 19.6776697,73.905556 19.1414781,72.1730912 L7.03933876,27.9552647 C6.5031471,26.2226087 7.57553041,24.414786 9.41379066,23.9628304 Z" id="Shape" fill="#A3B4E0"></path>
+          <path d="M16.613773,18.9157691 L93.5933522,18.9157691 C96.0444307,18.9157691 97.9593175,20.8743074 97.9593175,23.2094434 L97.9593175,79.3290239 C97.9593175,81.7395178 95.9678041,83.6226983 93.5933522,83.6226983 L16.613773,83.6226983 C14.1626945,83.6226983 12.2478076,81.66416 12.2478076,79.3290239 L12.2478076,23.2096347 C12.2478076,20.8743074 14.2393211,18.9157691 16.613773,18.9157691 Z" id="Shape" fill="#F3F3F3"></path>
+          <path d="M21.7458098,24.9420995 L88.6147631,24.9420995 C90.4530233,24.9420995 91.9849717,26.4486821 91.9849717,28.2565047 L91.9849717,74.3575117 C91.9849717,76.1653343 90.4530233,77.6719169 88.6147631,77.6719169 L21.7458098,77.6719169 C19.9075495,77.6719169 18.3756011,76.1653343 18.3756011,74.3575117 L18.3756011,28.2565047 C18.3756011,26.4486821 19.8309229,24.9420995 21.7458098,24.9420995 Z" id="Shape" fill="#B6CAFD"></path>
+          <path d="M18.3756011,28.2565047 L18.3756011,44.3767665 C19.1414781,44.4521243 19.9075495,44.5274821 20.6734264,44.5274821 C30.4011139,44.5274821 38.2907355,36.7686869 38.2907355,27.2018778 C38.2907355,26.4486821 38.2141089,25.6952952 38.1374823,24.9420995 L21.7458098,24.9420995 C19.8309229,24.9420995 18.3756011,26.4486821 18.3756011,28.2565047 Z" id="Shape" fill="#EFC75E"></path>
+          <path d="M23.967203,61.8530865 C22.0523161,61.8530865 20.1374293,62.0038021 18.3756011,62.2296843 L18.3756011,74.3575117 C18.3756011,76.1653343 19.9075495,77.6719169 21.7458098,77.6719169 L47.252546,77.6719169 C47.4057992,76.9938878 47.4824257,76.3914078 47.4824257,75.7133787 C47.4822313,68.0299413 36.9886669,61.8530865 23.967203,61.8530865 Z" id="Shape" fill="#8BBB04"></path>
+          <path d="M77.3549328,55.0733691 C56.3674151,55.0733691 39.2862977,65.1673004 39.0566124,77.6719169 L88.5381365,77.6719169 C90.3763967,77.6719169 91.9083451,76.1653343 91.9083451,74.3575117 L91.9083451,56.8060252 C87.3891266,55.7513982 82.4869696,55.0733691 77.3549328,55.0733691 Z" id="Shape" fill="#97CC04"></path>
         </g>
+      </g>
     </g>
-</svg>
+  </svg>
 )) `
   display: block;
   margin: 0 auto 38px auto;
 `;
 
-const ResizingContainer = styled.div`
-position: relative;
-`
-
 const SpringOverlay = styled((props: any) => (
   <Spring
     className={props.className}
     pressed={props.pressed}
+    {...props}
   >
     {props.children}
   </Spring>
@@ -106,8 +101,8 @@ const SpringOverlay = styled((props: any) => (
   position: absolute;
   position: absolute;
   left: 50%;
-  top: 50%;
-  transform: translate(-50%,-50%);
+  top: 0%;
+  transform: translate(-50%,0%);
 `;
 
 const Container = styled.div`
@@ -152,6 +147,7 @@ class Home extends React.Component<any, any> {
     this.handleDragLeave = this.handleDragLeave.bind(this);
     this.handleDrop = this.handleDrop.bind(this);
     this.openFileDialog = this.openFileDialog.bind(this);
+    this.handleResizeToFullscreenAnimEnd = this.handleResizeToFullscreenAnimEnd.bind(this);
     this.state = {
       isDragging: false,
     }
@@ -159,16 +155,28 @@ class Home extends React.Component<any, any> {
 
   handleDragEnter() {
     this.setState({ isDragging: true });
-    console.log('drag enter');
+    // if (this.props.onDragEnter) {
+    //   this.props.onDragEnter();
+    // }
   }
 
   handleDragLeave() {
     this.setState({ isDragging: false });
   }
 
-  handleDrop() {
+  handleDrop(acceptedFiles) {
     this.setState({ isDragging: false });
-    console.log('drop');
+    console.log('dropped files', acceptedFiles);
+    if (this.props.onDrop) {
+      this.props.onDrop(acceptedFiles);
+    }
+  }
+
+  handleResizeToFullscreenAnimEnd() {
+    console.log('anim done in home page');
+    if (this.props.onResizeToFullscreenAnimEnd) {
+      this.props.onResizeToFullscreenAnimEnd();
+    }
   }
 
   openFileDialog() {
@@ -178,7 +186,7 @@ class Home extends React.Component<any, any> {
   render() {
     return (
       <Dropzone
-      disableClick={true}
+        disableClick={true}
         className=" "
         onDragEnter={this.handleDragEnter}
         onDragLeave={this.handleDragLeave}
@@ -187,23 +195,25 @@ class Home extends React.Component<any, any> {
       >
         <FullViewportView >
           <Container>
-          <SpringOverlay
-            pressed={this.state.isDragging}
-          >
-            <CallToAction>
-              Instantly create a shareable photo album
+            <SpringOverlay
+              onResizeToFullscreenAnimEnd={this.handleResizeToFullscreenAnimEnd}
+              pressed={this.state.isDragging}
+
+            >
+              <CallToAction>
+                Instantly create a shareable photo album
         </CallToAction>
-            <DropZoneStyledArea isActive={this.state.isDragging}>
-              <CloudSvg isActive={this.state.isDragging} />
-              <PhotosSvg />
-              <InstructionMain>
-                Drag & drop
+              <DropZoneStyledArea isActive={this.state.isDragging}>
+                <CloudSvg isActive={this.state.isDragging} />
+                <PhotosSvg />
+                <InstructionMain>
+                  Drag & drop
           </InstructionMain>
-              <InstructionSecondary>
-                or <Link onClick={this.openFileDialog} href="#">browse</Link> to upload your photos
+                <InstructionSecondary>
+                  or <Link role="button" onClick={this.openFileDialog} href="#">browse</Link> to upload your photos
           </InstructionSecondary>
-            </DropZoneStyledArea>
-          </SpringOverlay>
+              </DropZoneStyledArea>
+            </SpringOverlay>
           </Container>
         </FullViewportView>
       </Dropzone>
