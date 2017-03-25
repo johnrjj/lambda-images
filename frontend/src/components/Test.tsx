@@ -12,6 +12,7 @@ class Attempt extends React.Component<any, any> {
   heightAnimFullscreen;
   roundToStraightBorderRadiusAnim;
   opacityFadeAnimFullscreen;
+  
   constructor(props) {
     super(props);
 
@@ -38,6 +39,7 @@ class Attempt extends React.Component<any, any> {
     
     this.handleSpringDown = this.handleSpringDown.bind(this);
     this.handleSpringUp = this.handleSpringUp.bind(this);
+    this.handleStartMaximize = this.handleStartMaximize.bind(this);
     this.handleResizeToFullscreenAnimEnd = this.handleResizeToFullscreenAnimEnd.bind(this);
   }
 
@@ -47,23 +49,28 @@ class Attempt extends React.Component<any, any> {
     } 
     if (this.props.pressed === false && nextProps.pressed === true) {
       this.handleSpringDown();
-      const fuzz = 0;
-      const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-      const h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-        this.heightAnimFullscreen = this.state.animFullscreen.interpolate({
-          inputRange: [0, 1],
-          outputRange: ['690px', `${h + fuzz - 72}px`] // height of header...
-        });
-        this.widthAnimFullscreen = this.state.animFullscreen.interpolate({
-          inputRange: [0, 1],
-          outputRange: ['760px', `${w + fuzz}px`]
-        });
-        // console.log(this.interpolate);
     }
 
     if (this.props.fullscreen === false && nextProps.fullscreen === true) {
-
+      console.log('trying to maximize!');
+      const fuzz = 0;
+      const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+      const h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+      this.heightAnimFullscreen = this.state.animFullscreen.interpolate({
+        inputRange: [0, 1],
+        outputRange: ['690px', `${h + fuzz - 72}px`] // height of header...
+      });
+      this.widthAnimFullscreen = this.state.animFullscreen.interpolate({
+        inputRange: [0, 1],
+        outputRange: ['760px', `${w + fuzz}px`]
+      });
+      this.handleStartMaximize();
     }
+  }
+
+  handleStartMaximize() {
+    console.log('trying to maximize2');
+    return Animated.timing(this.state.animFullscreen, { toValue: 1, onUpdate: () => console.log('moo'), onEnd: () => console.log('meowww')}).start();
   }
 
   handleResizeToFullscreenAnimEnd() {
@@ -80,7 +87,7 @@ class Attempt extends React.Component<any, any> {
       <Animated.div
         className={this.props.className}
         style={{ 
-            transform: [{scale: this.state.anim}, 'translate(-50%,-50%)'],
+            transform: [{scale: this.state.anim}],
             maxHeight: this.heightAnimFullscreen || '690px',
             maxWidth: this.widthAnimFullscreen || '760px',
             height:  '100%',
@@ -101,13 +108,17 @@ class Attempt extends React.Component<any, any> {
   }
 
   handleSpringDown() {
+    console.log('down');
+    Animated.spring(this.state.anim, { toValue: 1.05 }).start();
     // Animated.spring(this.state.fullscren)
-    Animated.timing(this.state.animFullscreen, { toValue: 1, onUpdate: () => console.log('moo'), onEnd: () => console.log('meowww')}).start();
+    // Animated.spring(this.state.anim, { toValue: 1.5 }).start();
+    // Animated.timing(this.state.animFullscreen, { toValue: 1, onUpdate: () => console.log('moo'), onEnd: () => console.log('meowww')}).start();
   }
   handleSpringUp() {
-    Animated.spring(this.state.animFullscreen, { toValue: 0,  onEnd: () => console.log('test')}).start();
+    console.log('up');
+    // Animated.spring(this.state.animFullscreen, { toValue: 0,  onEnd: () => console.log('test')}).start();
 
-    // Animated.spring(this.state.anim, { toValue: 1,       friction: 3,       }).start();
+    Animated.spring(this.state.anim, { toValue: 1,       friction: 3,       }).start();
   }
 
 }

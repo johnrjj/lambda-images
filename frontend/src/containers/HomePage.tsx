@@ -5,9 +5,6 @@ import * as Dropzone from 'react-dropzone';
 
 import Spring from '../components/Test';
 
-
-const PageWrapper = styled.div``;
-
 const BlueGradient = styled.div`
   background-image: linear-gradient(-180deg, #5483F7 19%, #2B5BDB 100%);
   height: 100vh;
@@ -36,7 +33,7 @@ const CallToAction = styled.header`
 
 const DropZoneStyledArea: any = styled.div`
   height: 452px;
-  border: 2px dashed ${(props: any) => props.isActive ? '#74809D' : '#B9B5B5'};
+  border: 2px dashed ${(props: any) => props.isActive ? '#B7BAC1' : '#B7BAC1'};
   border-radius: 16px;
   margin: 0 72px 30px 72px;
   padding: 54px 0;
@@ -100,9 +97,9 @@ const SpringOverlay = styled((props: any) => (
   z-index: 1;
   position: absolute;
   position: absolute;
-  left: 50%;
-  top: 0%;
-  transform: translate(-50%,0%);
+  left: 0;
+  top: 0;
+  right: 0;
 `;
 
 const Container = styled.div`
@@ -110,7 +107,6 @@ const Container = styled.div`
   width: 100%;
   position: relative;
 `
-
 // success subdued green: #7AB88B
 
 const CloudSvg = styled((props: any) => (
@@ -125,7 +121,7 @@ const CloudSvg = styled((props: any) => (
       </g>
     </g>
     <g opacity={props.isActive ? 0 : 1} style={{ transition: 'opacity .25s ease-in-out' }} id="cloud-computing" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd" transform="translate(98.000000, 0.000000)">
-      <g id="Capa_1" fillRule="nonzero" fill="#B7BAC1">
+      <g id="cloud-computing-gray" fillRule="nonzero" fill="#B7BAC1">
         <g id="Group">
           <path d="M130.835833,41.6981154 C129.4832,18.6788846 110.4411,0.278846154 87.4822667,0.278846154 C73.5452667,0.278846154 60.0497333,7.08998077 51.6875333,18.2031538 C51.4976,18.1034038 51.2948333,18.0369038 51.1023333,17.9422692 C50.5941333,17.6967308 50.0782333,17.4614231 49.5495,17.25425 C49.2543333,17.1391538 48.9591667,17.0342885 48.6614333,16.9294231 C48.1429667,16.7478269 47.6193667,16.58925 47.0829333,16.4434615 C46.7852,16.3641731 46.4900333,16.2823269 46.1871667,16.2132692 C45.6122333,16.0828269 45.0270333,15.9830769 44.4341333,15.8961154 C44.1723333,15.85775 43.9156667,15.8065962 43.6513,15.7759038 C42.8043,15.6838269 41.9419,15.625 41.0666667,15.625 C28.3308667,15.625 17.9666667,25.9504038 17.9666667,38.6442308 C17.9666667,38.9741731 17.9846333,39.2964423 18.0077333,39.6187115 C7.33296667,45.417 0,57.5685962 0,69.7304231 C0,87.8465577 14.7891333,102.586538 32.9688333,102.586538 L46.2,102.586538 C47.6168,102.586538 48.7666667,101.44325 48.7666667,100.028846 C48.7666667,98.6144423 47.6168,97.4711538 46.2,97.4711538 L32.9688333,97.4711538 C17.6201667,97.4711538 5.13333333,85.0279808 5.13333333,69.7304231 C5.13333333,59.1057692 12.0761667,48.077 21.6421333,43.5064038 L23.1,42.8132692 L23.1,41.2019231 C23.1,40.8873269 23.1205333,40.5650577 23.1385,40.2427885 L23.1616,39.7951923 L23.1308,39.3143462 C23.1179667,39.0918269 23.1,38.8693077 23.1,38.6442308 C23.1,28.7740962 31.1593333,20.7403846 41.0666667,20.7403846 C41.8597667,20.7403846 42.6426,20.8094423 43.4203,20.91175 C43.6205,20.9373269 43.8181333,20.9705769 44.0157667,21.0038269 C44.7036333,21.1163654 45.3812333,21.2647115 46.0485667,21.4565385 C46.1358333,21.4821154 46.2256667,21.4974615 46.3103667,21.5230385 C47.0444333,21.7455577 47.7605333,22.0294615 48.4612333,22.3466154 C48.6383333,22.4259038 48.8128667,22.5128654 48.9874,22.5998269 C49.6085333,22.9041923 50.2168333,23.2418077 50.8020333,23.6203462 C55.748,26.8149038 59.0333333,32.34975 59.0333333,38.6442308 C59.0333333,40.0586346 60.1832,41.2019231 61.6,41.2019231 C63.0168,41.2019231 64.1666667,40.0586346 64.1666667,38.6442308 C64.1666667,31.6003462 60.9686,25.2956346 55.9533333,21.0703269 C63.3094,11.4789808 75.4292,5.39423077 87.4822667,5.39423077 C107.358533,5.39423077 123.872467,21.0856731 125.592133,40.9129038 C122.969,40.72875 119.039433,40.6341154 115.112433,41.2326154 C113.711033,41.4449038 112.748533,42.7493269 112.961567,44.1458269 C113.154067,45.4118846 114.247467,46.3198654 115.494867,46.3198654 C115.6232,46.3198654 115.7541,46.3096346 115.885,46.2891731 C121.593267,45.4297885 127.545367,46.2354615 127.907267,46.2840577 C139.857667,48.5476154 148.866667,59.5175577 148.866667,71.8226154 C148.866667,85.9640962 137.319233,97.4711538 123.128133,97.4711538 L112.933333,97.4711538 C111.516533,97.4711538 110.366667,98.6144423 110.366667,100.028846 C110.366667,101.44325 111.516533,102.586538 112.933333,102.586538 L123.128133,102.586538 C140.150267,102.586538 154,88.7852308 154,71.8226154 C154,57.7834423 144.177367,45.1919231 130.835833,41.6981154 Z" id="Shape"></path>
           <path d="M81.3838667,67.5308077 C81.1477333,67.2929423 80.8628333,67.1062308 80.5471333,66.9757885 C79.9208667,66.7174615 79.2124667,66.7174615 78.5862,66.9757885 C78.2705,67.1062308 77.9881667,67.2929423 77.7494667,67.5308077 L57.2187,87.9897885 C56.2151333,88.9898462 56.2151333,90.6063077 57.2187,91.6063654 C57.7192,92.1051154 58.3762667,92.3557692 59.0333333,92.3557692 C59.6904,92.3557692 60.3474667,92.1051154 60.8479667,91.6063654 L77,75.5108077 L77,128.163462 C77,129.577865 78.1498667,130.721154 79.5666667,130.721154 C80.9834667,130.721154 82.1333333,129.577865 82.1333333,128.163462 L82.1333333,75.5108077 L98.2853667,91.6063654 C98.7858667,92.1051154 99.4429333,92.3557692 100.1,92.3557692 C100.757067,92.3557692 101.414133,92.1051154 101.914633,91.6063654 C102.9182,90.6063077 102.9182,88.9898462 101.914633,87.9897885 L81.3838667,67.5308077 Z" id="Shape"></path>
@@ -147,7 +143,7 @@ class Home extends React.Component<any, any> {
     this.handleDragLeave = this.handleDragLeave.bind(this);
     this.handleDrop = this.handleDrop.bind(this);
     this.openFileDialog = this.openFileDialog.bind(this);
-    this.handleResizeToFullscreenAnimEnd = this.handleResizeToFullscreenAnimEnd.bind(this);
+    // this.handleResizeToFullscreenAnimEnd = this.handleResizeToFullscreenAnimEnd.bind(this);
     this.state = {
       isDragging: false,
     }
@@ -155,9 +151,6 @@ class Home extends React.Component<any, any> {
 
   handleDragEnter() {
     this.setState({ isDragging: true });
-    // if (this.props.onDragEnter) {
-    //   this.props.onDragEnter();
-    // }
   }
 
   handleDragLeave() {
@@ -166,16 +159,8 @@ class Home extends React.Component<any, any> {
 
   handleDrop(acceptedFiles) {
     this.setState({ isDragging: false });
-    console.log('dropped files', acceptedFiles);
     if (this.props.onDrop) {
       this.props.onDrop(acceptedFiles);
-    }
-  }
-
-  handleResizeToFullscreenAnimEnd() {
-    console.log('anim done in home page');
-    if (this.props.onResizeToFullscreenAnimEnd) {
-      this.props.onResizeToFullscreenAnimEnd();
     }
   }
 
@@ -192,26 +177,26 @@ class Home extends React.Component<any, any> {
         onDragLeave={this.handleDragLeave}
         onDrop={this.handleDrop}
         ref={(node) => { this.dropzone = node; }}
-      >
+          >
         <FullViewportView >
           <Container>
             <SpringOverlay
-              onResizeToFullscreenAnimEnd={this.handleResizeToFullscreenAnimEnd}
+              onResizeToFullscreenAnimEnd={this.props.onResizeToFullscreenAnimEnd}
               pressed={this.state.isDragging}
-
+              fullscreen={this.props.maximizeOverlay}
             >
               <CallToAction>
                 Instantly create a shareable photo album
-        </CallToAction>
+              </CallToAction>
               <DropZoneStyledArea isActive={this.state.isDragging}>
                 <CloudSvg isActive={this.state.isDragging} />
                 <PhotosSvg />
                 <InstructionMain>
                   Drag & drop
-          </InstructionMain>
+                </InstructionMain>
                 <InstructionSecondary>
                   or <Link role="button" onClick={this.openFileDialog} href="#">browse</Link> to upload your photos
-          </InstructionSecondary>
+                </InstructionSecondary>
               </DropZoneStyledArea>
             </SpringOverlay>
           </Container>

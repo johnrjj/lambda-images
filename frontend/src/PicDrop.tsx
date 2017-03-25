@@ -74,6 +74,7 @@ export interface DropPicState {
   uploading: boolean;
   error: string;
   status: string;
+  albumId: string;
 }
 
 export interface CollectionStatus {
@@ -98,19 +99,20 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
       files: null,
       error: null,
       status: null,
+      albumId: null,
     };
     this.toggleModal = this.toggleModal.bind(this);
     this.handleDrop = this.handleDrop.bind(this);
+    this.transitionToCreatedAlbum = this.transitionToCreatedAlbum.bind(this);
   }
 
   toggleModal() {
     this.setState({ showModal: !this.state.showModal });
   }
 
-  async handleDrop(e) {
-    this.setState({ uploading: true });
+  async handleDrop(files) {
+    console.log('called');
 
-    const { files, types, items } = e.dataTransfer;
     const postFiles: Array<File> = Array.prototype.slice.call(files);
     this.setState({ files: postFiles });
 
@@ -157,10 +159,18 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
     const { push } = history;
     console.log(this.state);
 
-    push(`/a/${id}`);
+    // push(`/a/${id}`);
+    // start transition here....
+    // this.setState({  uploading: true})
+
+    this.setState({ uploading: true, albumId: id });
+
+    
+
+
     console.log('but i can keep executing!');
 
-    this.toggleModal();
+    // this.toggleModal();
 
     await Promise.all(images.map((image, i) => {
 
@@ -205,13 +215,15 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
     } catch (err) {
       console.log('err', err);
     }
+
+    console.log('neat all done!');
   }
 
-  transitionToCreatedAlbum(albumId) {
+  transitionToCreatedAlbum() {
     // handleResizeToFullscreenAnimEnd
     const { history } = this.props;
     const { push } = history;
-    push(`/a/${albumId}`);
+    push(`/a/${this.state.albumId}`);
   }
 
   poll(collectionId): Promise<any> {
@@ -251,7 +263,9 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
         <Header />
         <Route path="/" exact render={props =>
           <Home
-            onResizeToFullscreenAnimEnd={() => console.log('in picdrop, anim done!')}
+            onDrop={this.handleDrop}
+            onResizeToFullscreenAnimEnd={this.transitionToCreatedAlbum}
+            maximizeOverlay={this.state.uploading}
             {...props}
           />
         }
