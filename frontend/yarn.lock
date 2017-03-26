@@ -37,6 +37,19 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-addons-css-transition-group@^15.0.1":
+  version "15.0.1"
+  resolved "https://registry.yarnpkg.com/@types/react-addons-css-transition-group/-/react-addons-css-transition-group-15.0.1.tgz#2fc47a444d754bce94f1b774bca490542de13874"
+  dependencies:
+    "@types/react" "*"
+    "@types/react-addons-transition-group" "*"
+
+"@types/react-addons-transition-group@*":
+  version "0.14.19"
+  resolved "https://registry.yarnpkg.com/@types/react-addons-transition-group/-/react-addons-transition-group-0.14.19.tgz#74053d3b1d30644644149343323e05570ccb9fd2"
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-dom@^0.14.22":
   version "0.14.23"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-0.14.23.tgz#cecfcfad754b4c2765fe5d29b81b301889ad6c2e"
@@ -46,6 +59,12 @@
 "@types/react-dropzone@^0.0.32":
   version "0.0.32"
   resolved "https://registry.yarnpkg.com/@types/react-dropzone/-/react-dropzone-0.0.32.tgz#0035029a938db8f80d575db280e6b241a71247ce"
+  dependencies:
+    "@types/react" "*"
+
+"@types/react-imageloader@^2.1.6":
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/@types/react-imageloader/-/react-imageloader-2.1.6.tgz#b7971c2a64e3b7fa25bac1f1c7fe1aa76b1188e6"
   dependencies:
     "@types/react" "*"
 
@@ -3848,7 +3867,7 @@ rc@^1.0.1, rc@^1.1.6, rc@~1.1.6:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-"react-addons-css-transition-group@^15.0.0 || ^16.0.0":
+"react-addons-css-transition-group@^15.0.0 || ^16.0.0", react-addons-css-transition-group@^15.4.2:
   version "15.4.2"
   resolved "https://registry.yarnpkg.com/react-addons-css-transition-group/-/react-addons-css-transition-group-15.4.2.tgz#b7828834dfa14229fe07750e331e8a8cb6fb7745"
   dependencies:
@@ -3887,6 +3906,10 @@ react-dropzone@^3.12.2:
   resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-3.12.2.tgz#7e66a37322a80cf26a205d749ecf8cad0d90aa6f"
   dependencies:
     attr-accept "^1.0.3"
+
+react-imageloader@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/react-imageloader/-/react-imageloader-2.1.0.tgz#a58401970b3282386aeb810c43175165634f6308"
 
 react-perimeter@^0.2.0:
   version "0.2.0"

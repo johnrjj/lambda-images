@@ -1,6 +1,10 @@
 import * as React from 'react';
+// import {  } from 'react';
 import * as Radium from 'radium';
 import { withRouter, Route } from 'react-router-dom';
+// import ReactCSSTransitionGroup from 'react-addons-css-transition-group' ;
+import ReactCSSTransitionGroup from 'react/lib/ReactCSSTransitionGroup';
+// import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import 'isomorphic-fetch';
 import 'normalize.css';
 import './App.css';
@@ -120,19 +124,21 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
     postFiles.forEach((file, idx) => {
       const reader = new FileReader();
       const url = reader.readAsDataURL(file);
+      // reader.readAsArrayBuffer(file);
       reader.onloadend = e => {
-        console.log(this.state);
-        const files = this.state.files;
-        const image = new Image();
-        image.src = reader.result;
-        const height = image.height;
-        const width = image.width;
+        // const fileBuffer: ArrayBuffer = reader.result();
+        // console.log(this.state);
+        // const files = this.state.files;
+        // const image = new Image();
+        // image.src = reader.result;
+        // const height = image.height;
+        // const width = image.width;
 
         this.setState((prevState, props) => {
           const files = prevState.files;
           files[idx].previewUrl = reader.result;
-          files[idx].height = height;
-          files[idx].width = width;
+          files[idx].height = 600;
+          files[idx].width = 600;
           files[idx].uploadedAmount = 0;
           return { files };
         });
@@ -144,10 +150,12 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
       size,
       type,
     }));
+    console.log('generating album');
     const album = await generateAlbumSignatures(
       generateAlbumEndpoint,
       filesMetadata,
     );
+    console.log('done generating album');
     const { id, images } = album;
     // console.log(album);
 
@@ -159,13 +167,15 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
     const { push } = history;
     console.log(this.state);
 
+    this.setState({ uploading: true, albumId: id });
+
+
     // push(`/a/${id}`);
     // start transition here....
     // this.setState({  uploading: true})
 
-    this.setState({ uploading: true, albumId: id });
 
-    
+
 
 
     console.log('but i can keep executing!');
@@ -216,6 +226,8 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
       console.log('err', err);
     }
 
+
+
     console.log('neat all done!');
   }
 
@@ -249,17 +261,18 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
   }
 
   render() {
-
+    console.log(this.props);
     const files = this.state.files;
     // console.log
+    console.log(ReactCSSTransitionGroup);
 
     return (
       <div>
-        <FullViewportModal
+        {/*<FullViewportModal
           hide={!this.state.showModal}
         >
           <div>{this.state.uploading ? 'Loading' : null}</div>
-        </FullViewportModal>
+        </FullViewportModal>*/}
         <Header />
         <Route path="/" exact render={props =>
           <Home
@@ -270,9 +283,10 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
           />
         }
         />
-        <Route path="/a/:id" render={props =>
-          <AlbumPage {...props} meow={"meow"} photos={files}> </AlbumPage>}
-        />
+
+          <Route path="/a/:id" key={'meow'} render={props =>
+            <AlbumPage {...props} key={'test2'} meow={"meow"} photos={files}> </AlbumPage>}
+          />
         <Route path="/:id" exact component={ImagePage} />
         {/*</Card>*/}
         {/*<Auth domain={auth0Domain} clientId={auth0ClientId} ></Auth>*/}
@@ -281,5 +295,27 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
     );
   }
 }
+
+const workerFn = () => {
+  setInterval(() => {
+
+
+
+    postMessage(['test'], undefined);
+    // postMessage({foo: "bar"});
+  }, 1000);
+}
+
+let workerCode = workerFn.toString();
+workerCode = workerCode.substring(workerCode.indexOf("{") + 1, workerCode.lastIndexOf("}"));
+
+const blob = new Blob([workerCode], { type: "application/javascript" });
+const worker = new Worker(URL.createObjectURL(blob));
+
+worker.onmessage = (m) => {
+  console.log("msg", m);
+};
+
+
 
 export default withRouter(Radium(DropPic));

@@ -2,17 +2,18 @@ import * as React from 'react';
 import { Component } from 'react';
 import * as Radium from 'radium';
 import 'isomorphic-fetch';
+import ImageLoader from 'react-imageloader';
 import { AImage } from '../PicDrop';
 import PhotoCard from '../components/PhotoCard';
 import ContentEditable from '../components/ContentEditable';
 
 const styles = {
   title: {
-    fontSize: '1.5rem',
+    fontSize: '48px',
     marginBottom: '0.5rem',
   },
   subtitle: {
-    fontSize: '1rem',
+    fontSize: '1.5rem',
   },
   albumHeader: {
     padding: '1rem',
@@ -44,12 +45,12 @@ const getProgressBarStyles = (progress: number = 0) => {
   }
   return {
     position: 'fixed',
-    top: '50',
+    top: '72',
     left: '0',
     height: '4px',
     zIndex: 3,
     width: `${progress}%`,
-    backgroundColor: '#6CB0FF',
+    backgroundColor: '#8DC1FB',
     transition: '2s width ease-out',
   }
 };
@@ -124,6 +125,9 @@ class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
     console.log(totalProgressPercent);
     return (
       <div>
+      <div style={{height: '72px', backgroundColor: '#5483F7'}}>
+      </div>
+      <div style={{width: '720px', margin: '0 auto'}}>
         <div>
           <div style={getProgressBarStyles(totalProgressPercent)}></div>
         </div>
@@ -159,6 +163,7 @@ class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
 
           {'meow'}
         </div>
+      </div>
       </div>
     );
   }

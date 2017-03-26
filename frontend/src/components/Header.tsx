@@ -11,7 +11,7 @@ const styles = {
   container: {
     display: 'flex',
     margin: '0 auto',
-    width: '780px',
+    width: '624px',
     alignItems: 'center',
     justifyContent: 'space-between',
   } as CSSProperties,
@@ -19,6 +19,7 @@ const styles = {
     backgroundColor: '#5483F7',
     borderBottom: '1px solid rgba(0,0,0,.0975)',
     zIndex: 2,
+    
     alignItems: 'center',
     position: 'fixed',
     left: '0',
