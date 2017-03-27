@@ -12,7 +12,7 @@ export interface ContentEditableState {
   htmlEl?: Element;
 };
 
-class ContentEditable extends React.Component<ContentEditableProps, ContentEditableState> {
+class ContentEditable extends React.Component<ContentEditableProps & any, ContentEditableState> {
   htmlEl: Element;
   lastHtml: string;
   

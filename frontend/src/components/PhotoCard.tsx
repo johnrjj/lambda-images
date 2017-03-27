@@ -12,6 +12,9 @@ export interface Photo {
   statusText?: string;
 }
 
+/* Rectangle 5: */
+
+
 const Photo = ({ src, height, width, placeholderImageSrc, uploadProgress, statusText, ...rest }: Photo) => {
   return (
     <div style={styles.container}>
@@ -24,9 +27,9 @@ const Photo = ({ src, height, width, placeholderImageSrc, uploadProgress, status
         progressBarPercent={uploadProgress}
         {...rest}
       />
-      <div style={styles.metadata}>
+      {/*<div style={styles.metadata}>
         metadata reeeeeee
-      </div>
+      </div>*/}
     </div>
   )
 };
@@ -35,7 +38,7 @@ export default Radium(Photo);
 
 const styles = {
   container: {
-    marginBottom: '2rem',
+    marginBottom: '4rem',
   },
   metadata: {
     padding: '1rem 1rem 2rem',

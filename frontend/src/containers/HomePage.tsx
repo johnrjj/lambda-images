@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import * as Animated from 'animated/lib/targets/react-dom';
 import * as Dropzone from 'react-dropzone';
+import { headerHeight } from '../design-tokens';
 
 import Spring from '../components/Test';
 
@@ -16,7 +17,7 @@ const FullViewportView = styled.div`
   position: relative;
   width: 100vw;
   background-image: linear-gradient(-180deg, #5483F7 19%, #2B5BDB 100%);
-  padding-top: 72px;
+  padding-top: ${headerHeight};
 `;
 
 // ç33CCA9
@@ -28,6 +29,7 @@ const CallToAction = styled.header`
   color: #74809D;
   width: 376px;
   font-size: 36px;
+  font-weight: 500;
   text-align: center;
 `;
 
@@ -90,9 +92,11 @@ const SpringOverlay = styled((props: any) => (
     {props.children}
   </Spring>
 )) `
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0;
   min-width: 500px;
-  box-shadow: 0 11px 74px 28px rgba(0,0,0,0.15);
+  box-shadow: 0 26px 74px 28px rgba(0,0,0,0.15);
   background: #FFFFFF;
   z-index: 1;
   position: absolute;

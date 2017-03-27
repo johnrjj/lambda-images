@@ -6,12 +6,14 @@ import { ReactNode, Component, CSSProperties } from 'react';
 
 import style from 'styled-components';
 
+import { headerHeight } from '../design-tokens';
 
 class Attempt extends React.Component<any, any> {
   widthAnimFullscreen;
   heightAnimFullscreen;
   roundToStraightBorderRadiusAnim;
   opacityFadeAnimFullscreen;
+  marginTopHideAnimFullscreen;
   
   constructor(props) {
     super(props);
@@ -30,6 +32,11 @@ class Attempt extends React.Component<any, any> {
     this.opacityFadeAnimFullscreen = animFullscreen.interpolate({
       inputRange: [0, 1],
       outputRange: [1, 0],
+    });
+
+    this.marginTopHideAnimFullscreen = animFullscreen.interpolate({
+      inputRange: [0, 1],
+      outputRange: [headerHeight, '0px'],
     });
 
     this.state = {
@@ -58,11 +65,11 @@ class Attempt extends React.Component<any, any> {
       const h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
       this.heightAnimFullscreen = this.state.animFullscreen.interpolate({
         inputRange: [0, 1],
-        outputRange: ['690px', `${h + fuzz - 72}px`] // height of header...
+        outputRange: ['690px', `${h + fuzz - 52}px`] // height of header...
       });
       this.widthAnimFullscreen = this.state.animFullscreen.interpolate({
         inputRange: [0, 1],
-        outputRange: ['760px', `${w + fuzz}px`]
+        outputRange: ['720px', `${w + fuzz}px`]
       });
       this.handleStartMaximize();
     }
@@ -89,7 +96,8 @@ class Attempt extends React.Component<any, any> {
         style={{ 
             transform: [{scale: this.state.anim}],
             maxHeight: this.heightAnimFullscreen || '690px',
-            maxWidth: this.widthAnimFullscreen || '760px',
+            maxWidth: this.widthAnimFullscreen || '720px',
+            marginTop: this.marginTopHideAnimFullscreen || headerHeight,
             height:  '100%',
             borderRadius: this.roundToStraightBorderRadiusAnim || '14px',
             width: '100%',

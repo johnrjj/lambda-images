@@ -6,17 +6,26 @@ import ImageLoader from 'react-imageloader';
 import { AImage } from '../PicDrop';
 import PhotoCard from '../components/PhotoCard';
 import ContentEditable from '../components/ContentEditable';
+import { headerHeight } from '../design-tokens';
+import { CSSProperties } from 'react';
+
 
 const styles = {
   title: {
-    fontSize: '48px',
-    marginBottom: '0.5rem',
-  },
+    fontSize: '2rem',
+    fontWeight: 300,
+    marginBottom: '0.25rem',
+  } as CSSProperties,
   subtitle: {
-    fontSize: '1.5rem',
-  },
+    fontSize: '1rem',
+    fontWeight: 300,
+    
+    color: '#969898', 
+  } as CSSProperties,
   albumHeader: {
-    padding: '1rem',
+    marginTop: '1rem',
+    marginBottom: '2rem',
+
   },
   albumFooter: {
     padding: '1rem',
@@ -45,7 +54,7 @@ const getProgressBarStyles = (progress: number = 0) => {
   }
   return {
     position: 'fixed',
-    top: '72',
+    top: headerHeight,
     left: '0',
     height: '4px',
     zIndex: 3,
@@ -72,7 +81,7 @@ class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
   constructor(props) {
     super(props);
     this.state = {
-      albumTitle: 'Give your album a title',
+      albumTitle: 'Give your album a title...',
       photos: props.photos || [],
     };
     this.onAlbumTitleChange = this.onAlbumTitleChange.bind(this);
@@ -121,11 +130,12 @@ class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
     const totalFilesSize = this.state.photos
       .map(photo => photo.size)
       .reduce((total, photoSize) => total += photoSize, 0);
+
     const totalProgressPercent = 100 * (totalUploadedData / totalFilesSize);
-    console.log(totalProgressPercent);
+
     return (
       <div>
-      <div style={{height: '72px', backgroundColor: '#5483F7'}}>
+      <div style={{height: headerHeight, backgroundColor: '#5483F7'}}>
       </div>
       <div style={{width: '720px', margin: '0 auto'}}>
         <div>
@@ -134,13 +144,14 @@ class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
         <div style={styles.albumHeader}>
           <div style={styles.title}> 
             <ContentEditable
+              style={{ lineHeight: '1.5' }}
               onChange={this.onAlbumTitleChange}
               html={this.state.albumTitle}
             >
             </ContentEditable>
           </div>
           <div style={styles.subtitle}>
-            Uploaded 7 min ago
+            Uploaded by <span style={{ fontWeight: 700 }}><strong>johnjohnson</strong></span>, 7m ago
           </div>
         </div>
 
@@ -159,9 +170,6 @@ class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
             : null}
         </div>
         <div style={styles.albumFooter}>
-
-
-          {'meow'}
         </div>
       </div>
       </div>

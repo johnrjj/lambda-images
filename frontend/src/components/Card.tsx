@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ReactNode, Component} from 'react';
+import { ReactNode, Component, CSSProperties} from 'react';
 import * as Radium from 'radium';
 
 export interface CardProps {
@@ -15,7 +15,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
-  },
+  } as CSSProperties,
 };
 
 const Card = ({ children }: CardProps) => {

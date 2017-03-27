@@ -4,7 +4,7 @@ import * as ReactDOM from 'react-dom';
 import * as Radium from 'radium';
 
 // right now hardcoding width value.
-const MAX_WIDTH: number = 672;
+const MAX_WIDTH: number = 720;
 const MAX_HEIGHT: number = Number.MAX_VALUE;
 
 export interface PhotoDisplayerProps {
@@ -22,33 +22,48 @@ const styles = {
     position: 'relative',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: '1rem',
+    // marginBottom: '1rem',
   } as CSSProperties,
+  imageContainer: {
+    background: '#FFFFFF',
+    // border: '1px solid #FFFFFF',
+    boxShadow: '1px 26px 40px 0 rgba(0,0,0,0.15)',
+    // borderRadius: '4px',
+  },
   image: {
     display: 'block',
     width: 'auto',
     maxWidth: '100%',
     height: 'auto',
+    // borderRadius: '4px',
+    
   },
   placeholderImage: {
     position: 'absolute',
     top: 0,
   },
   mainImage: {},
-  getScaledImageStyle(origHeight: number, origWidth: number): { maxWidth: number, minHeight: number } {
+  getScaledImageStyle(origHeight: number, origWidth: number): { maxWidth?: number, minHeight?: number, height: number, width: number } {
     const { height = 0, width = 0 } = scaleImageToFit(origHeight, origWidth);
     console.log(height, width, origHeight, origWidth);
     return {
-      maxWidth: width,
-      minHeight: height,
+      // maxWidth: width,
+      height: height,
+      width: width,
+      // minHeight: height,
     }
   },
+  
 };
 
 const PhotoDisplayer: React.StatelessComponent<PhotoDisplayerProps> = (props) => {
   console.log('props', props);
   return (
     <div style={styles.container}>
+      <div style={[
+        styles.imageContainer, 
+        styles.getScaledImageStyle(props.originalHeight, props.originalWidth)
+        ]}>
       <img
         src={props.placeholderImageSrc}
         style={[
@@ -72,6 +87,7 @@ const PhotoDisplayer: React.StatelessComponent<PhotoDisplayerProps> = (props) =>
       {(props.progressBarPercent) &&
         <div style={getProgressBarStyles(props.progressBarPercent)}></div>
       }
+      </div>
     </div>
   )
 };

@@ -3,14 +3,14 @@ import * as React from 'react';
 import * as Radium from 'radium';
 import { withRouter, Route } from 'react-router-dom';
 // import ReactCSSTransitionGroup from 'react-addons-css-transition-group' ;
-import ReactCSSTransitionGroup from 'react/lib/ReactCSSTransitionGroup';
-// import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+// import ReactCSSTransitionGroup from 'react/lib/ReactCSSTransitionGroup';
+import * as ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import 'isomorphic-fetch';
 import 'normalize.css';
 import './App.css';
 import DropArea from './components/DropArea';
-import FullViewportModal from './components/FullViewportModal';
-import PageContainer from './components/PageContainer';
+// import FullViewportModal from './components/FullViewportModal';
+// import PageContainer from './components/PageContainer';
 import AlbumPage from './containers/AlbumPage';
 import Home from './containers/HomePage';
 import ImagePage from './containers/ImagePage';
@@ -70,6 +70,7 @@ export interface AImage {
 
 export interface DropPicProps {
   history: any;
+  location: any;
 }
 
 export interface DropPicState {
@@ -117,7 +118,8 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
   async handleDrop(files) {
     console.log('called');
 
-    const postFiles: Array<File> = Array.prototype.slice.call(files);
+    setTimeout(async () => {
+const postFiles: Array<File> = Array.prototype.slice.call(files);
     this.setState({ files: postFiles });
 
 
@@ -127,18 +129,18 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
       // reader.readAsArrayBuffer(file);
       reader.onloadend = e => {
         // const fileBuffer: ArrayBuffer = reader.result();
-        // console.log(this.state);
-        // const files = this.state.files;
-        // const image = new Image();
-        // image.src = reader.result;
-        // const height = image.height;
-        // const width = image.width;
+        console.log(this.state);
+        const files = this.state.files;
+        const image = new Image();
+        image.src = reader.result;
+        const height = image.height;
+        const width = image.width;
 
         this.setState((prevState, props) => {
           const files = prevState.files;
           files[idx].previewUrl = reader.result;
-          files[idx].height = 600;
-          files[idx].width = 600;
+          files[idx].height = height;//600;
+          files[idx].width = width;//600;
           files[idx].uploadedAmount = 0;
           return { files };
         });
@@ -227,6 +229,9 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
     }
 
 
+    }, 750);
+
+    
 
     console.log('neat all done!');
   }
@@ -261,18 +266,10 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
   }
 
   render() {
-    console.log(this.props);
     const files = this.state.files;
-    // console.log
-    console.log(ReactCSSTransitionGroup);
 
     return (
       <div>
-        {/*<FullViewportModal
-          hide={!this.state.showModal}
-        >
-          <div>{this.state.uploading ? 'Loading' : null}</div>
-        </FullViewportModal>*/}
         <Header />
         <Route path="/" exact render={props =>
           <Home
@@ -283,14 +280,11 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
           />
         }
         />
-
-          <Route path="/a/:id" key={'meow'} render={props =>
-            <AlbumPage {...props} key={'test2'} meow={"meow"} photos={files}> </AlbumPage>}
-          />
+        <Route key={this.props.location.key} path="/a/:id" render={props =>
+          <AlbumPage {...props} meow={"meow"} photos={files}> </AlbumPage>}
+        />
         <Route path="/:id" exact component={ImagePage} />
-        {/*</Card>*/}
         {/*<Auth domain={auth0Domain} clientId={auth0ClientId} ></Auth>*/}
-        {/*</PageContainer>*/}
       </div>
     );
   }
