@@ -3,12 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "@types/auth0-lock": "^10.10.0",
     "@types/enzyme": "^2.7.2",
     "@types/jest": "^18.1.1",
     "@types/node": "^7.0.4",
     "@types/radium": "^0.18.20",
     "@types/react": "^15.0.6",
+    "@types/react-addons-css-transition-group": "^15.0.1",
     "@types/react-dom": "^0.14.22",
+    "@types/react-dropzone": "^0.0.32",
+    "@types/react-imageloader": "^2.1.6",
     "@types/sinon": "^1.16.34",
     "enzyme": "^2.7.1",
     "jest": "^18.1.0",
@@ -16,10 +20,6 @@
     "sinon": "^1.17.7"
   },
   "dependencies": {
-    "@types/auth0-lock": "^10.10.0",
-    "@types/react-addons-css-transition-group": "^15.0.1",
-    "@types/react-dropzone": "^0.0.32",
-    "@types/react-imageloader": "^2.1.6",
     "animated": "^0.2.0",
     "auth0-lock": "^10.13.0",
     "normalize.css": "^5.0.0",
