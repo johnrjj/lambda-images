@@ -1,14 +1,13 @@
-import * as React from 'react';
-import { Component } from 'react';
-import * as Radium from 'radium';
 import 'isomorphic-fetch';
-import ImageLoader from 'react-imageloader';
-import { AImage } from '../PicDrop';
+import * as React from 'react';
+import * as Radium from 'radium';
 import PhotoCard from '../components/PhotoCard';
 import ContentEditable from '../components/ContentEditable';
+import ImageLoader from 'react-imageloader';
+import { AImage } from '../PicDrop';
+import { Component } from 'react';
 import { headerHeight } from '../design-tokens';
 import { CSSProperties } from 'react';
-
 
 const styles = {
   title: {
@@ -64,7 +63,6 @@ const getProgressBarStyles = (progress: number = 0) => {
   }
 };
 
-
 export interface AlbumPageProps {
   photos?: AImage[];
   albumId?: string;
@@ -118,8 +116,6 @@ class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
     this.setState({ albumTitle: newTitle });
   }
 
-
-
   render() {
     const photos = this.state.photos;
 
@@ -135,9 +131,9 @@ class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
 
     return (
       <div>
-      <div style={{height: headerHeight, backgroundColor: '#5483F7'}}>
+      <div style={{ height: headerHeight, backgroundColor: '#5483F7' }}>
       </div>
-      <div style={{width: '720px', margin: '0 auto'}}>
+      <div style={{ width: '720px', margin: '0 auto' }}>
         <div>
           <div style={getProgressBarStyles(totalProgressPercent)}></div>
         </div>
@@ -154,7 +150,6 @@ class AlbumPage extends Component<AlbumPageProps, AlbumPageState> {
             Uploaded by <span style={{ fontWeight: 700 }}><strong>johnjohnson</strong></span>, 7m ago
           </div>
         </div>
-
         <div>
           {photos
             ? photos.map(photo =>

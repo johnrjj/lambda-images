@@ -1,10 +1,9 @@
 import * as React from 'react';
-import styled from 'styled-components';
 import * as Animated from 'animated/lib/targets/react-dom';
 import * as Dropzone from 'react-dropzone';
+import styled from 'styled-components';
+import Spring from '../components/AnimatedDrop';
 import { headerHeight } from '../design-tokens';
-
-import Spring from '../components/Test';
 
 const BlueGradient = styled.div`
   background-image: linear-gradient(-180deg, #5483F7 19%, #2B5BDB 100%);
@@ -19,10 +18,8 @@ const FullViewportView = styled.div`
   background-image: linear-gradient(-180deg, #5483F7 19%, #2B5BDB 100%);
   padding-top: ${headerHeight};
 `;
-
 // ç33CCA9
 // gray gradient   background-image: linear-gradient(-180deg, #FEFEFF 0%, #FCFCFD 51%, #F3F7FF 100%);
-
 
 const CallToAction = styled.header`
   margin: 46px auto 46px auto;
@@ -142,15 +139,13 @@ class Home extends React.Component<any, any> {
   dropzone: any;
   constructor(props) {
     super(props);
-
+    this.state = {
+      isDragging: false,
+    }
     this.handleDragEnter = this.handleDragEnter.bind(this);
     this.handleDragLeave = this.handleDragLeave.bind(this);
     this.handleDrop = this.handleDrop.bind(this);
     this.openFileDialog = this.openFileDialog.bind(this);
-    // this.handleResizeToFullscreenAnimEnd = this.handleResizeToFullscreenAnimEnd.bind(this);
-    this.state = {
-      isDragging: false,
-    }
   }
 
   handleDragEnter() {
@@ -181,7 +176,7 @@ class Home extends React.Component<any, any> {
         onDragLeave={this.handleDragLeave}
         onDrop={this.handleDrop}
         ref={(node) => { this.dropzone = node; }}
-          >
+      >
         <FullViewportView >
           <Container>
             <SpringOverlay

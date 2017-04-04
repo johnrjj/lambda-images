@@ -1,11 +1,8 @@
 // import Animated from 'animated';
 import * as React from 'react';
 import * as Animated from 'animated/lib/targets/react-dom';
-
-import { ReactNode, Component, CSSProperties } from 'react';
-
 import style from 'styled-components';
-
+import { ReactNode, Component, CSSProperties } from 'react';
 import { headerHeight } from '../design-tokens';
 
 class Attempt extends React.Component<any, any> {
@@ -114,17 +111,11 @@ class Attempt extends React.Component<any, any> {
   handleSpringDown() {
     console.log('down');
     Animated.spring(this.state.anim, { toValue: 1.05 }).start();
-    // Animated.spring(this.state.fullscren)
-    // Animated.spring(this.state.anim, { toValue: 1.5 }).start();
-    // Animated.timing(this.state.animFullscreen, { toValue: 1, onUpdate: () => console.log('moo'), onEnd: () => console.log('meowww')}).start();
   }
   handleSpringUp() {
     console.log('up');
-    // Animated.spring(this.state.animFullscreen, { toValue: 0,  onEnd: () => console.log('test')}).start();
-
     Animated.spring(this.state.anim, { toValue: 1,       friction: 3,       }).start();
   }
-
 }
 
 export default Attempt;
