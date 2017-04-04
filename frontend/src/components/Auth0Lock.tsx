@@ -5,7 +5,6 @@ import { Component } from 'react';
 export interface AuthProps {
   clientId: string;
   domain: string;
-  // router: any;
 }
 
 class Auth extends Component<AuthProps, null> {

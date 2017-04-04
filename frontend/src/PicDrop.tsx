@@ -1,16 +1,10 @@
-import * as React from 'react';
-// import {  } from 'react';
-import * as Radium from 'radium';
-import { withRouter, Route } from 'react-router-dom';
-// import ReactCSSTransitionGroup from 'react-addons-css-transition-group' ;
-// import ReactCSSTransitionGroup from 'react/lib/ReactCSSTransitionGroup';
-import * as ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import 'isomorphic-fetch';
 import 'normalize.css';
 import './App.css';
+import * as React from 'react';
+import * as Radium from 'radium';
+import * as ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import DropArea from './components/DropArea';
-// import FullViewportModal from './components/FullViewportModal';
-// import PageContainer from './components/PageContainer';
 import AlbumPage from './containers/AlbumPage';
 import Home from './containers/HomePage';
 import ImagePage from './containers/ImagePage';
@@ -18,12 +12,8 @@ import Header from './components/Header';
 import Card from './components/Card';
 import Photo from './components/PhotoCard';
 import Auth from './components/Auth0Lock';
-import {
-  XHRPromise,
-  uploadFile,
-  generateAlbumSignatures
-} from './util';
-
+import { withRouter, Route } from 'react-router-dom';
+import { XHRPromise, uploadFile, generateAlbumSignatures } from './util';
 
 const auth0ClientId = '9b9vnnximFjks0pgQxhmlgtaIbOxqXoG';
 const auth0Domain = 'lamdba-images.auth0.com';
@@ -96,7 +86,6 @@ const getCollectionStatus = async (collectionId: string) => {
 
 class DropPic extends React.Component<DropPicProps, DropPicState> {
   constructor(props, context) {
-    console.log('DropPic ctr, dumping props and context', props, context);
     super(props);
     this.state = {
       showModal: false,
@@ -116,37 +105,30 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
   }
 
   async handleDrop(files) {
-    console.log('called');
-
-    setTimeout(async () => {
-const postFiles: Array<File> = Array.prototype.slice.call(files);
+    const postFiles: Array<File> = Array.prototype.slice.call(files);
     this.setState({ files: postFiles });
-
-
+    console.log(postFiles, 'dropped!');
     postFiles.forEach((file, idx) => {
       const reader = new FileReader();
       const url = reader.readAsDataURL(file);
-      // reader.readAsArrayBuffer(file);
-      reader.onloadend = e => {
-        // const fileBuffer: ArrayBuffer = reader.result();
-        console.log(this.state);
+      reader.onloadend = () => {
         const files = this.state.files;
         const image = new Image();
+        image.onload = () => {
+          const height = image.height;
+          const width = image.width;
+          this.setState((prevState, props) => {
+            const files = prevState.files;
+            files[idx].previewUrl = reader.result;
+            files[idx].height = height;
+            files[idx].width = width;
+            files[idx].uploadedAmount = 0;
+            return { files };
+          });
+        };
         image.src = reader.result;
-        const height = image.height;
-        const width = image.width;
-
-        this.setState((prevState, props) => {
-          const files = prevState.files;
-          files[idx].previewUrl = reader.result;
-          files[idx].height = height;//600;
-          files[idx].width = width;//600;
-          files[idx].uploadedAmount = 0;
-          return { files };
-        });
       };
     });
-
     const filesMetadata = postFiles.map(({ name, size, type }) => ({
       name,
       size,
@@ -159,8 +141,6 @@ const postFiles: Array<File> = Array.prototype.slice.call(files);
     );
     console.log('done generating album');
     const { id, images } = album;
-    // console.log(album);
-
     const totalFileSize = getTotalFileSize(filesMetadata);
     console.log(`total file size: ${totalFileSize}`);
     console.log(id, images);
@@ -171,23 +151,8 @@ const postFiles: Array<File> = Array.prototype.slice.call(files);
 
     this.setState({ uploading: true, albumId: id });
 
-
-    // push(`/a/${id}`);
-    // start transition here....
-    // this.setState({  uploading: true})
-
-
-
-
-
-    console.log('but i can keep executing!');
-
-    // this.toggleModal();
-
     await Promise.all(images.map((image, i) => {
-
       // todo any files > 6 count won't have a status text until they actually begin the uploading.
-
       return uploadFile(image.presignedUrl, postFiles[i], (e) => {
         const { loaded, total } = e;
         // const percentUploaded = 100 * (loaded / total);
@@ -200,19 +165,16 @@ const postFiles: Array<File> = Array.prototype.slice.call(files);
     }));
 
     // now we can check the processing statuses of all the photos and make sure everything worked...
-
     // poll, query DB make sure all photos have urls s3 keys
     const albumId = id;
     try {
       const res = await this.poll(albumId);
       console.log(res);
-
       this.setState((prevState: DropPicState) => {
         const { files } = prevState;
         files.forEach(file => file.uploadedAmount = null);
         return { files };
       });
-
       const entries: any = res.entries;
       const testImg = new Image();
       const src: string = `https://image-service-jj-02.s3.amazonaws.com/${entries[0].s3key}`
@@ -223,21 +185,14 @@ const postFiles: Array<File> = Array.prototype.slice.call(files);
         const files = prevState.files;
         files[0].src = src;
       });
-
     } catch (err) {
       console.log('err', err);
     }
-
-
-    }, 750);
-
-    
-
     console.log('neat all done!');
   }
 
+  // todo, should turn this into a redirect component!
   transitionToCreatedAlbum() {
-    // handleResizeToFullscreenAnimEnd
     const { history } = this.props;
     const { push } = history;
     push(`/a/${this.state.albumId}`);
@@ -266,8 +221,7 @@ const postFiles: Array<File> = Array.prototype.slice.call(files);
   }
 
   render() {
-    const files = this.state.files;
-
+    const { files } = this.state;
     return (
       <div>
         <Header />
@@ -290,26 +244,21 @@ const postFiles: Array<File> = Array.prototype.slice.call(files);
   }
 }
 
-const workerFn = () => {
-  setInterval(() => {
+// todo offload image processing to service workers so animations look nicer
+// const workerFn = () => {
+//   setInterval(() => {
+//     postMessage(['test'], undefined);
+//   }, 1000);
+// }
 
+// let workerCode = workerFn.toString();
+// workerCode = workerCode.substring(workerCode.indexOf("{") + 1, workerCode.lastIndexOf("}"));
 
+// const blob = new Blob([workerCode], { type: "application/javascript" });
+// const worker = new Worker(URL.createObjectURL(blob));
 
-    postMessage(['test'], undefined);
-    // postMessage({foo: "bar"});
-  }, 1000);
-}
-
-let workerCode = workerFn.toString();
-workerCode = workerCode.substring(workerCode.indexOf("{") + 1, workerCode.lastIndexOf("}"));
-
-const blob = new Blob([workerCode], { type: "application/javascript" });
-const worker = new Worker(URL.createObjectURL(blob));
-
-worker.onmessage = (m) => {
-  console.log("msg", m);
-};
-
-
+// worker.onmessage = (m) => {
+//   console.log("msg", m);
+// };
 
 export default withRouter(Radium(DropPic));

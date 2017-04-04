@@ -22,42 +22,34 @@ const styles = {
     position: 'relative',
     justifyContent: 'center',
     alignItems: 'center',
-    // marginBottom: '1rem',
   } as CSSProperties,
   imageContainer: {
     background: '#FFFFFF',
-    // border: '1px solid #FFFFFF',
-    boxShadow: '1px 26px 40px 0 rgba(0,0,0,0.15)',
-    // borderRadius: '4px',
+    boxShadow: '1px 26px 40px 1px rgba(0,0,0,0.15)',
   },
   image: {
     display: 'block',
     width: 'auto',
     maxWidth: '100%',
     height: 'auto',
-    // borderRadius: '4px',
-    
   },
   placeholderImage: {
     position: 'absolute',
     top: 0,
   },
   mainImage: {},
-  getScaledImageStyle(origHeight: number, origWidth: number): { maxWidth?: number, minHeight?: number, height: number, width: number } {
-    const { height = 0, width = 0 } = scaleImageToFit(origHeight, origWidth);
-    console.log(height, width, origHeight, origWidth);
+  getScaledImageStyle(origHeight: number, origWidth: number): { height: number, width: number } {
+    console.log(origHeight, origWidth);
+    const { height , width  } = scaleImageToFit(origHeight, origWidth);
+    // console.log(height, width, origHeight, origWidth);
     return {
-      // maxWidth: width,
-      height: height,
-      width: width,
-      // minHeight: height,
+      height,
+      width,
     }
   },
-  
 };
 
 const PhotoDisplayer: React.StatelessComponent<PhotoDisplayerProps> = (props) => {
-  console.log('props', props);
   return (
     <div style={styles.container}>
       <div style={[

@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { ReactNode, Component} from 'react';
+import { ReactNode, Component } from 'react';
 import * as Radium from 'radium';
 
 export interface ContentProps {
-  children?: ReactNode;
+  children?: ReactNode,
 }
 
 const styles = {
@@ -14,12 +14,12 @@ const styles = {
   }
 };
 
-const Container = ({ children }: ContentProps) => {
-  return (
+const Container = ({ children }: ContentProps) => 
+  (
     <div style={styles.container}>
       {children}
     </div>
   )
-}
+
 
 export default Radium(Container);

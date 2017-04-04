@@ -4,16 +4,22 @@ import * as Radium from 'radium';
 import PhotoDisplayer from './PhotoDisplayer';
 
 export interface Photo {
-  src: string;
-  placeholderImageSrc: string;
-  height: number;
-  width: number;
-  uploadProgress: number;
-  statusText?: string;
+  src: string,
+  placeholderImageSrc: string,
+  height: number,
+  width: number,
+  uploadProgress: number,
+  statusText?: string,
 }
 
-/* Rectangle 5: */
-
+const styles = {
+  container: {
+    marginBottom: '4rem',
+  },
+  metadata: {
+    padding: '1rem 1rem 2rem',
+  }
+};
 
 const Photo = ({ src, height, width, placeholderImageSrc, uploadProgress, statusText, ...rest }: Photo) => {
   return (
@@ -27,21 +33,8 @@ const Photo = ({ src, height, width, placeholderImageSrc, uploadProgress, status
         progressBarPercent={uploadProgress}
         {...rest}
       />
-      {/*<div style={styles.metadata}>
-        metadata reeeeeee
-      </div>*/}
     </div>
   )
 };
 
 export default Radium(Photo);
-
-const styles = {
-  container: {
-    marginBottom: '4rem',
-  },
-  metadata: {
-    padding: '1rem 1rem 2rem',
-    
-  }
-};

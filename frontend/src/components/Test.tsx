@@ -65,7 +65,7 @@ class Attempt extends React.Component<any, any> {
       const h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
       this.heightAnimFullscreen = this.state.animFullscreen.interpolate({
         inputRange: [0, 1],
-        outputRange: ['690px', `${h + fuzz - 52}px`] // height of header...
+        outputRange: ['690px', `${h + fuzz - 52}px`] // height of header...extract...
       });
       this.widthAnimFullscreen = this.state.animFullscreen.interpolate({
         inputRange: [0, 1],
@@ -86,10 +86,8 @@ class Attempt extends React.Component<any, any> {
   }
 
   render() {
-    // console.log( this.state.animFullscreen, this.state.anim);
-
     // div (shadowbox, concerned on shadow/sizing)
-    //   div (content container, displays contents or not)
+    // div (content container, displays contents or not)
     return (
       <Animated.div
         className={this.props.className}
@@ -103,12 +101,10 @@ class Attempt extends React.Component<any, any> {
             width: '100%',
         }}
       >
-
       <Animated.div
         style={{ 
             opacity: this.opacityFadeAnimFullscreen || 1,
         }}>
-
         { this.props.children }
         </Animated.div>
       </Animated.div>

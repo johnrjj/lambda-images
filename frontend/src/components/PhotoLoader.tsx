@@ -5,7 +5,6 @@ import { Component } from 'react';
 import { CSSProperties } from 'react';
 import * as Radium from 'radium';
 
-
 const { PropTypes } = React;
 const { span } = React.DOM;
 

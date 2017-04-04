@@ -18,12 +18,11 @@ const styles = {
   } as CSSProperties,
 };
 
-const Card = ({ children }: CardProps) => {
-  return (
+const Card = ({ children }: CardProps) => 
+  (
     <div style={styles.container}>
       {children}
     </div>
   );
-};
 
 export default Radium(Card);

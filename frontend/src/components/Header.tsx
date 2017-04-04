@@ -18,21 +18,16 @@ const styles = {
   } as CSSProperties,
   header: {
     backgroundColor: '#5483F7',
-    // borderBottom: '1px solid rgba(0,0,0,.0975)',
     zIndex: 2,
-    
     alignItems: 'center',
     position: 'fixed',
     left: '0',
     opacity: 1,
     top: '0',
-    // background: '#5483F7',
     padding: '1rem 3rem',
     color: '#f7fafe',
     display: 'flex',
     flexDirection: 'row',
-    // alignItems: 'center',
-    // justifyContent: 'center',
     width: '100%',
     height: headerHeight,
   } as CSSProperties,
@@ -46,18 +41,12 @@ const styles = {
     fontSize: '18px',
     fontWeight: '300',
   },
-  itemSelected: {
-  },
   logo: {
     display: 'flex',
-    // transform: 'translate3d(0px,0px,0px)',
     fontSize: '24px',
     fontWeight: 300
   } as CSSProperties,
   linksContainer: {
-    // float: 'right',
-    // alignItems: 'center',
-    // justifyContent: 'center',
     display: 'flex'
   } as CSSProperties
 };
