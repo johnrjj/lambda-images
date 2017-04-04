@@ -5,5 +5,6 @@ Just wanted to make a image sharing service with less tracking data and freshen 
 
 Client uploads straight into S3 bucket via presigned urls, bypassing server.
 S3 upload triggers event(s) to store metadata into dynamodb.
+Everything is routed through API gateway for auth, rate limiting, and to abstract out Lambda. 
 
-uses react and lambda for most of the heavy lifting.
+Uses React and Lambda for most of the heavy lifting. (LOVE both of these technologies).
