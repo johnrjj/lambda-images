@@ -1,13 +1,11 @@
-import 'isomorphic-fetch';
 import * as React from 'react';
+import { CSSProperties, Component } from 'react';
 import * as Radium from 'radium';
 import PhotoCard from '../components/PhotoCard';
 import ContentEditable from '../components/ContentEditable';
 import ImageLoader from 'react-imageloader';
 import { AImage } from '../PicDrop';
-import { Component } from 'react';
 import { headerHeight } from '../design-tokens';
-import { CSSProperties } from 'react';
 
 const styles = {
   title: {

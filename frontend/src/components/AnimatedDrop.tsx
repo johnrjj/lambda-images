@@ -116,7 +116,7 @@ class Attempt extends React.Component<any, any> {
   }
   handleSpringUp() {
     console.log('up');
-    Animated.spring(this.state.anim, { toValue: 1, friction: 3, }).start();
+    Animated.spring(this.state.anim, { toValue: 1, friction: 2.0, }).start();
   }
 }
 

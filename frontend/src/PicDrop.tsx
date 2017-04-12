@@ -1,9 +1,7 @@
-import 'isomorphic-fetch';
-import 'normalize.css';
-import './App.css';
 import * as React from 'react';
 import * as Radium from 'radium';
 import * as ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import { withRouter, Route } from 'react-router-dom';
 import DropArea from './components/DropArea';
 import AlbumPage from './containers/AlbumPage';
 import Home from './containers/HomePage';
@@ -12,7 +10,6 @@ import Header from './components/Header';
 import Card from './components/Card';
 import Photo from './components/PhotoCard';
 import Auth from './components/Auth0Lock';
-import { withRouter, Route } from 'react-router-dom';
 import { XHRPromise, uploadFile, generateAlbumSignatures } from './util';
 
 const auth0ClientId = '9b9vnnximFjks0pgQxhmlgtaIbOxqXoG';
@@ -70,6 +67,7 @@ export interface DropPicState {
   error: string;
   status: string;
   albumId: string;
+  loading: boolean,
 }
 
 export interface CollectionStatus {
@@ -122,6 +120,7 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
       error: null,
       status: null,
       albumId: null,
+      loading: false,
     };
     this.toggleModal = this.toggleModal.bind(this);
     this.handleDrop = this.handleDrop.bind(this);
@@ -132,17 +131,9 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
     this.setState({ showModal: !this.state.showModal });
   }
 
-  // async handleDrop(files: File[]) {
-  //   // const postFiles: Array<File> = Array.prototype.slice.call(files);
-
-
-  // }
-
   async handleDrop(files) {
-    const postFiles: Array<File> = Array.prototype.slice.call(files);
-    this.setState({ files: postFiles });
-    console.log(postFiles, 'dropped!');
-    const promises = postFiles.map((file, idx) => {
+    this.setState({ files, loading: true });
+    const promises = await files.map((file, idx) => {
       const promise = getImageMetadata(file).then((data: any) => {
         this.setState((prevState, props) => {
           const files = prevState.files;
@@ -153,70 +144,45 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
           return { files };
         });
       });
-
-
+      return promise;
     });
-    // const filesMetadata = postFiles.map(({ name, size, type }) => ({
-    //   name,
-    //   size,
-    //   type,
-    // }));
-    // console.log('generating album');
-    // const album = await generateAlbumSignatures(
-    //   generateAlbumEndpoint,
-    //   filesMetadata,
-    // );
+
     const album = await presignUrls(files);
-    console.log('done generating album');
-    const { id, images } = album;
-    const totalFileSize = getTotalFileSize(postFiles);
-    console.log(`total file size: ${totalFileSize}`);
-    console.log(id, images);
-    console.log(this, this.props);
-    const { history } = this.props;
-    const { push } = history;
-    console.log(this.state);
+    const totalFileSize = getTotalFileSize(files);
+    this.setState({ uploading: true, albumId: album.id });
 
-    this.setState({ uploading: true, albumId: id });
+    setTimeout(async () => {
+      await Promise.all(album.images.map((image, i) => {
+        // todo any files > 6 count won't have a status text until they actually begin the uploading.
+        return uploadFile(image.presignedUrl, files[i], (e) => {
+          const { loaded, total } = e;
+          this.setState((prev, props) => {
+            const files = prev.files;
+            files[i].uploadedAmount = loaded;
+            return { files };
+          });
+        })
+      }));
 
-    await Promise.all(images.map((image, i) => {
-      // todo any files > 6 count won't have a status text until they actually begin the uploading.
-      return uploadFile(image.presignedUrl, postFiles[i], (e) => {
-        const { loaded, total } = e;
-        // const percentUploaded = 100 * (loaded / total);
-        this.setState((prev, props) => {
-          const files = prev.files;
-          files[i].uploadedAmount = loaded;
+      // now we can check the processing statuses of all the photos and make sure everything worked...
+      // poll, query DB make sure all photos have urls s3 keys
+      try {
+        const res = await this.poll(album.id);
+        this.setState((prevState: DropPicState) => {
+          const { files } = prevState;
+          files.forEach(file => file.uploadedAmount = null);
           return { files };
         });
-      })
-    }));
-
-    // now we can check the processing statuses of all the photos and make sure everything worked...
-    // poll, query DB make sure all photos have urls s3 keys
-    const albumId = id;
-    try {
-      const res = await this.poll(albumId);
-      console.log(res);
-      this.setState((prevState: DropPicState) => {
-        const { files } = prevState;
-        files.forEach(file => file.uploadedAmount = null);
-        return { files };
-      });
-      const entries: any = res.entries;
-      const testImg = new Image();
-      const src: string = `https://image-service-jj-02.s3.amazonaws.com/${entries[0].s3key}`
-      testImg.onload = (e) => console.log('loaded', e);
-      testImg.onerror = (e) => console.log('onerror', e);
-      testImg.src = src;
-      this.setState((prevState: DropPicState, props: DropPicProps) => {
-        const files = prevState.files;
-        files[0].src = src;
-      });
-    } catch (err) {
-      console.log('err', err);
-    }
-    console.log('neat all done!');
+        const entries: any = res.entries;
+        const src: string = `https://image-service-jj-02.s3.amazonaws.com/${entries[0].s3key}`
+        this.setState((prevState: DropPicState, props: DropPicProps) => {
+          const files = prevState.files;
+          files[0].src = src;
+        });
+      } catch (err) {
+        console.log('err', err);
+      }
+    });
   }
 
   // todo, should turn this into a redirect component!
@@ -256,6 +222,7 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
         <Route path="/" exact render={props =>
           <Home
             onDrop={this.handleDrop}
+            loading={this.state.loading}
             onResizeToFullscreenAnimEnd={this.transitionToCreatedAlbum}
             maximizeOverlay={this.state.uploading}
             {...props}
