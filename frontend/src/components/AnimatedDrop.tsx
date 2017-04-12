@@ -11,7 +11,7 @@ class Attempt extends React.Component<any, any> {
   roundToStraightBorderRadiusAnim;
   opacityFadeAnimFullscreen;
   marginTopHideAnimFullscreen;
-  
+
   constructor(props) {
     super(props);
 
@@ -40,7 +40,7 @@ class Attempt extends React.Component<any, any> {
       anim: new Animated.Value(1),
       animFullscreen,
     }
-    
+
     this.handleSpringDown = this.handleSpringDown.bind(this);
     this.handleSpringUp = this.handleSpringUp.bind(this);
     this.handleStartMaximize = this.handleStartMaximize.bind(this);
@@ -48,9 +48,9 @@ class Attempt extends React.Component<any, any> {
   }
 
   componentWillUpdate(nextProps, nextState) {
-    if (this.props.pressed === true &&  nextProps.pressed === false) {
+    if (this.props.pressed === true && nextProps.pressed === false) {
       this.handleSpringUp();
-    } 
+    }
     if (this.props.pressed === false && nextProps.pressed === true) {
       this.handleSpringDown();
     }
@@ -74,7 +74,7 @@ class Attempt extends React.Component<any, any> {
 
   handleStartMaximize() {
     console.log('trying to maximize2');
-    return Animated.timing(this.state.animFullscreen, { toValue: 1, onUpdate: () => console.log('moo'), onEnd: () => console.log('meowww')}).start();
+    return Animated.timing(this.state.animFullscreen, { toValue: 1, onUpdate: () => console.log('moo'), onEnd: () => console.log('meowww') }).start();
   }
 
   handleResizeToFullscreenAnimEnd() {
@@ -88,21 +88,23 @@ class Attempt extends React.Component<any, any> {
     return (
       <Animated.div
         className={this.props.className}
-        style={{ 
-            transform: [{scale: this.state.anim}],
-            maxHeight: this.heightAnimFullscreen || '690px',
-            maxWidth: this.widthAnimFullscreen || '720px',
-            marginTop: this.marginTopHideAnimFullscreen || headerHeight,
-            height:  '100%',
-            borderRadius: this.roundToStraightBorderRadiusAnim || '14px',
-            width: '100%',
+        style={{
+          willChange: 'transform',
+          transform: [{ scale: this.state.anim }],
+          maxHeight: this.heightAnimFullscreen || '690px',
+          maxWidth: this.widthAnimFullscreen || '720px',
+          marginTop: this.marginTopHideAnimFullscreen || headerHeight,
+          height: '100%',
+          borderRadius: this.roundToStraightBorderRadiusAnim || '14px',
+          width: '100%',
         }}
       >
-      <Animated.div
-        style={{ 
+        <Animated.div
+          style={{
+            willChange: 'opacity',
             opacity: this.opacityFadeAnimFullscreen || 1,
-        }}>
-        { this.props.children }
+          }}>
+          {this.props.children}
         </Animated.div>
       </Animated.div>
     );
@@ -114,7 +116,7 @@ class Attempt extends React.Component<any, any> {
   }
   handleSpringUp() {
     console.log('up');
-    Animated.spring(this.state.anim, { toValue: 1,       friction: 3,       }).start();
+    Animated.spring(this.state.anim, { toValue: 1, friction: 3, }).start();
   }
 }
 

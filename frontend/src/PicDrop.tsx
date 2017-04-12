@@ -84,6 +84,34 @@ const getCollectionStatus = async (collectionId: string) => {
   return data;
 };
 
+const presignUrls = async (files: File[]) => {
+  const filesMetadata = files.map(({ name, size, type }) => ({ name, size, type }));
+  const album = await generateAlbumSignatures(
+    generateAlbumEndpoint,
+    filesMetadata,
+  );
+  return album;
+}
+
+const getImageMetadata = (image: File) => {
+  return new Promise((accept, reject) => {
+    const reader = new FileReader();
+    const url = reader.readAsDataURL(image);
+    reader.onloadend = () => {
+      const imageSrc: string = reader.result;
+      const image = new Image();
+      image.onload = () => {
+        const height = image.height;
+        const width = image.width;
+        const src = imageSrc
+        const res = { height, width, src };
+        accept(res);
+      };
+      image.src = imageSrc;
+    };
+  });
+}
+
 class DropPic extends React.Component<DropPicProps, DropPicState> {
   constructor(props, context) {
     super(props);
@@ -104,44 +132,44 @@ class DropPic extends React.Component<DropPicProps, DropPicState> {
     this.setState({ showModal: !this.state.showModal });
   }
 
+  // async handleDrop(files: File[]) {
+  //   // const postFiles: Array<File> = Array.prototype.slice.call(files);
+
+
+  // }
+
   async handleDrop(files) {
     const postFiles: Array<File> = Array.prototype.slice.call(files);
     this.setState({ files: postFiles });
     console.log(postFiles, 'dropped!');
-    postFiles.forEach((file, idx) => {
-      const reader = new FileReader();
-      const url = reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        const files = this.state.files;
-        const image = new Image();
-        image.onload = () => {
-          const height = image.height;
-          const width = image.width;
-          this.setState((prevState, props) => {
-            const files = prevState.files;
-            files[idx].previewUrl = reader.result;
-            files[idx].height = height;
-            files[idx].width = width;
-            files[idx].uploadedAmount = 0;
-            return { files };
-          });
-        };
-        image.src = reader.result;
-      };
+    const promises = postFiles.map((file, idx) => {
+      const promise = getImageMetadata(file).then((data: any) => {
+        this.setState((prevState, props) => {
+          const files = prevState.files;
+          files[idx].previewUrl = data.src;
+          files[idx].height = data.height;
+          files[idx].width = data.width;
+          files[idx].uploadedAmount = 0;
+          return { files };
+        });
+      });
+
+
     });
-    const filesMetadata = postFiles.map(({ name, size, type }) => ({
-      name,
-      size,
-      type,
-    }));
-    console.log('generating album');
-    const album = await generateAlbumSignatures(
-      generateAlbumEndpoint,
-      filesMetadata,
-    );
+    // const filesMetadata = postFiles.map(({ name, size, type }) => ({
+    //   name,
+    //   size,
+    //   type,
+    // }));
+    // console.log('generating album');
+    // const album = await generateAlbumSignatures(
+    //   generateAlbumEndpoint,
+    //   filesMetadata,
+    // );
+    const album = await presignUrls(files);
     console.log('done generating album');
     const { id, images } = album;
-    const totalFileSize = getTotalFileSize(filesMetadata);
+    const totalFileSize = getTotalFileSize(postFiles);
     console.log(`total file size: ${totalFileSize}`);
     console.log(id, images);
     console.log(this, this.props);
